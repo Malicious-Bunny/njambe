@@ -542,4 +542,65 @@ Updated `components/custom/start/LanguageSelector.tsx`:
 
 Both screens now show the updated language selector with proper flags.
 
+## Session Log - Tue Jan 27, 2026 (New Session - Project Study)
+
+### Project Cloned and Studied
+1. **Cloned repository** from `https://github.com/Malicious-Bunny/njambe.git`
+2. **Read todos.md** - Full project briefing understood
+3. **Read react-native-reusables.md** - Component library reference understood
+4. **Studied key project files:**
+   - `package.json` - Expo SDK 54, React Native 0.81.5, NativeWind, Lucide icons
+   - `app/_layout.tsx` - Root layout with Stack navigation, ThemeProvider, PortalHost
+   - `app/index.tsx` - Start screen with logo, carousel, CTAs
+   - `app/auth/login.tsx` - Login screen with email/password form
+   - `app/(customer)/index.tsx` - Customer signup screen
+   - `app/(customer)/(tabs)/index.tsx` - Service screen with categories grid
+   - `app/(provider)/index.tsx` - Provider home with stats and actions
+   - `app/(provider)/onboarding.tsx` - 3-slide swipeable onboarding flow
+   - `lib/theme.ts` - Zinc theme configuration
+   - `global.css` - CSS variables for light/dark themes
+   - `lib/customer/categories.ts` - Service categories data
+   - `lib/start/service-providers.ts` - Service provider card data
+   - `lib/provider/onboarding-data.ts` - Onboarding slides data
+   - Various custom component files in `components/custom/`
+5. **Installed dependencies** with pnpm (765 packages)
+
+### Project Understanding Summary
+
+**njambe** is a React Native Expo app that clones the RingTwice business model for Cameroon:
+- Neighborhood-based services marketplace connecting users with local service providers
+- Two user modes: **Customer** (needs services) and **Provider** (offers services)
+- Currency: XAF (Central African CFA franc)
+- Languages: French/English
+
+**Tech Stack:**
+- Expo SDK 54 with React Native 0.81.5
+- Expo Router v6 for navigation
+- NativeWind (Tailwind CSS for React Native)
+- React Native Reusables (shadcn/ui port)
+- Lucide React Native for icons
+- React Native Reanimated for animations
+- pnpm as package manager
+
+**Design System:**
+- Zinc color theme with full light/dark mode support
+- CSS variables in `global.css`
+- Theme constants in `lib/theme.ts`
+
+**Current Screens:**
+1. **Start Screen** - Landing with logo, service provider carousel, CTAs
+2. **Login Screen** - Email/password with social login options
+3. **Customer Signup** - Email/social signup options
+4. **Customer Tabs** - 5 tabs (Requests, Service, Notifications, Messages, Account)
+5. **Provider Home** - Stats, quick actions, job listings
+6. **Provider Onboarding** - 3-slide swipeable onboarding flow
+
+**Pending Tasks:**
+- [ ] Add Input component from React Native Reusables for forms
+- [ ] Build provider join/signup screen (after onboarding)
+- [ ] Build out individual tab screens with content
+
+### Ready for Instructions
+Project is set up and ready for development. Awaiting user instructions for next tasks.
+
 ## Standing by for further instructions

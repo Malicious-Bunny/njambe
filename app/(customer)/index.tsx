@@ -3,36 +3,16 @@ import { PageHeader } from '@/components/custom/shared';
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { router } from 'expo-router';
+import { Google, Facebook, AppleMac } from 'iconoir-react-native';
+import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-// Simple icon components for social providers
-function GoogleIcon({ size = 20, color = '#18181B' }: { size?: number; color?: string }) {
-  return (
-    <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
-      <Text style={{ fontSize: size * 0.9, fontWeight: '700', color }}>G</Text>
-    </View>
-  );
-}
-
-function FacebookIcon({ size = 20, color = '#18181B' }: { size?: number; color?: string }) {
-  return (
-    <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
-      <Text style={{ fontSize: size * 0.9, fontWeight: '700', color }}>f</Text>
-    </View>
-  );
-}
-
-function AppleIcon({ size = 20, color = '#18181B' }: { size?: number; color?: string }) {
-  return (
-    <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
-      <Text style={{ fontSize: size * 0.9, fontWeight: '400', color }}></Text>
-    </View>
-  );
-}
-
 export default function CustomerSignupScreen() {
+  const { colorScheme } = useColorScheme();
+  const iconColor = colorScheme === 'dark' ? '#fafafa' : '#18181b';
+
   const handleEmailSignup = () => {
     // Navigate to tabs after signup
     router.replace('/(customer)/(tabs)');
@@ -89,17 +69,17 @@ export default function CustomerSignupScreen() {
         {/* Social Login Buttons */}
         <View className="gap-3">
           <SocialLoginButton
-            icon={GoogleIcon}
+            icon={() => <Google width={20} height={20} color={iconColor} />}
             label="Sign up with Google"
             onPress={handleGoogleSignup}
           />
           <SocialLoginButton
-            icon={FacebookIcon}
+            icon={() => <Facebook width={20} height={20} color={iconColor} />}
             label="Sign up with Facebook"
             onPress={handleFacebookSignup}
           />
           <SocialLoginButton
-            icon={AppleIcon}
+            icon={() => <AppleMac width={20} height={20} color={iconColor} />}
             label="Sign up with Apple"
             onPress={handleAppleSignup}
           />

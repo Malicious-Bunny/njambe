@@ -1,6 +1,7 @@
 import { NjambeLogo } from '@/components/custom/start/NjambeLogo';
 import { router } from 'expo-router';
-import { ArrowLeftIcon, BellIcon } from 'lucide-react-native';
+import { NavArrowLeft, Bell } from 'iconoir-react-native';
+import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import { Pressable, View } from 'react-native';
 
@@ -17,6 +18,9 @@ export function Header({
   onBackPress,
   onNotificationPress,
 }: HeaderProps) {
+  const { colorScheme } = useColorScheme();
+  const iconColor = colorScheme === 'dark' ? '#fafafa' : '#18181b';
+
   const handleBack = () => {
     if (onBackPress) {
       onBackPress();
@@ -29,7 +33,7 @@ export function Header({
     <View className="flex-row items-center justify-between px-5 pt-2 pb-4">
       {showBackButton ? (
         <Pressable onPress={handleBack} className="p-2">
-          <ArrowLeftIcon size={24} color="#374151" />
+          <NavArrowLeft width={24} height={24} color={iconColor} />
         </Pressable>
       ) : (
         <View className="w-10" />
@@ -37,7 +41,7 @@ export function Header({
       <NjambeLogo size="md" />
       {showNotification ? (
         <Pressable onPress={onNotificationPress} className="p-2">
-          <BellIcon size={24} color="#374151" />
+          <Bell width={24} height={24} color={iconColor} />
         </Pressable>
       ) : (
         <View className="w-10" />

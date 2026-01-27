@@ -1,7 +1,7 @@
 import { QuickActions, StatsRow } from '@/components/custom/provider';
 import { EmptyState, Header, LocationSelector } from '@/components/custom/shared';
 import { Text } from '@/components/ui/text';
-import { BriefcaseIcon } from 'lucide-react-native';
+import { Briefcase } from 'iconoir-react-native';
 import * as React from 'react';
 import { ScrollView, View } from 'react-native';
 

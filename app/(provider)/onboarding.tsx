@@ -12,7 +12,7 @@ import {
   type OnboardingSlide3Data,
 } from '@/lib/provider/onboarding-data';
 import { useRouter } from 'expo-router';
-import { ArrowLeft } from 'lucide-react-native';
+import { NavArrowLeft } from 'iconoir-react-native';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import {

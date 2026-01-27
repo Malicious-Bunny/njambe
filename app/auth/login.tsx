@@ -1,7 +1,7 @@
 import { LanguageSelector } from '@/components/custom/start';
 import { Text } from '@/components/ui/text';
 import { router } from 'expo-router';
-import { NavArrowLeft, Eye, EyeOff } from 'iconoir-react-native';
+import { NavArrowLeft, Eye, EyeClosed, Google, Facebook, AppleMac } from 'iconoir-react-native';
 import * as React from 'react';
 import { Pressable, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -84,7 +84,7 @@ export default function LoginScreen() {
               {showPassword ? (
                 <Eye width={20} height={20} color={iconColor} />
               ) : (
-                <EyeOff width={20} height={20} color={iconColor} />
+                <EyeClosed width={20} height={20} color={iconColor} />
               )}
             </Pressable>
           </View>
@@ -119,17 +119,17 @@ export default function LoginScreen() {
           <Pressable
             className="h-12 w-12 items-center justify-center rounded-xl bg-secondary active:bg-accent"
           >
-            <Text className="text-lg font-semibold text-foreground">G</Text>
+            <Google width={22} height={22} color={textColor} />
           </Pressable>
           <Pressable
             className="h-12 w-12 items-center justify-center rounded-xl bg-secondary active:bg-accent"
           >
-            <Text className="text-lg font-bold text-foreground">f</Text>
+            <Facebook width={22} height={22} color={textColor} />
           </Pressable>
           <Pressable
             className="h-12 w-12 items-center justify-center rounded-xl bg-secondary active:bg-accent"
           >
-            <Text className="text-lg text-foreground"></Text>
+            <AppleMac width={22} height={22} color={textColor} />
           </Pressable>
         </View>
 

@@ -1,6 +1,6 @@
 import { EmptyState, Header } from '@/components/custom/shared';
 import { Text } from '@/components/ui/text';
-import { HeartIcon } from 'lucide-react-native';
+import { Heart } from 'iconoir-react-native';
 import * as React from 'react';
 import { ScrollView, View } from 'react-native';
 
