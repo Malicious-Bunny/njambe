@@ -1,5 +1,5 @@
 import { Text } from '@/components/ui/text';
-import { SearchIcon } from 'lucide-react-native';
+import { Search } from 'iconoir-react-native';
 import * as React from 'react';
 import { Pressable, View } from 'react-native';
 import { useColorScheme } from 'nativewind';
@@ -21,7 +21,7 @@ export function SearchBar({
       <Pressable
         onPress={onPress}
         className="flex-row items-center gap-3 rounded-2xl bg-card px-4 py-3.5 shadow-sm active:bg-secondary">
-        <SearchIcon size={20} color={iconColor} />
+        <Search width={20} height={20} color={iconColor} />
         <Text className="flex-1 text-muted-foreground">{placeholder}</Text>
       </Pressable>
     </View>

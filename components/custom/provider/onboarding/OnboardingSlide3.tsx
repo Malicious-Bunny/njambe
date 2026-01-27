@@ -1,6 +1,6 @@
 import { Text } from '@/components/ui/text';
 import { HOW_IT_WORKS_URL, type OnboardingSlide3Data } from '@/lib/provider/onboarding-data';
-import { Bell, Check, Minus, Plus } from 'lucide-react-native';
+import { Bell, Check, Minus, Plus } from 'iconoir-react-native';
 import { useColorScheme } from 'nativewind';
 import { Image, View } from 'react-native';
 

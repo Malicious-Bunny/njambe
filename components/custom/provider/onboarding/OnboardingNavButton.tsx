@@ -1,4 +1,4 @@
-import { ArrowRight } from 'lucide-react-native';
+import { NavArrowRight } from 'iconoir-react-native';
 import { useColorScheme } from 'nativewind';
 import { Pressable, type PressableProps } from 'react-native';
 
@@ -16,7 +16,7 @@ export function OnboardingNavButton({ onPress, ...props }: OnboardingNavButtonPr
       className="w-14 h-14 rounded-full bg-primary dark:bg-primary items-center justify-center active:bg-primary/90 dark:active:bg-primary/90"
       {...props}
     >
-      <ArrowRight size={24} color={arrowColor} />
+      <NavArrowRight width={24} height={24} color={arrowColor} />
     </Pressable>
   );
 }

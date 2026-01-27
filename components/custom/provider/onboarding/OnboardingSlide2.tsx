@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Text } from '@/components/ui/text';
 import { JOB_ILLUSTRATION_URL, type OnboardingSlide2Data } from '@/lib/provider/onboarding-data';
-import { Bell, Grid3X3, MapPin, Users } from 'lucide-react-native';
+import { Bell, ViewGrid, MapPin, Group } from 'iconoir-react-native';
 import { useColorScheme } from 'nativewind';
 import { Image, View } from 'react-native';
 
@@ -10,10 +10,10 @@ interface OnboardingSlide2Props {
 }
 
 const STAT_ICONS = {
-  grid: Grid3X3,
+  grid: ViewGrid,
   bell: Bell,
   mapPin: MapPin,
-  users: Users,
+  users: Group,
 };
 
 export function OnboardingSlide2({ data }: OnboardingSlide2Props) {
@@ -74,7 +74,7 @@ export function OnboardingSlide2({ data }: OnboardingSlide2Props) {
           const IconComponent = STAT_ICONS[stat.icon as keyof typeof STAT_ICONS] || Grid3X3;
           return (
             <View key={index} className="flex-row items-center gap-3">
-              <IconComponent size={22} color={primaryColor} />
+              <IconComponent width={22} height={22} color={primaryColor} />
               <Text className="text-muted-foreground dark:text-muted-foreground">
                 {stat.text}
                 {stat.boldText && <Text className="font-semibold text-foreground dark:text-foreground">{stat.boldText}</Text>}

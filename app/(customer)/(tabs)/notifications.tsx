@@ -1,6 +1,6 @@
 import { EmptyState, Header } from '@/components/custom/shared';
 import { Text } from '@/components/ui/text';
-import { BellIcon } from 'lucide-react-native';
+import { Bell } from 'iconoir-react-native';
 import * as React from 'react';
 import { ScrollView, View } from 'react-native';
 

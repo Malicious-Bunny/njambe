@@ -51,7 +51,7 @@ export default function ProviderHomeScreen() {
         </View>
         <View className="mt-4">
           <EmptyState
-            icon={BriefcaseIcon}
+            icon={Briefcase}
             title="No jobs available yet"
             subtitle="New jobs will appear here"
           />

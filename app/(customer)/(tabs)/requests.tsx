@@ -21,7 +21,7 @@ export default function RequestsScreen() {
       {/* Empty State */}
       <View className="px-5">
         <EmptyState
-          icon={HeartIcon}
+          icon={Heart}
           title="No requests yet"
           subtitle="Your service requests will appear here"
         />

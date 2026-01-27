@@ -89,7 +89,7 @@ export default function ProviderOnboardingScreen() {
           onPress={handleBack}
           className="w-10 h-10 items-center justify-center"
         >
-          <ArrowLeft size={24} color={arrowColor} />
+          <NavArrowLeft width={24} height={24} color={arrowColor} />
         </Pressable>
       </View>
 

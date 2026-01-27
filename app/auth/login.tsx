@@ -1,7 +1,7 @@
 import { LanguageSelector } from '@/components/custom/start';
 import { Text } from '@/components/ui/text';
 import { router } from 'expo-router';
-import { ArrowLeftIcon, EyeIcon, EyeOffIcon } from 'lucide-react-native';
+import { NavArrowLeft, Eye, EyeOff } from 'iconoir-react-native';
 import * as React from 'react';
 import { Pressable, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -40,7 +40,7 @@ export default function LoginScreen() {
           onPress={() => router.back()}
           className="flex-row items-center gap-1"
         >
-          <ArrowLeftIcon size={20} color={textColor} />
+          <NavArrowLeft width={20} height={20} color={textColor} />
           <Text className="text-base text-foreground">Back</Text>
         </Pressable>
         <LanguageSelector />
@@ -82,9 +82,9 @@ export default function LoginScreen() {
             />
             <Pressable onPress={() => setShowPassword(!showPassword)} className="pb-3">
               {showPassword ? (
-                <EyeIcon size={20} color={iconColor} />
+                <Eye width={20} height={20} color={iconColor} />
               ) : (
-                <EyeOffIcon size={20} color={iconColor} />
+                <EyeOff width={20} height={20} color={iconColor} />
               )}
             </Pressable>
           </View>

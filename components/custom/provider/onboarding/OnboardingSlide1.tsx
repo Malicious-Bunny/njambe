@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Text } from '@/components/ui/text';
 import { PROVIDER_AVATAR_URL, type OnboardingSlide1Data } from '@/lib/provider/onboarding-data';
-import { Check, Star } from 'lucide-react-native';
+import { Check, StarSolid } from 'iconoir-react-native';
 import { useColorScheme } from 'nativewind';
 import { Image, View } from 'react-native';
 
@@ -33,11 +33,11 @@ export function OnboardingSlide1({ data }: OnboardingSlide1Props) {
             <View className="flex-row items-center gap-1">
               <Text className="font-semibold text-foreground dark:text-foreground">{data.providerName}</Text>
               <View className="w-4 h-4 rounded-full bg-primary dark:bg-primary items-center justify-center">
-                <Check size={10} color={colorScheme === 'dark' ? '#18181b' : '#fafafa'} strokeWidth={3} />
+                <Check width={10} height={10} color={colorScheme === 'dark' ? '#18181b' : '#fafafa'} strokeWidth={3} />
               </View>
             </View>
             <View className="flex-row items-center gap-1 mt-0.5">
-              <Star size={14} color={starColor} fill={starColor} />
+              <StarSolid width={14} height={14} color={starColor} />
               <Text className="text-sm text-muted-foreground dark:text-muted-foreground">{data.providerRating}</Text>
             </View>
           </View>
@@ -52,7 +52,7 @@ export function OnboardingSlide1({ data }: OnboardingSlide1Props) {
         <Text className="text-lg font-semibold text-foreground dark:text-foreground mb-3">As an individual</Text>
         {data.individualBenefits.map((benefit, index) => (
           <View key={index} className="flex-row items-start gap-3 mb-2.5">
-            <Check size={20} color={primaryColor} strokeWidth={2.5} />
+            <Check width={20} height={20} color={primaryColor} strokeWidth={2.5} />
             <Text className="text-muted-foreground dark:text-muted-foreground flex-1">
               {benefit.text}
               {benefit.boldText && <Text className="font-semibold text-foreground dark:text-foreground">{benefit.boldText}</Text>}
@@ -66,7 +66,7 @@ export function OnboardingSlide1({ data }: OnboardingSlide1Props) {
         <Text className="text-lg font-semibold text-foreground dark:text-foreground mb-3">As a professional</Text>
         {data.professionalBenefits.map((benefit, index) => (
           <View key={index} className="flex-row items-start gap-3 mb-2.5">
-            <Check size={20} color={primaryColor} strokeWidth={2.5} />
+            <Check width={20} height={20} color={primaryColor} strokeWidth={2.5} />
             <Text className="text-muted-foreground dark:text-muted-foreground flex-1">
               {benefit.text}
               {benefit.boldText && <Text className="font-semibold text-foreground dark:text-foreground">{benefit.boldText}</Text>}

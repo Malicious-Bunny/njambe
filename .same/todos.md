@@ -415,6 +415,37 @@ The project has:
 - Design system now consistent across all pages
 - Ready to implement next features
 
+## Session Log - Tue Jan 27, 2026 (New Session)
+
+### Project Study Complete (New Session)
+- **Cloned repository** from `https://github.com/Malicious-Bunny/njambe.git`
+- **Studied todos.md** - Comprehensive project briefing complete
+- **Studied react-native-reusables.md** - Component library reference reviewed
+- **Dependencies installed** with pnpm (765 packages)
+- **Ready to receive instructions** for next tasks
+
+### Key Project Understanding:
+1. **App Name**: njambe - a clone of RingTwice adapted for Cameroon
+2. **Framework**: Expo SDK 54 with React Native 0.81.5, Expo Router v6
+3. **Styling**: NativeWind (Tailwind CSS for React Native)
+4. **UI Library**: React Native Reusables (shadcn/ui port for React Native)
+5. **Design System**: Zinc color theme with full light/dark mode support
+6. **Package Manager**: pnpm
+7. **Currency/Context**: XAF (Cameroonian Franc), French/English languages
+
+### Project Screens Implemented:
+1. **Start Screen** - Landing with logo, service provider carousel, CTAs
+2. **Login Screen** - Email/password with social login options
+3. **Customer Signup** - Email/social signup options
+4. **Customer Tabs** - 5 tabs (Requests, Service, Notifications, Messages, Account)
+5. **Provider Home** - Stats, quick actions, job listings
+6. **Provider Onboarding** - 3-slide swipeable onboarding flow
+
+### Pending Tasks from Previous Session:
+- [ ] Add Input component from React Native Reusables for forms
+- [ ] Build provider join/signup screen (after onboarding)
+- [ ] Build out individual tab screens with content
+
 ## Session Log - Tue Jan 27, 2026 (Continued)
 
 ### Design System Audit - Provider Onboarding
