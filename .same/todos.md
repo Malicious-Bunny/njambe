@@ -102,6 +102,8 @@ njambe/
 │       ├── customer/
 │       │   ├── CategoryCard.tsx
 │       │   ├── CategoriesGrid.tsx
+│       │   ├── CountryFlag.tsx         # NEW: Renders country flags
+│       │   ├── CountrySelector.tsx     # NEW: Country picker with modal
 │       │   ├── OrDivider.tsx
 │       │   ├── SearchBar.tsx
 │       │   ├── SocialLoginButton.tsx
@@ -127,8 +129,11 @@ njambe/
 │   ├── theme.ts                  # Navigation theme colors
 │   ├── start/
 │   │   └── service-providers.ts  # Service provider data
-│   └── customer/
-│       └── categories.ts         # Service categories data
+│   ├── customer/
+│   │   ├── categories.ts         # Service categories data
+│   │   └── countries.ts          # NEW: Country data for signup
+│   └── provider/
+│       └── onboarding-data.ts    # Onboarding slides data
 ├── assets/images/                # App icons and splash screens
 ├── global.css                    # Tailwind CSS with CSS variables
 ├── tailwind.config.js            # Tailwind configuration
@@ -246,6 +251,10 @@ The app uses **Zinc** as the base color theme, configured via CSS variables for 
 - [x] Build out individual tab screens with content
 - [x] Build provider onboarding page with component switcher
 - [x] Redesign login screen with new layout (underline inputs, social icons, create account button)
+- [x] Build customer signup form with full form fields (name, email, password, country, checkbox)
+- [x] Create CountrySelector component with modal picker
+- [x] Create CountryFlag component for rendering country flags
+- [x] Create countries data file with Cameroon (extensible)
 - [ ] Add Input component from React Native Reusables for forms
 - [ ] Build provider join/signup screen (after onboarding)
 - [ ] Build out individual tab screens with content
@@ -602,5 +611,151 @@ Both screens now show the updated language selector with proper flags.
 
 ### Ready for Instructions
 Project is set up and ready for development. Awaiting user instructions for next tasks.
+
+## Session Log - Tue Jan 27, 2026 (New Session - Full Project Study)
+
+### Project Cloned and Studied
+1. **Cloned repository** from `https://github.com/Malicious-Bunny/njambe.git`
+2. **Read todos.md** - Full project briefing and history understood
+3. **Read react-native-reusables.md** - Component library patterns and CLI commands understood
+4. **Dependencies installed** with pnpm (765 packages)
+
+### Files Reviewed:
+- `package.json` - Expo SDK 54, React Native 0.81.5, NativeWind, iconoir-react-native, Lucide icons
+- `app/_layout.tsx` - Root layout with Stack navigation, ThemeProvider, PortalHost
+- `app/index.tsx` - Start/Landing screen with logo, carousel, CTAs
+- `app/auth/login.tsx` - Login screen with underline-style inputs, social login icons
+- `app/(customer)/index.tsx` - Customer signup screen with email/social options
+- `app/(customer)/(tabs)/index.tsx` - Service screen with categories grid
+- `app/(customer)/(tabs)/_layout.tsx` - 5-tab navigation with special center button
+- `app/(provider)/index.tsx` - Provider home with stats and quick actions
+- `app/(provider)/onboarding.tsx` - 3-slide swipeable onboarding flow
+- `lib/theme.ts` - Zinc theme configuration with light/dark mode
+- `global.css` - CSS variables for NativeWind theming
+- `lib/customer/categories.ts` - Service categories data
+- `lib/start/service-providers.ts` - Service provider card data
+- `lib/provider/onboarding-data.ts` - Onboarding slides data (Cameroon context)
+- `components/custom/start/NjambeLogo.tsx` - Branded logo component
+- `components/custom/start/ServiceProviderCard.tsx` - Card with Badge component
+- `components/custom/shared/Header.tsx` - Reusable header with back/notification
+
+### Project Understanding Summary
+
+**njambe** is a React Native Expo app that clones the RingTwice business model for Cameroon:
+- **Purpose**: Neighborhood-based services marketplace connecting users with local service providers
+- **Two user modes**: Customer (needs services) and Provider (offers services)
+- **Currency**: XAF (Central African CFA franc)
+- **Languages**: French/English (with flag selector)
+
+**Tech Stack:**
+| Technology | Version/Details |
+|------------|-----------------|
+| Expo SDK | 54 |
+| React Native | 0.81.5 |
+| Expo Router | v6 (file-based routing) |
+| NativeWind | v4.2.1 (Tailwind for RN) |
+| React Native Reusables | shadcn/ui port for React Native |
+| Icons | iconoir-react-native + lucide-react-native |
+| Animations | React Native Reanimated 4.1.1 |
+| Package Manager | pnpm |
+
+**Design System (Zinc Theme):**
+| Token | Light Mode | Dark Mode |
+|-------|------------|-----------|
+| background | zinc-50/white | zinc-950 |
+| foreground | zinc-950 | zinc-50 |
+| primary | zinc-900 | zinc-50 |
+| secondary | zinc-100 | zinc-800 |
+| muted | zinc-100 | zinc-800 |
+| border | zinc-200 | zinc-800 |
+| card | white | zinc-900 |
+
+**Current Screens:**
+1. **Start Screen** (`app/index.tsx`) - Landing with logo, service provider carousel, 2 CTAs
+2. **Login Screen** (`app/auth/login.tsx`) - Underline inputs, social icons, create account
+3. **Customer Signup** (`app/(customer)/index.tsx`) - Email/social signup options
+4. **Customer Tabs** (`app/(customer)/(tabs)/`) - 5 tabs (Requests, Service, Notifications, Messages, Account)
+5. **Provider Home** (`app/(provider)/index.tsx`) - Stats, quick actions, job listings
+6. **Provider Onboarding** (`app/(provider)/onboarding.tsx`) - 3-slide component switcher
+
+**Component Organization Pattern:**
+```
+components/
+├── ui/                     # React Native Reusables (shadcn-style)
+│   ├── button.tsx
+│   ├── text.tsx
+│   ├── card.tsx
+│   ├── badge.tsx
+│   └── separator.tsx
+└── custom/                 # Custom page-specific components
+    ├── start/              # Start screen components
+    ├── customer/           # Customer-specific components
+    ├── provider/           # Provider-specific components
+    │   └── onboarding/     # Onboarding slide components
+    └── shared/             # Shared components (Header, LocationSelector, etc.)
+
+lib/
+├── utils.ts               # cn() utility
+├── theme.ts               # Theme configuration
+├── start/                 # Start screen data
+├── customer/              # Customer data (categories)
+└── provider/              # Provider data (onboarding)
+```
+
+**Pending Tasks:**
+- [ ] Add Input component from React Native Reusables for forms
+- [ ] Build provider join/signup screen (after onboarding)
+- [ ] Build out individual tab screens with content
+
+### Important Notes:
+1. **This is a React Native Expo project** - Cannot preview in web browser in Same
+2. **Use React Native Reusables CLI**: `npx @react-native-reusables/cli@latest add [component-name]`
+3. **Package manager**: pnpm
+4. **Follow Code Organization Pattern** when adding new pages/components
+5. **PortalHost** is already set up in root layout for dialogs/popovers
+
+### Ready for Instructions
+Project is fully studied and dependencies are installed. Awaiting user instructions for next tasks.
+
+## Session Log - Tue Jan 27, 2026 (Customer Signup Form Implementation)
+
+### Customer Signup Form Implemented
+Created a full signup form page for customers based on the provided screenshots.
+
+**Files Created:**
+1. `lib/customer/countries.ts` - Country data with Cameroon (extensible for more countries)
+2. `components/custom/customer/CountryFlag.tsx` - Dynamic flag renderer component
+3. `components/custom/customer/CountrySelector.tsx` - Country selector with modal picker
+
+**Files Updated:**
+1. `app/(customer)/index.tsx` - Replaced simple options with full signup form
+2. `components/custom/customer/index.ts` - Added new component exports
+
+**Features Implemented:**
+- First name input with underline style
+- Last name input with underline style
+- Email input with underline style
+- Password input with visibility toggle (Eye/EyeClosed icons)
+- Country selector with modal bottom sheet
+- Newsletter/promotions checkbox
+- Google signup button
+- Primary "Sign up" button (disabled when form invalid)
+- Terms & Conditions and Privacy Policy links
+- KeyboardAvoidingView for proper keyboard handling
+- Full Zinc theme support (light/dark mode)
+- All iconoir icons used (EyeClosed, Eye, Google, Check, NavArrowDown, Xmark)
+
+**Country Selector Features:**
+- Modal bottom sheet with radio button selection
+- Country flag display with vertical stripes
+- Cameroon flag with green, red, yellow stripes
+- Extensible structure - just add countries to COUNTRIES array
+- Confirm button to apply selection
+
+**Design System Compliance:**
+- Uses Zinc theme tokens throughout
+- Dynamic colors based on useColorScheme hook
+- No hardcoded colors from the reference images
+- Proper dark mode support
 
 ## Standing by for further instructions
