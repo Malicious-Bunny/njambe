@@ -493,4 +493,22 @@ Redesigned `app/auth/login.tsx` to match the new UI layout:
 - Create account button navigates to `/(customer)`
 - Back button uses `router.back()`
 
+### Language Selector Update (Tue Jan 27, 2026)
+
+Updated `components/custom/start/LanguageSelector.tsx`:
+
+**Changes:**
+- Replaced Cameroon flag with UK flag (English) and French flag (French)
+- Added toggle functionality between EN and FR
+- UK flag: Blue background with white and red cross pattern
+- French flag: Blue, white, red vertical stripes
+- Added `onLanguageChange` callback prop for language state management
+- Component maintains its own language state internally
+
+**Affected Screens:**
+- `app/index.tsx` (Start/Home screen)
+- `app/auth/login.tsx` (Login screen)
+
+Both screens now show the updated language selector with proper flags.
+
 ## Standing by for further instructions
