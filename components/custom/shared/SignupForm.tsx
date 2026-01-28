@@ -27,12 +27,10 @@ const signupSchema = z.object({
 
 interface SignupFormProps {
   role: UserRole;
-  title: string;
-  subtitle?: string;
   successRoute: string;
 }
 
-export function SignupForm({ role, title, subtitle, successRoute }: SignupFormProps) {
+export function SignupForm({ role, successRoute }: SignupFormProps) {
   const { colorScheme } = useColorScheme();
   const isDark = colorScheme === 'dark';
   const { signup, socialLogin, isLoading } = useAuthStore();
@@ -124,13 +122,7 @@ export function SignupForm({ role, title, subtitle, successRoute }: SignupFormPr
         keyboardShouldPersistTaps="handled"
       >
         <View className="px-6 pt-8">
-          {/* Title & Subtitle */}
-          {subtitle && (
-            <View className="mb-6">
-              <Text className="text-lg font-semibold text-foreground">{title}</Text>
-              <Text className="text-sm text-muted-foreground mt-1">{subtitle}</Text>
-            </View>
-          )}
+        
 
           {/* First Name */}
           <View className="mb-6">

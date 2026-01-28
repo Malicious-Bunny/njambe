@@ -11,8 +11,7 @@ export default function CustomerSignupScreen() {
 
       <SignupForm
         role="customer"
-        title="Welcome!"
-        subtitle="Create your account to find skilled neighbors for any service you need."
+       
         successRoute="/(customer)/(tabs)"
       />
     </SafeAreaView>

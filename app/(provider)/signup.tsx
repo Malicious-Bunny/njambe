@@ -6,13 +6,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function ProviderSignupScreen() {
   return (
     <SafeAreaView className="flex-1 bg-background" edges={['top']}>
-      <PageHeader title="Become a Provider" />
+      <PageHeader title="Signup to Njambe" />
       <View className="h-px bg-border" />
 
       <SignupForm
         role="provider"
-        title="Start Earning!"
-        subtitle="Create your account to offer your services to neighbors in your area."
+        
         successRoute="/(provider)"
       />
     </SafeAreaView>
