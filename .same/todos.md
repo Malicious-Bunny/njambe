@@ -888,7 +888,7 @@ emoji: '🇨🇲'
 
 ### Files Reviewed:
 **Core Configuration:**
-- `package.json` - Expo SDK 54, React Native 0.81.5, NativeWind 4.2.1, iconoir-react-native, Lucide icons, Zod for validation
+- `package.json` - Expo SDK 54, React Native 0.81.5, NativeWind, iconoir-react-native, Lucide icons, Zod for validation
 - `app/_layout.tsx` - Root layout with Stack navigation, ThemeProvider, PortalHost
 - `global.css` - CSS variables for Zinc light/dark themes
 - `lib/theme.ts` - Zinc theme configuration with NAV_THEME export
@@ -1196,6 +1196,177 @@ cp .env.example .env
 - [x] Implement Supabase authentication for login
 - [ ] Add Input component from React Native Reusables for forms
 - [ ] Build out individual tab screens with content
+
+## Session Log - Wed Jan 28, 2026 (New Session - Full Project Study)
+
+### Project Cloned and Studied
+1. **Cloned repository** from `https://github.com/Malicious-Bunny/njambe.git`
+2. **Read todos.md** - Full project briefing and history understood (1086 lines)
+3. **Read react-native-reusables.md** - Component library patterns and CLI commands understood
+4. **Dependencies installed** with pnpm (766 packages)
+
+### Files Reviewed:
+**Core Configuration:**
+- `package.json` - Expo SDK 54, React Native 0.81.5, NativeWind 4.2.1, iconoir-react-native, Lucide icons, Zod 4.3.6
+- `app/_layout.tsx` - Root layout with Stack navigation, ThemeProvider, PortalHost
+- `global.css` - CSS variables for Zinc light/dark themes
+- `lib/theme.ts` - Zinc theme configuration with NAV_THEME, COLORS, THEME exports
+
+**Screen Files:**
+- `app/index.tsx` - Start/Landing screen with NjambeLogo, ServiceProvidersCarousel, 2 CTAs
+- `app/auth/login.tsx` - Login screen with underline-style inputs, social icons (Google, LinkedIn, Apple)
+- `app/(customer)/index.tsx` - Customer signup screen with full form (name, email, password, country, checkbox) + Zod validation
+- `app/(customer)/(tabs)/_layout.tsx` - 5-tab navigation (Requests, Service, Notifications, Messages, Account)
+- `app/(customer)/(tabs)/index.tsx` - Service screen with categories grid
+- `app/(provider)/index.tsx` - Provider home with stats and quick actions
+- `app/(provider)/onboarding.tsx` - 3-slide swipeable onboarding flow with FlatList
+
+**Data/Lib Files:**
+- `lib/customer/categories.ts` - 8 service categories with emoji icons
+- `lib/customer/countries.ts` - Country data (Cameroon) with emoji flags
+- `lib/start/service-providers.ts` - 3 service provider cards with Unsplash images
+- `lib/provider/onboarding-data.ts` - Onboarding slides data (Cameroon context, XAF currency)
+
+**UI Components:**
+- `components/ui/button.tsx` - Button with variants (default, destructive, outline, secondary, ghost, link)
+- `components/ui/text.tsx` - Text with variants (h1, h2, h3, h4, p, etc.)
+- `components/ui/card.tsx` - Card with CardHeader, CardTitle, CardDescription, CardContent, CardFooter
+- `components/ui/badge.tsx` - Badge with variants
+- `components/ui/separator.tsx` - Separator component
+
+### Project Understanding Summary
+
+**njambe** is a React Native Expo app that clones the RingTwice business model for Cameroon:
+- **Purpose**: Neighborhood-based services marketplace connecting users with local service providers
+- **Two user modes**: Customer (needs services) and Provider (offers services)
+- **Currency**: XAF (Central African CFA franc)
+- **Languages**: French/English (with flag selector)
+
+**Tech Stack:**
+| Technology | Version/Details |
+|------------|-----------------|
+| Expo SDK | 54 |
+| React Native | 0.81.5 |
+| Expo Router | v6 (file-based routing) |
+| NativeWind | v4.2.1 (Tailwind for RN) |
+| React Native Reusables | shadcn/ui port for React Native |
+| Icons | iconoir-react-native + lucide-react-native |
+| Animations | React Native Reanimated 4.1.1 |
+| Validation | Zod 4.3.6 |
+| Package Manager | pnpm |
+
+**Design System (Zinc Theme):**
+| Token | Light Mode | Dark Mode |
+|-------|------------|-----------|
+| background | white | zinc-950 |
+| foreground | zinc-950 | zinc-50 |
+| primary | zinc-900 | zinc-50 |
+| secondary | zinc-100 | zinc-800 |
+| muted | zinc-100 | zinc-800 |
+| border | zinc-200 | zinc-800 |
+| card | white | zinc-900 |
+
+**Current Screens:**
+1. **Start Screen** (`app/index.tsx`) - Landing with logo, service provider carousel, 2 CTAs
+2. **Login Screen** (`app/auth/login.tsx`) - Underline inputs, social icons, create account
+3. **Customer Signup** (`app/(customer)/index.tsx`) - Full form with Zod validation
+4. **Customer Tabs** (`app/(customer)/(tabs)/`) - 5 tabs (Requests, Service, Notifications, Messages, Account)
+5. **Provider Home** (`app/(provider)/index.tsx`) - Stats, quick actions, job listings
+6. **Provider Onboarding** (`app/(provider)/onboarding.tsx`) - 3-slide swipeable onboarding flow
+
+**Pending Tasks:**
+- [ ] Add Input component from React Native Reusables for forms
+- [ ] Build provider join/signup screen (after onboarding)
+- [ ] Build out individual tab screens with content
+
+### Important Notes:
+1. **This is a React Native Expo project** - Cannot preview in web browser in Same
+2. **Use React Native Reusables CLI**: `npx @react-native-reusables/cli@latest add [component-name]`
+3. **Package manager**: pnpm
+4. **Follow Code Organization Pattern** when adding new pages/components
+5. **PortalHost** is already set up in root layout for dialogs/popovers
+
+### Ready for Instructions
+Project is fully studied and dependencies are installed. Awaiting user instructions for next tasks.
+
+## Session Log - Wed Jan 28, 2026 (Auth Store Removal & Direct Supabase SDK)
+
+### Changes Made
+
+**1. Removed Auth Store Entirely:**
+- Deleted `lib/stores/auth-store.ts`
+- Updated `lib/stores/index.ts` to remove auth-store export
+- Auth state is now managed directly by Supabase SDK
+
+**2. Updated Supabase Configuration:**
+- Added user's Supabase credentials to `lib/supabase.ts`:
+  - URL: `https://kumbvpzqtagbpocwnrxv.supabase.co`
+  - Anon Key: `sb_secret_aQu1WA5i05bBfRCDW7TiDA_N6aVoUj2`
+- Removed `isSupabaseConfigured()` helper (no longer needed)
+
+**3. Updated Root Layout (`app/_layout.tsx`):**
+- Removed `useAuthStore` import
+- Added local `isInitialized` state with `useState`
+- Uses `supabase.auth.getSession()` directly for initialization
+- Added `supabase.auth.onAuthStateChange()` listener with cleanup
+
+**4. Updated Login Screen (`app/auth/login.tsx`):**
+- Removed `useAuthStore` import
+- Added local `isLoading` state
+- Uses `supabase.auth.signInWithPassword()` directly
+- Uses `supabase.auth.signInWithOAuth()` directly for social login
+- All error handling done locally
+
+**5. Updated SignupForm (`components/custom/shared/SignupForm.tsx`):**
+- Removed `useAuthStore` import
+- Added local `isLoading` and `authError` state
+- Uses `supabase.auth.signUp()` directly
+- Creates profile in `profiles` table after signup
+- Uses `supabase.auth.signInWithOAuth()` for Google signup
+- Exported `UserRole` type from this file
+
+**6. Updated Shared Index:**
+- `components/custom/shared/index.ts` now exports `UserRole` type
+
+### Files Modified:
+- `lib/supabase.ts` - Added credentials, removed isSupabaseConfigured
+- `lib/stores/index.ts` - Removed auth-store export
+- `app/_layout.tsx` - Direct Supabase SDK usage
+- `app/auth/login.tsx` - Direct Supabase SDK usage
+- `components/custom/shared/SignupForm.tsx` - Direct Supabase SDK usage
+- `components/custom/shared/index.ts` - Export UserRole type
+
+### Files Deleted:
+- `lib/stores/auth-store.ts`
+
+### Current Auth Flow:
+1. App starts → `_layout.tsx` calls `supabase.auth.getSession()`
+2. Login → Uses `supabase.auth.signInWithPassword()` directly
+3. Signup → Uses `supabase.auth.signUp()` directly + creates profile
+4. Social Login → Uses `supabase.auth.signInWithOAuth()` directly
+5. Session persistence handled by Supabase SDK with SecureStore adapter
+
+### Supabase Database Requirements:
+The app expects a `profiles` table with this structure:
+```sql
+create table profiles (
+  id uuid references auth.users primary key,
+  first_name text,
+  last_name text,
+  email text,
+  country_code text,
+  country_name text,
+  role text check (role in ('customer', 'provider')),
+  accepts_promos boolean default false,
+  created_at timestamp with time zone default now(),
+  updated_at timestamp with time zone default now()
+);
+```
+
+### Ready for Testing
+- All auth functionality now uses Supabase SDK directly
+- No more Zustand auth store
+- State managed by Supabase's built-in session management
 
 ## Session Log - Wed Jan 28, 2026 (New Session - Full Project Study)
 

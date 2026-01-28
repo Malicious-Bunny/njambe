@@ -1,7 +1,7 @@
 import { CountrySelector, OrDivider } from '@/components/custom/customer';
 import { Text } from '@/components/ui/text';
 import { DEFAULT_COUNTRY, type Country } from '@/lib/customer/countries';
-import { useAuthStore, type UserRole } from '@/lib/stores';
+import { supabase } from '@/lib/supabase';
 import { router } from 'expo-router';
 import { EyeClosed, Eye, Google, Check } from 'iconoir-react-native';
 import { useColorScheme } from 'nativewind';
@@ -26,6 +26,8 @@ const signupSchema = z.object({
   password: z.string().min(8, 'Min 8 characters'),
 });
 
+export type UserRole = 'customer' | 'provider';
+
 interface SignupFormProps {
   role: UserRole;
   successRoute: string;
@@ -34,7 +36,6 @@ interface SignupFormProps {
 export function SignupForm({ role, successRoute }: SignupFormProps) {
   const { colorScheme } = useColorScheme();
   const isDark = colorScheme === 'dark';
-  const { signup, socialLogin, isLoading, error: authError, clearError } = useAuthStore();
 
   // Form state
   const [form, setForm] = React.useState({
@@ -48,6 +49,8 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
   const [acceptsPromos, setAcceptsPromos] = React.useState(false);
   const [errors, setErrors] = React.useState<Record<string, string>>({});
   const [submitted, setSubmitted] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [authError, setAuthError] = React.useState<string | null>(null);
 
   // Theme colors
   const textColor = isDark ? '#fafafa' : '#18181b';
@@ -55,10 +58,10 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
   const borderColor = isDark ? '#3f3f46' : '#e4e4e7';
   const checkboxBorderColor = isDark ? '#52525b' : '#d4d4d8';
 
-  // Clear auth error when component mounts or form changes
+  // Clear auth error when form changes
   React.useEffect(() => {
     if (authError) {
-      clearError();
+      setAuthError(null);
     }
   }, [form.email, form.password]);
 
@@ -78,7 +81,7 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
   // Validate and submit
   const handleSignup = async () => {
     setSubmitted(true);
-    clearError();
+    setAuthError(null);
 
     const result = signupSchema.safeParse(form);
 
@@ -94,34 +97,78 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
       return;
     }
 
-    // Call signup from store
-    const response = await signup({
-      firstName: form.firstName,
-      lastName: form.lastName,
-      email: form.email,
-      password: form.password,
-      country: selectedCountry,
-      role,
-      acceptsPromos,
-    });
+    setIsLoading(true);
 
-    if (response.success) {
-      // Navigate on success
-      router.replace(successRoute as any);
-    } else if (response.error) {
-      // Show error alert for auth errors
-      Alert.alert('Signup Failed', response.error, [{ text: 'OK' }]);
+    try {
+      // Sign up with Supabase Auth
+      const { data: authData, error: signUpError } = await supabase.auth.signUp({
+        email: form.email.trim(),
+        password: form.password,
+        options: {
+          data: {
+            first_name: form.firstName,
+            last_name: form.lastName,
+            role,
+          },
+        },
+      });
+
+      if (signUpError) {
+        setAuthError(signUpError.message);
+        Alert.alert('Signup Failed', signUpError.message, [{ text: 'OK' }]);
+        return;
+      }
+
+      if (authData.user) {
+        // Create user profile in database
+        const { error: profileError } = await supabase.from('profiles').upsert({
+          id: authData.user.id,
+          first_name: form.firstName,
+          last_name: form.lastName,
+          email: form.email.trim(),
+          country_code: selectedCountry.code,
+          country_name: selectedCountry.name,
+          role,
+          accepts_promos: acceptsPromos,
+          updated_at: new Date().toISOString(),
+        });
+
+        if (profileError) {
+          console.error('Error creating profile:', profileError);
+          // Don't fail signup if profile creation fails - user can update later
+        }
+
+        // Navigate on success
+        router.replace(successRoute as any);
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Signup failed';
+      setAuthError(errorMessage);
+      Alert.alert('Signup Failed', errorMessage, [{ text: 'OK' }]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleGoogleSignup = async () => {
-    clearError();
-    const response = await socialLogin('google');
+    setAuthError(null);
+    setIsLoading(true);
 
-    if (response.success) {
-      router.replace(successRoute as any);
-    } else if (response.error) {
-      Alert.alert('Google Signup Failed', response.error, [{ text: 'OK' }]);
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          skipBrowserRedirect: true,
+        },
+      });
+
+      if (error) {
+        Alert.alert('Google Signup Failed', error.message, [{ text: 'OK' }]);
+      }
+    } catch (error) {
+      Alert.alert('Google Signup Failed', error instanceof Error ? error.message : 'Failed', [{ text: 'OK' }]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
