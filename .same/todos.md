@@ -1004,3 +1004,82 @@ Project is fully studied and dependencies are installed. Awaiting user instructi
 - Changed active state from `active:bg-accent` to `active:opacity-70`
 
 ## Standing by for further instructions
+
+## Session Log - Wed Jan 28, 2026 (New Session - Full Project Study)
+
+### Project Cloned and Studied
+1. **Cloned repository** from `https://github.com/Malicious-Bunny/njambe.git`
+2. **Read todos.md** - Full project briefing and history understood (1006 lines of comprehensive documentation)
+3. **Read react-native-reusables.md** - Component library patterns and CLI commands understood
+4. **Dependencies installed** with pnpm (766 packages)
+
+### Files Reviewed:
+**Core Configuration:**
+- `package.json` - Expo SDK 54, React Native 0.81.5, NativeWind 4.2.1, iconoir-react-native, Lucide icons, Zod 4.3.6 for validation
+- `app/_layout.tsx` - Root layout with Stack navigation, ThemeProvider, PortalHost
+- `global.css` - CSS variables for Zinc light/dark themes
+- `lib/theme.ts` - Zinc theme configuration with NAV_THEME export
+
+**Screen Files:**
+- `app/index.tsx` - Start/Landing screen with NjambeLogo, ServiceProvidersCarousel, 2 CTAs
+- `app/auth/login.tsx` - Login screen with underline-style inputs, social icons (Google, LinkedIn, Apple)
+- `app/(customer)/index.tsx` - Customer signup screen with full form (name, email, password, country, checkbox) + Zod validation
+- `app/(customer)/(tabs)/_layout.tsx` - 5-tab navigation (Requests, Service, Notifications, Messages, Account)
+- `app/(customer)/(tabs)/index.tsx` - Service screen with categories grid
+- `app/(provider)/index.tsx` - Provider home with stats and quick actions
+- `app/(provider)/onboarding.tsx` - 3-slide swipeable onboarding flow with FlatList
+
+### Project Understanding Summary
+
+**njambe** is a React Native Expo app that clones the RingTwice business model for Cameroon:
+- **Purpose**: Neighborhood-based services marketplace connecting users with local service providers
+- **Two user modes**: Customer (needs services) and Provider (offers services)
+- **Currency**: XAF (Central African CFA franc)
+- **Languages**: French/English (with flag selector)
+
+**Tech Stack:**
+| Technology | Version/Details |
+|------------|-----------------|
+| Expo SDK | 54 |
+| React Native | 0.81.5 |
+| Expo Router | v6 (file-based routing) |
+| NativeWind | v4.2.1 (Tailwind for RN) |
+| React Native Reusables | shadcn/ui port for React Native |
+| Icons | iconoir-react-native + lucide-react-native |
+| Animations | React Native Reanimated 4.1.1 |
+| Validation | Zod 4.3.6 |
+| Package Manager | pnpm |
+
+**Design System (Zinc Theme):**
+| Token | Light Mode | Dark Mode |
+|-------|------------|-----------|
+| background | white | zinc-950 |
+| foreground | zinc-950 | zinc-50 |
+| primary | zinc-900 | zinc-50 |
+| secondary | zinc-100 | zinc-800 |
+| muted | zinc-100 | zinc-800 |
+| border | zinc-200 | zinc-800 |
+| card | white | zinc-900 |
+
+**Current Screens:**
+1. **Start Screen** (`app/index.tsx`) - Landing with logo, service provider carousel, 2 CTAs
+2. **Login Screen** (`app/auth/login.tsx`) - Underline inputs, social icons, create account
+3. **Customer Signup** (`app/(customer)/index.tsx`) - Full form with Zod validation
+4. **Customer Tabs** (`app/(customer)/(tabs)/`) - 5 tabs (Requests, Service, Notifications, Messages, Account)
+5. **Provider Home** (`app/(provider)/index.tsx`) - Stats, quick actions, job listings
+6. **Provider Onboarding** (`app/(provider)/onboarding.tsx`) - 3-slide swipeable onboarding flow
+
+**Pending Tasks:**
+- [ ] Add Input component from React Native Reusables for forms
+- [ ] Build provider join/signup screen (after onboarding)
+- [ ] Build out individual tab screens with content
+
+### Important Notes:
+1. **This is a React Native Expo project** - Cannot preview in web browser in Same
+2. **Use React Native Reusables CLI**: `npx @react-native-reusables/cli@latest add [component-name]`
+3. **Package manager**: pnpm
+4. **Follow Code Organization Pattern** when adding new pages/components
+5. **PortalHost** is already set up in root layout for dialogs/popovers
+
+### Ready for Instructions
+Project is fully studied and dependencies are installed. Awaiting user instructions for next tasks.
