@@ -4,9 +4,8 @@ import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
 
 // Supabase configuration
-// Replace these with your actual Supabase project credentials
-const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL || 'YOUR_SUPABASE_URL';
-const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY || 'YOUR_SUPABASE_ANON_KEY';
+const supabaseUrl = 'https://kumbvpzqtagbpocwnrxv.supabase.co';
+const supabaseAnonKey = 'sb_secret_aQu1WA5i05bBfRCDW7TiDA_N6aVoUj2';
 
 // Custom storage adapter for React Native using SecureStore
 const ExpoSecureStoreAdapter = {
@@ -68,13 +67,3 @@ export interface UserProfile {
   created_at: string;
   updated_at: string;
 }
-
-// Helper to check if Supabase is configured
-export const isSupabaseConfigured = (): boolean => {
-  return (
-    supabaseUrl !== 'YOUR_SUPABASE_URL' &&
-    supabaseAnonKey !== 'YOUR_SUPABASE_ANON_KEY' &&
-    supabaseUrl.startsWith('https://') &&
-    supabaseAnonKey.length > 0
-  );
-};

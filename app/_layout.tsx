@@ -1,7 +1,7 @@
 import '@/global.css';
 
 import { NAV_THEME } from '@/lib/theme';
-import { useAuthStore } from '@/lib/stores';
+import { supabase } from '@/lib/supabase';
 import { ThemeProvider } from '@react-navigation/native';
 import { PortalHost } from '@rn-primitives/portal';
 import { Stack } from 'expo-router';
@@ -17,11 +17,31 @@ export {
 
 export default function RootLayout() {
   const { colorScheme } = useColorScheme();
-  const { initialize, isInitialized, isLoading } = useAuthStore();
+  const [isInitialized, setIsInitialized] = React.useState(false);
 
   // Initialize auth on app start
   React.useEffect(() => {
-    initialize();
+    const initAuth = async () => {
+      try {
+        // Check for existing session
+        await supabase.auth.getSession();
+      } catch (error) {
+        console.error('Auth initialization error:', error);
+      } finally {
+        setIsInitialized(true);
+      }
+    };
+
+    initAuth();
+
+    // Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log('Auth state changed:', event);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   // Show loading screen while initializing
@@ -38,8 +58,7 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={NAV_THEME[colorScheme ?? 'light']}>
       <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-      <Stack
-      >
+      <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(customer)" options={{ headerShown: false }} />
         <Stack.Screen name="(provider)" options={{ headerShown: false }} />

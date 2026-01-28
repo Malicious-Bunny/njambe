@@ -1,6 +1,6 @@
 import { LanguageSelector } from '@/components/custom/start';
 import { Text } from '@/components/ui/text';
-import { useAuthStore } from '@/lib/stores';
+import { supabase } from '@/lib/supabase';
 import { router } from 'expo-router';
 import { NavArrowLeft, Eye, EyeClosed, Google, Linkedin, AppleMac } from 'iconoir-react-native';
 import { useColorScheme } from 'nativewind';
@@ -13,8 +13,8 @@ export default function LoginScreen() {
   const [password, setPassword] = React.useState('');
   const [showPassword, setShowPassword] = React.useState(false);
   const [loginError, setLoginError] = React.useState<string | null>(null);
+  const [isLoading, setIsLoading] = React.useState(false);
   const { colorScheme } = useColorScheme();
-  const { login, socialLogin, isLoading, error: authError, clearError } = useAuthStore();
 
   const textColor = colorScheme === 'dark' ? '#fafafa' : '#18181b';
   const placeholderColor = colorScheme === 'dark' ? '#71717a' : '#a1a1aa';
@@ -23,9 +23,8 @@ export default function LoginScreen() {
 
   // Clear errors when form changes
   React.useEffect(() => {
-    if (loginError || authError) {
+    if (loginError) {
       setLoginError(null);
-      clearError();
     }
   }, [email, password]);
 
@@ -39,22 +38,51 @@ export default function LoginScreen() {
       return;
     }
 
-    const response = await login(email, password);
+    setIsLoading(true);
+    setLoginError(null);
 
-    if (response.success) {
-      router.replace('/(customer)/(tabs)');
-    } else if (response.error) {
-      setLoginError(response.error);
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password,
+      });
+
+      if (error) {
+        setLoginError(error.message);
+        return;
+      }
+
+      if (data.user) {
+        router.replace('/(customer)/(tabs)');
+      }
+    } catch (error) {
+      setLoginError(error instanceof Error ? error.message : 'Login failed');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleSocialLogin = async (provider: 'google' | 'linkedin' | 'apple') => {
-    const response = await socialLogin(provider);
+    setIsLoading(true);
+    setLoginError(null);
 
-    if (response.success) {
-      router.replace('/(customer)/(tabs)');
-    } else if (response.error) {
-      Alert.alert('Login Failed', response.error, [{ text: 'OK' }]);
+    try {
+      const oauthProvider = provider === 'linkedin' ? 'linkedin_oidc' : provider;
+
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: oauthProvider as 'google' | 'apple' | 'linkedin_oidc',
+        options: {
+          skipBrowserRedirect: true,
+        },
+      });
+
+      if (error) {
+        Alert.alert('Login Failed', error.message, [{ text: 'OK' }]);
+      }
+    } catch (error) {
+      Alert.alert('Login Failed', error instanceof Error ? error.message : 'Social login failed', [{ text: 'OK' }]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -63,15 +91,12 @@ export default function LoginScreen() {
   };
 
   const handleForgotPassword = () => {
-    // TODO: Implement forgot password
     Alert.alert(
       'Forgot Password',
       'Password reset functionality coming soon. Please contact support for assistance.',
       [{ text: 'OK' }]
     );
   };
-
-  const displayError = loginError || authError;
 
   return (
     <SafeAreaView className="flex-1 bg-background" edges={['top', 'bottom']}>
@@ -90,10 +115,10 @@ export default function LoginScreen() {
       {/* Form Content */}
       <View className="flex-1 px-6 pt-12">
         {/* Error Banner */}
-        {displayError && (
+        {loginError && (
           <View className="mb-6 p-3 bg-red-100 dark:bg-red-900/30 rounded-lg border border-red-200 dark:border-red-800">
             <Text className="text-sm text-red-600 dark:text-red-400 text-center">
-              {displayError}
+              {loginError}
             </Text>
           </View>
         )}
@@ -105,7 +130,7 @@ export default function LoginScreen() {
             className="text-base pb-3 border-b"
             style={{
               color: textColor,
-              borderBottomColor: displayError ? '#ef4444' : borderColor,
+              borderBottomColor: loginError ? '#ef4444' : borderColor,
               borderBottomWidth: 1,
             }}
             placeholder="Enter your email"
@@ -125,7 +150,7 @@ export default function LoginScreen() {
           <View
             className="flex-row items-center border-b"
             style={{
-              borderBottomColor: displayError ? '#ef4444' : borderColor,
+              borderBottomColor: loginError ? '#ef4444' : borderColor,
               borderBottomWidth: 1
             }}
           >
