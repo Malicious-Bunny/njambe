@@ -166,7 +166,6 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
               onChangeText={(v) => updateField('firstName', v)}
               autoCapitalize="words"
               editable={!isLoading}
-              placeholder="Enter your first name"
               placeholderTextColor={iconColor}
             />
             {submitted && errors.firstName && (
@@ -188,7 +187,6 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
               onChangeText={(v) => updateField('lastName', v)}
               autoCapitalize="words"
               editable={!isLoading}
-              placeholder="Enter your last name"
               placeholderTextColor={iconColor}
             />
             {submitted && errors.lastName && (
@@ -212,7 +210,6 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
               autoCapitalize="none"
               autoComplete="email"
               editable={!isLoading}
-              placeholder="Enter your email"
               placeholderTextColor={iconColor}
             />
             {submitted && errors.email && (
@@ -234,7 +231,6 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
                 onChangeText={(v) => updateField('password', v)}
                 secureTextEntry={!showPassword}
                 editable={!isLoading}
-                placeholder="Create a password"
                 placeholderTextColor={iconColor}
               />
               <Pressable onPress={() => setShowPassword(!showPassword)} className="pb-3">
