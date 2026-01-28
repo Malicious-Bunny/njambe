@@ -1459,3 +1459,12 @@ create table profiles (
 
 ### Ready for Instructions
 Project is fully studied and dependencies are installed. Awaiting user instructions for next tasks.
+
+
+## Session Log - Wed Jan 28, 2026 (Phone Number Added)
+
+### Changes Made
+- Added phone number field to SignupForm with +237 country code
+- Zod validation: 9 digits, must start with 6 or 7
+- Phone stored in Supabase with full country code prefix
+

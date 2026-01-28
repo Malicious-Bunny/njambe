@@ -18,12 +18,17 @@ import {
 } from 'react-native';
 import { z } from 'zod';
 
-// Validation schema
+// Validation schema with phone number
 const signupSchema = z.object({
   firstName: z.string().min(2, 'Min 2 characters'),
   lastName: z.string().min(2, 'Min 2 characters'),
   email: z.string().email('Invalid email'),
   password: z.string().min(8, 'Min 8 characters'),
+  phone: z
+    .string()
+    .min(9, 'Phone number must be 9 digits')
+    .max(9, 'Phone number must be 9 digits')
+    .regex(/^[67]\d{8}$/, 'Invalid Cameroon phone number (must start with 6 or 7)'),
 });
 
 export type UserRole = 'customer' | 'provider';
@@ -37,12 +42,13 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
   const { colorScheme } = useColorScheme();
   const isDark = colorScheme === 'dark';
 
-  // Form state
+  // Form state with phone
   const [form, setForm] = React.useState({
     firstName: '',
     lastName: '',
     email: '',
     password: '',
+    phone: '',
   });
   const [showPassword, setShowPassword] = React.useState(false);
   const [selectedCountry, setSelectedCountry] = React.useState<Country>(DEFAULT_COUNTRY);
@@ -51,6 +57,9 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
   const [submitted, setSubmitted] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [authError, setAuthError] = React.useState<string | null>(null);
+
+  // Phone country code (Cameroon default)
+  const phoneCountryCode = '+237';
 
   // Theme colors
   const textColor = isDark ? '#fafafa' : '#18181b';
@@ -63,7 +72,7 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
     if (authError) {
       setAuthError(null);
     }
-  }, [form.email, form.password]);
+  }, [form.email, form.password, form.phone]);
 
   // Update form field
   const updateField = (field: string, value: string) => {
@@ -76,6 +85,15 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
         return next;
       });
     }
+  };
+
+  // Handle phone input - only allow digits
+  const handlePhoneChange = (value: string) => {
+    // Remove any non-digit characters
+    const digitsOnly = value.replace(/\D/g, '');
+    // Limit to 9 digits
+    const limited = digitsOnly.slice(0, 9);
+    updateField('phone', limited);
   };
 
   // Validate and submit
@@ -99,6 +117,9 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
 
     setIsLoading(true);
 
+    // Format full phone number with country code
+    const fullPhoneNumber = `${phoneCountryCode}${form.phone}`;
+
     try {
       // Sign up with Supabase Auth
       const { data: authData, error: signUpError } = await supabase.auth.signUp({
@@ -109,6 +130,7 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
             first_name: form.firstName,
             last_name: form.lastName,
             role,
+            phone: fullPhoneNumber,
           },
         },
       });
@@ -126,6 +148,7 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
           first_name: form.firstName,
           last_name: form.lastName,
           email: form.email.trim(),
+          phone: fullPhoneNumber,
           country_code: selectedCountry.code,
           country_name: selectedCountry.name,
           role,
@@ -262,6 +285,43 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
             {submitted && errors.email && (
               <Text className="text-xs text-red-500 mt-1">{errors.email}</Text>
             )}
+          </View>
+
+          {/* Phone Number */}
+          <View className="mb-6">
+            <Text className="text-sm text-muted-foreground mb-2">Phone number</Text>
+            <View
+              className="flex-row items-center"
+              style={{ borderBottomColor: getBorderColor('phone'), borderBottomWidth: 1 }}
+            >
+              {/* Country Code Prefix */}
+              <View className="flex-row items-center pr-3 border-r border-border">
+                <Text className="text-base" style={{ color: textColor }}>
+                  🇨🇲
+                </Text>
+                <Text className="text-base ml-2" style={{ color: textColor }}>
+                  {phoneCountryCode}
+                </Text>
+              </View>
+              {/* Phone Input */}
+              <TextInput
+                className="flex-1 text-base pb-3 pl-3"
+                style={{ color: textColor }}
+                value={form.phone}
+                onChangeText={handlePhoneChange}
+                keyboardType="phone-pad"
+                placeholder="6XX XXX XXX"
+                maxLength={9}
+                editable={!isLoading}
+                placeholderTextColor={iconColor}
+              />
+            </View>
+            {submitted && errors.phone && (
+              <Text className="text-xs text-red-500 mt-1">{errors.phone}</Text>
+            )}
+            <Text className="text-xs text-muted-foreground mt-2">
+              Cameroon mobile number (9 digits starting with 6 or 7)
+            </Text>
           </View>
 
           {/* Password */}
