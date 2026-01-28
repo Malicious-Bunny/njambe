@@ -3,17 +3,17 @@ import * as React from 'react';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function CustomerSignupScreen() {
+export default function ProviderSignupScreen() {
   return (
     <SafeAreaView className="flex-1 bg-background" edges={['top']}>
-      <PageHeader title="Join njambe!" />
+      <PageHeader title="Become a Provider" />
       <View className="h-px bg-border" />
 
       <SignupForm
-        role="customer"
-        title="Welcome!"
-        subtitle="Create your account to find skilled neighbors for any service you need."
-        successRoute="/(customer)/(tabs)"
+        role="provider"
+        title="Start Earning!"
+        subtitle="Create your account to offer your services to neighbors in your area."
+        successRoute="/(provider)"
       />
     </SafeAreaView>
   );

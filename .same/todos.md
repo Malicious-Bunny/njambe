@@ -895,7 +895,7 @@ emoji: '🇨🇲'
 
 **Screen Files:**
 - `app/index.tsx` - Start/Landing screen with NjambeLogo, ServiceProvidersCarousel, 2 CTAs
-- `app/auth/login.tsx` - Login screen with underline-style inputs, social icons (Google, Facebook, Apple)
+- `app/auth/login.tsx` - Login screen with underline-style inputs, social login icons (Google, Facebook, Apple)
 - `app/(customer)/index.tsx` - Customer signup screen with full form (name, email, password, country, checkbox) + Zod validation
 - `app/(customer)/(tabs)/_layout.tsx` - 5-tab navigation (Requests, Service, Notifications, Messages, Account)
 - `app/(customer)/(tabs)/index.tsx` - Service screen with categories grid
@@ -1005,20 +1005,20 @@ Project is fully studied and dependencies are installed. Awaiting user instructi
 
 ## Standing by for further instructions
 
-## Session Log - Wed Jan 28, 2026 (New Session - Full Project Study)
+## Session Log - Wed Jan 28, 2026 (New Session - Full Project Study & Briefing)
 
 ### Project Cloned and Studied
 1. **Cloned repository** from `https://github.com/Malicious-Bunny/njambe.git`
-2. **Read todos.md** - Full project briefing and history understood (1006 lines of comprehensive documentation)
+2. **Read todos.md** - Full project briefing and comprehensive history understood (1086 lines)
 3. **Read react-native-reusables.md** - Component library patterns and CLI commands understood
 4. **Dependencies installed** with pnpm (766 packages)
 
 ### Files Reviewed:
 **Core Configuration:**
-- `package.json` - Expo SDK 54, React Native 0.81.5, NativeWind 4.2.1, iconoir-react-native, Lucide icons, Zod 4.3.6 for validation
+- `package.json` - Expo SDK 54, React Native 0.81.5, NativeWind 4.2.1, iconoir-react-native, Lucide icons, Zod 4.3.6
 - `app/_layout.tsx` - Root layout with Stack navigation, ThemeProvider, PortalHost
 - `global.css` - CSS variables for Zinc light/dark themes
-- `lib/theme.ts` - Zinc theme configuration with NAV_THEME export
+- `lib/theme.ts` - Zinc theme configuration with NAV_THEME, COLORS, THEME exports
 
 **Screen Files:**
 - `app/index.tsx` - Start/Landing screen with NjambeLogo, ServiceProvidersCarousel, 2 CTAs
@@ -1028,6 +1028,19 @@ Project is fully studied and dependencies are installed. Awaiting user instructi
 - `app/(customer)/(tabs)/index.tsx` - Service screen with categories grid
 - `app/(provider)/index.tsx` - Provider home with stats and quick actions
 - `app/(provider)/onboarding.tsx` - 3-slide swipeable onboarding flow with FlatList
+
+**Data/Lib Files:**
+- `lib/customer/categories.ts` - 8 service categories with emoji icons
+- `lib/customer/countries.ts` - Country data (Cameroon) with emoji flags
+- `lib/start/service-providers.ts` - 3 service provider cards with Unsplash images
+- `lib/provider/onboarding-data.ts` - Onboarding slides data (Cameroon context, XAF currency)
+
+**UI Components:**
+- `components/ui/button.tsx` - Button with variants (default, destructive, outline, secondary, ghost, link)
+- `components/ui/text.tsx` - Text with variants (h1, h2, h3, h4, p, etc.)
+- `components/ui/card.tsx` - Card with CardHeader, CardTitle, CardDescription, CardContent, CardFooter
+- `components/ui/badge.tsx` - Badge with variants
+- `components/ui/separator.tsx` - Separator component
 
 ### Project Understanding Summary
 

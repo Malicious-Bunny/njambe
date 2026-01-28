@@ -1,25 +1,32 @@
 import { LanguageSelector } from '@/components/custom/start';
 import { Text } from '@/components/ui/text';
+import { useAuthStore } from '@/lib/stores';
 import { router } from 'expo-router';
 import { NavArrowLeft, Eye, EyeClosed, Google, Linkedin, AppleMac } from 'iconoir-react-native';
-import * as React from 'react';
-import { Pressable, TextInput, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useColorScheme } from 'nativewind';
+import * as React from 'react';
+import { ActivityIndicator, Pressable, TextInput, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function LoginScreen() {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [showPassword, setShowPassword] = React.useState(false);
   const { colorScheme } = useColorScheme();
+  const { login, socialLogin, isLoading } = useAuthStore();
 
   const textColor = colorScheme === 'dark' ? '#fafafa' : '#18181b';
   const placeholderColor = colorScheme === 'dark' ? '#71717a' : '#a1a1aa';
   const iconColor = colorScheme === 'dark' ? '#a1a1aa' : '#71717a';
   const borderColor = colorScheme === 'dark' ? '#3f3f46' : '#e4e4e7';
 
-  const handleLogin = () => {
-    // TODO: Implement login logic
+  const handleLogin = async () => {
+    await login(email, password);
+    router.replace('/(customer)/(tabs)');
+  };
+
+  const handleSocialLogin = async (provider: 'google' | 'linkedin' | 'apple') => {
+    await socialLogin(provider);
     router.replace('/(customer)/(tabs)');
   };
 
@@ -64,6 +71,7 @@ export default function LoginScreen() {
             onChangeText={setEmail}
             keyboardType="email-address"
             autoCapitalize="none"
+            editable={!isLoading}
           />
         </View>
 
@@ -79,6 +87,7 @@ export default function LoginScreen() {
               value={password}
               onChangeText={setPassword}
               secureTextEntry={!showPassword}
+              editable={!isLoading}
             />
             <Pressable onPress={() => setShowPassword(!showPassword)} className="pb-3">
               {showPassword ? (
@@ -102,11 +111,16 @@ export default function LoginScreen() {
         {/* Login Button */}
         <Pressable
           onPress={handleLogin}
+          disabled={isLoading}
           className="h-14 items-center justify-center rounded-full bg-primary active:bg-primary/90"
         >
-          <Text className="text-base font-semibold text-primary-foreground">
-            Sign In
-          </Text>
+          {isLoading ? (
+            <ActivityIndicator size="small" color={colorScheme === 'dark' ? '#18181b' : '#fafafa'} />
+          ) : (
+            <Text className="text-base font-semibold text-primary-foreground">
+              Sign In
+            </Text>
+          )}
         </Pressable>
 
         {/* Or Continue With */}
@@ -117,16 +131,22 @@ export default function LoginScreen() {
         {/* Social Login Icons */}
         <View className="flex-row justify-center gap-4">
           <Pressable
+            onPress={() => handleSocialLogin('google')}
+            disabled={isLoading}
             className="h-12 w-12 items-center justify-center rounded-xl bg-secondary active:bg-accent"
           >
             <Google width={22} height={22} color={textColor} />
           </Pressable>
           <Pressable
+            onPress={() => handleSocialLogin('linkedin')}
+            disabled={isLoading}
             className="h-12 w-12 items-center justify-center rounded-xl bg-secondary active:bg-accent"
           >
             <Linkedin width={22} height={22} color={textColor} />
           </Pressable>
           <Pressable
+            onPress={() => handleSocialLogin('apple')}
+            disabled={isLoading}
             className="h-12 w-12 items-center justify-center rounded-xl bg-secondary active:bg-accent"
           >
             <AppleMac width={22} height={22} color={textColor} />
@@ -148,6 +168,7 @@ export default function LoginScreen() {
         <View className="h-px bg-border mb-4" />
         <Pressable
           onPress={handleCreateAccount}
+          disabled={isLoading}
           className="h-14 items-center justify-center rounded-full border-2 border-primary bg-background active:bg-secondary"
         >
           <Text className="text-base font-semibold text-primary">

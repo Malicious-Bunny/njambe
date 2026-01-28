@@ -42,8 +42,8 @@ export default function ProviderOnboardingScreen() {
         animated: true,
       });
     } else {
-      // Navigate to provider signup/join screen
-      router.push('/(provider)');
+      // Navigate to provider signup screen
+      router.push('/(provider)/signup');
     }
   };
 
