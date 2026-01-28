@@ -104,10 +104,9 @@ export default function CustomerSignupScreen() {
     router.replace('/(customer)/(tabs)');
   };
 
-  // Check if form is valid (for button state)
-  const isFormValid = React.useMemo(() => {
-    const result = signupSchema.safeParse({ firstName, lastName, email, password });
-    return result.success;
+  // Check if any field has content (for button state)
+  const hasAnyInput = React.useMemo(() => {
+    return firstName.trim() !== '' || lastName.trim() !== '' || email.trim() !== '' || password.trim() !== '';
   }, [firstName, lastName, email, password]);
 
   const getInputBorderColor = (field: keyof SignupFormData) => {
@@ -286,15 +285,15 @@ export default function CustomerSignupScreen() {
           {/* Signup Button */}
           <Pressable
             onPress={handleSignup}
-            disabled={!isFormValid}
+            disabled={!hasAnyInput}
             className={`h-14 items-center justify-center rounded-xl ${
-              isFormValid
+              hasAnyInput
                 ? 'bg-primary active:bg-primary/90'
                 : 'bg-muted'
             }`}
           >
             <Text className={`text-base font-semibold ${
-              isFormValid ? 'text-primary-foreground' : 'text-muted-foreground'
+              hasAnyInput ? 'text-primary-foreground' : 'text-muted-foreground'
             }`}>
               Sign up
             </Text>

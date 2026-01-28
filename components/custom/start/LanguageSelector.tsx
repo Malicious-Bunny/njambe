@@ -8,18 +8,28 @@ interface LanguageSelectorProps {
   onLanguageChange?: (language: Language) => void;
 }
 
-// UK Flag Component
-function UKFlag() {
+// USA Flag Component
+function USAFlag() {
   return (
-    <View className="h-6 w-6 overflow-hidden rounded-full border border-border bg-blue-800">
-      {/* Simplified UK flag */}
-      <View className="absolute inset-0 items-center justify-center">
-        {/* White diagonal cross */}
-        <View className="absolute h-full w-1 bg-white" />
-        <View className="absolute h-1 w-full bg-white" />
-        {/* Red cross */}
-        <View className="absolute h-full w-0.5 bg-red-600" />
-        <View className="absolute h-0.5 w-full bg-red-600" />
+    <View className="h-6 w-6 overflow-hidden rounded-full">
+      {/* Simplified USA flag with stripes and blue canton */}
+      <View className="flex-1">
+        {/* Red and white stripes */}
+        <View className="h-[8%] bg-red-600" />
+        <View className="h-[8%] bg-white" />
+        <View className="h-[8%] bg-red-600" />
+        <View className="h-[8%] bg-white" />
+        <View className="h-[8%] bg-red-600" />
+        <View className="h-[8%] bg-white" />
+        <View className="h-[8%] bg-red-600" />
+        <View className="h-[8%] bg-white" />
+        <View className="h-[8%] bg-red-600" />
+        <View className="h-[8%] bg-white" />
+        <View className="h-[8%] bg-red-600" />
+        <View className="h-[8%] bg-white" />
+        <View className="h-[4%] bg-red-600" />
+        {/* Blue canton overlay */}
+        <View className="absolute left-0 top-0 h-[54%] w-[40%] bg-blue-800" />
       </View>
     </View>
   );
@@ -28,7 +38,7 @@ function UKFlag() {
 // French Flag Component
 function FrenchFlag() {
   return (
-    <View className="h-6 w-6 overflow-hidden rounded-full border border-border flex-row">
+    <View className="h-6 w-6 overflow-hidden rounded-full flex-row">
       <View className="w-1/3 bg-blue-700" />
       <View className="w-1/3 bg-white" />
       <View className="w-1/3 bg-red-600" />
@@ -48,9 +58,9 @@ export function LanguageSelector({ onLanguageChange }: LanguageSelectorProps) {
   return (
     <Pressable
       onPress={toggleLanguage}
-      className="flex-row items-center gap-2 rounded-full bg-secondary px-3 py-2 shadow-sm active:bg-accent"
+      className="flex-row items-center gap-2 rounded-full bg-background px-3 py-2 active:opacity-70"
     >
-      {language === 'EN' ? <UKFlag /> : <FrenchFlag />}
+      {language === 'EN' ? <USAFlag /> : <FrenchFlag />}
       <Text className="text-sm font-semibold text-foreground">{language}</Text>
     </Pressable>
   );

@@ -1,7 +1,7 @@
 import { LanguageSelector } from '@/components/custom/start';
 import { Text } from '@/components/ui/text';
 import { router } from 'expo-router';
-import { NavArrowLeft, Eye, EyeClosed, Google, Facebook, AppleMac } from 'iconoir-react-native';
+import { NavArrowLeft, Eye, EyeClosed, Google, Linkedin, AppleMac } from 'iconoir-react-native';
 import * as React from 'react';
 import { Pressable, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -124,7 +124,7 @@ export default function LoginScreen() {
           <Pressable
             className="h-12 w-12 items-center justify-center rounded-xl bg-secondary active:bg-accent"
           >
-            <Facebook width={22} height={22} color={textColor} />
+            <Linkedin width={22} height={22} color={textColor} />
           </Pressable>
           <Pressable
             className="h-12 w-12 items-center justify-center rounded-xl bg-secondary active:bg-accent"
