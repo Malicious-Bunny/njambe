@@ -452,7 +452,7 @@ The project has:
 
 ### Pending Tasks from Previous Session:
 - [ ] Add Input component from React Native Reusables for forms
-- [ ] Build provider join/signup screen (after onboarding)
+- [ ] Build provider join/signup screen (when "I'm looking for jobs" is clicked)
 - [ ] Build out individual tab screens with content
 
 ## Session Log - Tue Jan 27, 2026 (Continued)
@@ -606,7 +606,7 @@ Both screens now show the updated language selector with proper flags.
 
 **Pending Tasks:**
 - [ ] Add Input component from React Native Reusables for forms
-- [ ] Build provider join/signup screen (after onboarding)
+- [ ] Build provider join/signup screen (when "I'm looking for jobs" is clicked)
 - [ ] Build out individual tab screens with content
 
 ### Ready for Instructions
@@ -662,7 +662,7 @@ Project is set up and ready for development. Awaiting user instructions for next
 **Design System (Zinc Theme):**
 | Token | Light Mode | Dark Mode |
 |-------|------------|-----------|
-| background | zinc-50/white | zinc-950 |
+| background | white | zinc-950 |
 | foreground | zinc-950 | zinc-50 |
 | primary | zinc-900 | zinc-50 |
 | secondary | zinc-100 | zinc-800 |
@@ -676,7 +676,7 @@ Project is set up and ready for development. Awaiting user instructions for next
 3. **Customer Signup** (`app/(customer)/index.tsx`) - Email/social signup options
 4. **Customer Tabs** (`app/(customer)/(tabs)/`) - 5 tabs (Requests, Service, Notifications, Messages, Account)
 5. **Provider Home** (`app/(provider)/index.tsx`) - Stats, quick actions, job listings
-6. **Provider Onboarding** (`app/(provider)/onboarding.tsx`) - 3-slide component switcher
+6. **Provider Onboarding** (`app/(provider)/onboarding.tsx`) - 3-slide swipeable onboarding flow
 
 **Component Organization Pattern:**
 ```
@@ -717,7 +717,82 @@ lib/
 ### Ready for Instructions
 Project is fully studied and dependencies are installed. Awaiting user instructions for next tasks.
 
-## Session Log - Tue Jan 27, 2026 (Customer Signup Form Implementation)
+## Session Log - Wed Jan 28, 2026 (New Session - Project Study)
+
+### Project Cloned and Studied
+1. **Cloned repository** from `https://github.com/Malicious-Bunny/njambe.git`
+2. **Read todos.md** - Full project briefing and history understood
+3. **Read react-native-reusables.md** - Component library patterns and CLI commands understood
+4. **Dependencies installed** with pnpm (765 packages)
+
+### Files Reviewed:
+- `package.json` - Expo SDK 54, React Native 0.81.5, NativeWind, iconoir-react-native, Lucide icons
+- `app/_layout.tsx` - Root layout with Stack navigation, ThemeProvider, PortalHost
+- `app/index.tsx` - Start/Landing screen with logo, carousel, CTAs
+- `app/auth/login.tsx` - Login screen with underline-style inputs, social login icons
+- `app/(customer)/index.tsx` - Customer signup screen with full form (name, email, password, country, checkbox)
+- `app/(customer)/(tabs)/index.tsx` - Service screen with categories grid
+- `app/(customer)/(tabs)/_layout.tsx` - 5-tab navigation with special center button
+- `app/(provider)/index.tsx` - Provider home with stats and quick actions
+- `app/(provider)/onboarding.tsx` - 3-slide swipeable onboarding flow
+- `lib/theme.ts` - Zinc theme configuration with light/dark mode
+- `global.css` - CSS variables for NativeWind theming
+
+### Project Understanding Summary
+
+**njambe** is a React Native Expo app that clones the RingTwice business model for Cameroon:
+- **Purpose**: Neighborhood-based services marketplace connecting users with local service providers
+- **Two user modes**: Customer (needs services) and Provider (offers services)
+- **Currency**: XAF (Central African CFA franc)
+- **Languages**: French/English (with flag selector)
+
+**Tech Stack:**
+| Technology | Version/Details |
+|------------|-----------------|
+| Expo SDK | 54 |
+| React Native | 0.81.5 |
+| Expo Router | v6 (file-based routing) |
+| NativeWind | v4.2.1 (Tailwind for RN) |
+| React Native Reusables | shadcn/ui port for React Native |
+| Icons | iconoir-react-native + lucide-react-native |
+| Animations | React Native Reanimated 4.1.1 |
+| Package Manager | pnpm |
+
+**Design System (Zinc Theme):**
+| Token | Light Mode | Dark Mode |
+|-------|------------|-----------|
+| background | white | zinc-950 |
+| foreground | zinc-950 | zinc-50 |
+| primary | zinc-900 | zinc-50 |
+| secondary | zinc-100 | zinc-800 |
+| muted | zinc-100 | zinc-800 |
+| border | zinc-200 | zinc-800 |
+| card | white | zinc-900 |
+
+**Current Screens:**
+1. **Start Screen** (`app/index.tsx`) - Landing with logo, service provider carousel, 2 CTAs
+2. **Login Screen** (`app/auth/login.tsx`) - Underline inputs, social icons, create account
+3. **Customer Signup** (`app/(customer)/index.tsx`) - Full form with country selector
+4. **Customer Tabs** (`app/(customer)/(tabs)/`) - 5 tabs (Requests, Service, Notifications, Messages, Account)
+5. **Provider Home** (`app/(provider)/index.tsx`) - Stats, quick actions, job listings
+6. **Provider Onboarding** (`app/(provider)/onboarding.tsx`) - 3-slide component switcher
+
+**Pending Tasks:**
+- [ ] Add Input component from React Native Reusables for forms
+- [ ] Build provider join/signup screen (after onboarding)
+- [ ] Build out individual tab screens with content
+
+### Important Notes:
+1. **This is a React Native Expo project** - Cannot preview in web browser in Same
+2. **Use React Native Reusables CLI**: `npx @react-native-reusables/cli@latest add [component-name]`
+3. **Package manager**: pnpm
+4. **Follow Code Organization Pattern** when adding new pages/components
+5. **PortalHost** is already set up in root layout for dialogs/popovers
+
+### Ready for Instructions
+Project is fully studied and dependencies are installed. Awaiting user instructions for next tasks.
+
+## Session Log - Wed Jan 28, 2026 (New Session - Customer Signup Form Implementation)
 
 ### Customer Signup Form Implemented
 Created a full signup form page for customers based on the provided screenshots.
@@ -757,5 +832,50 @@ Created a full signup form page for customers based on the provided screenshots.
 - Dynamic colors based on useColorScheme hook
 - No hardcoded colors from the reference images
 - Proper dark mode support
+
+### Changes Made - Wed Jan 28, 2026
+
+#### 1. Country Flags - Switched to Emoji Flags
+**Files Updated:**
+- `lib/customer/countries.ts` - Simplified Country interface to use `emoji` field instead of complex `flag` object with stripes
+- `components/custom/customer/CountryFlag.tsx` - Simplified component to render emoji text instead of drawing flags with boxes
+
+**Before:**
+```typescript
+flag: {
+  stripes: ['#007A5E', '#CE1126', '#FCD116'],
+  hasSymbol: true,
+  symbolColor: '#FCD116',
+}
+```
+
+**After:**
+```typescript
+emoji: '🇨🇲'
+```
+
+#### 2. Form Validation - Added Zod
+**File Updated:** `app/(customer)/index.tsx`
+
+**Features Added:**
+- Installed `zod` package
+- Created Zod schema for signup form validation
+- Validation rules:
+  - First name: required, min 2 characters
+  - Last name: required, min 2 characters
+  - Email: required, valid email format
+  - Password: required, min 8 characters, must contain uppercase letter and number
+- Field-level validation on blur (shows error after user leaves field)
+- Form-level validation on submit
+- Error messages displayed below each field
+- Red border on fields with errors
+- Sign up button disabled until form is valid
+
+### Current Tasks Status
+- [x] Use emoji flags instead of drawing with boxes
+- [x] Add Zod for form validation
+- [ ] Add Input component from React Native Reusables for forms
+- [ ] Build provider join/signup screen (after onboarding)
+- [ ] Build out individual tab screens with content
 
 ## Standing by for further instructions
