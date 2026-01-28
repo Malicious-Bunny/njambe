@@ -12,14 +12,14 @@ export function OnboardingSlide3({ data }: OnboardingSlide3Props) {
   const { colorScheme } = useColorScheme();
   const primaryColor = colorScheme === 'dark' ? '#fafafa' : '#18181b';
   const mutedColor = colorScheme === 'dark' ? '#71717a' : '#a1a1aa';
-  const starColor = colorScheme === 'dark' ? '#a1a1aa' : '#71717a';
+  const accentColor = colorScheme === 'dark' ? '#fbbf24' : '#f59e0b';
 
   return (
     <View className="flex-1 px-6">
       {/* Illustration with floating UI elements */}
-      <View className="items-center mb-8 relative h-64">
+      <View className="items-center mb-6 relative h-56">
         {/* Main image */}
-        <View className="w-48 h-48 rounded-full overflow-hidden border-4 border-border dark:border-border mt-6">
+        <View className="w-40 h-40 rounded-full overflow-hidden border-4 border-border mt-4">
           <Image
             source={{ uri: HOW_IT_WORKS_URL }}
             className="w-full h-full"
@@ -28,43 +28,43 @@ export function OnboardingSlide3({ data }: OnboardingSlide3Props) {
         </View>
 
         {/* New Job notification - Top */}
-        <View className="absolute top-0 left-8 bg-card dark:bg-card rounded-lg px-3 py-2 shadow-lg shadow-black/10 flex-row items-center gap-2">
-          <Bell size={16} color={starColor} fill={starColor} />
-          <Text className="font-semibold text-foreground dark:text-foreground text-sm">New job!</Text>
+        <View className="absolute top-0 left-6 bg-card rounded-xl px-3 py-2 shadow-md flex-row items-center gap-2">
+          <Bell size={14} color={accentColor} fill={accentColor} />
+          <Text className="text-sm font-medium text-foreground">New job!</Text>
         </View>
 
         {/* Rate adjuster - Right */}
-        <View className="absolute top-28 right-0 bg-card dark:bg-card rounded-lg px-3 py-2 shadow-lg shadow-black/10 flex-row items-center gap-2">
-          <Text className="text-muted-foreground dark:text-muted-foreground text-sm">Rate</Text>
+        <View className="absolute top-24 right-0 bg-card rounded-xl px-3 py-2 shadow-md flex-row items-center gap-2">
+          <Text className="text-xs text-muted-foreground">Rate</Text>
           <View className="flex-row items-center gap-1">
-            <Minus size={14} color={mutedColor} />
-            <Text className="font-bold text-primary dark:text-primary text-lg">24</Text>
-            <Plus size={14} color={mutedColor} />
+            <Minus size={12} color={mutedColor} />
+            <Text className="text-base font-bold text-foreground">24</Text>
+            <Plus size={12} color={mutedColor} />
           </View>
-          <Text className="text-muted-foreground dark:text-muted-foreground text-sm">XAF</Text>
+          <Text className="text-xs text-muted-foreground">XAF</Text>
         </View>
 
         {/* Payment received - Bottom Left */}
-        <View className="absolute bottom-2 left-0 bg-card dark:bg-card rounded-lg px-3 py-2 shadow-lg shadow-black/10">
-          <View className="flex-row items-center gap-2">
-            <Check size={18} color={primaryColor} strokeWidth={3} />
-            <Text className="font-semibold text-foreground dark:text-foreground text-sm">Payment received</Text>
+        <View className="absolute bottom-0 left-0 bg-card rounded-xl px-3 py-2 shadow-md">
+          <View className="flex-row items-center gap-1.5">
+            <Check size={14} color={primaryColor} strokeWidth={3} />
+            <Text className="text-sm font-medium text-foreground">Payment received</Text>
           </View>
-          <Text className="font-bold text-primary dark:text-primary text-xl mt-1">XAF 150</Text>
+          <Text className="text-lg font-bold text-primary mt-0.5">XAF 150</Text>
         </View>
       </View>
 
       {/* Title */}
-      <Text className="text-3xl font-bold text-foreground dark:text-foreground mb-6">{data.title}</Text>
+      <Text className="text-2xl font-bold text-foreground mb-5 leading-tight">{data.title}</Text>
 
       {/* Steps List */}
-      <View className="gap-4">
+      <View className="gap-3">
         {data.steps.map((step) => (
-          <View key={step.number} className="flex-row items-start gap-3">
-            <Text className="text-lg font-bold text-primary dark:text-primary">{step.number}.</Text>
-            <Text className="text-muted-foreground dark:text-muted-foreground text-lg flex-1">
+          <View key={step.number} className="flex-row items-start gap-2">
+            <Text className="text-base font-bold text-primary w-5">{step.number}.</Text>
+            <Text className="text-base text-foreground flex-1 leading-6">
               {step.text}
-              {step.boldText && <Text className="font-semibold text-foreground dark:text-foreground">{step.boldText}</Text>}
+              {step.boldText && <Text className="text-base font-bold text-foreground">{step.boldText}</Text>}
             </Text>
           </View>
         ))}
