@@ -121,7 +121,7 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
 
       if (authData.user) {
         // Create user profile in database
-        const { error: profileError } = await supabase.from('profiles').upsert({
+        const { error: profileError } = await supabase.from('users').upsert({
           id: authData.user.id,
           first_name: form.firstName,
           last_name: form.lastName,
