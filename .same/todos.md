@@ -1096,3 +1096,195 @@ Project is fully studied and dependencies are installed. Awaiting user instructi
 
 ### Ready for Instructions
 Project is fully studied and dependencies are installed. Awaiting user instructions for next tasks.
+
+## Session Log - Wed Jan 28, 2026 (Supabase Authentication Implementation)
+
+### Supabase SDK Integration Complete
+
+**Packages Installed:**
+- `@supabase/supabase-js` - Supabase JavaScript client
+- `expo-secure-store` - Secure storage for auth tokens on native
+- `react-native-url-polyfill` - URL polyfill for React Native
+
+**Files Created:**
+1. `lib/supabase.ts` - Supabase client configuration with SecureStore adapter
+2. `.env.example` - Example environment variables for Supabase credentials
+3. `.same/supabase-setup.sql` - SQL migration script for profiles table
+
+**Files Updated:**
+1. `lib/stores/auth-store.ts` - Complete rewrite with Supabase authentication:
+   - `initialize()` - Initialize auth state on app start, listen for auth changes
+   - `login()` - Sign in with email/password via Supabase
+   - `signup()` - Create account with Supabase + create profile in database
+   - `socialLogin()` - OAuth login (Google, Apple, LinkedIn)
+   - `logout()` - Sign out via Supabase
+   - `refreshSession()` - Refresh auth token
+   - Added `session` and `isInitialized` state
+   - All methods now return `{ success: boolean; error?: string }`
+   - Mock mode for development when Supabase is not configured
+
+2. `components/custom/shared/SignupForm.tsx`:
+   - Added error handling for async signup responses
+   - Added error banner display for auth errors
+   - Added Alert dialogs for failed signup attempts
+   - Added placeholder text to all inputs
+   - Added password requirements hint
+   - Clear auth errors when form changes
+
+3. `app/auth/login.tsx`:
+   - Added error handling for async login responses
+   - Added error banner display
+   - Added local loginError state
+   - Added form validation before submit
+   - Added forgot password alert placeholder
+   - Clear errors when form changes
+
+4. `app/_layout.tsx`:
+   - Added auth initialization on app start
+   - Added loading screen while auth initializes
+   - Shows ActivityIndicator during initialization
+
+### Supabase Setup Instructions
+
+**1. Create Supabase Project:**
+- Go to https://supabase.com
+- Create a new project
+
+**2. Get API Credentials:**
+- Go to Settings > API
+- Copy URL and anon key
+
+**3. Create `.env` file:**
+```bash
+cp .env.example .env
+# Edit .env and add your credentials
+```
+
+**4. Run Database Migration:**
+- Go to SQL Editor in Supabase Dashboard
+- Copy contents of `.same/supabase-setup.sql`
+- Run the query
+
+**5. Enable Email Authentication:**
+- Go to Authentication > Providers
+- Ensure Email is enabled
+
+**6. (Optional) Enable OAuth Providers:**
+- Google: Authentication > Providers > Google
+- Apple: Authentication > Providers > Apple
+- LinkedIn: Authentication > Providers > LinkedIn
+
+### Features Implemented:
+- [x] Email/password signup with Supabase Auth
+- [x] Email/password login with Supabase Auth
+- [x] User profile creation in database
+- [x] Persistent session with SecureStore (native) / localStorage (web)
+- [x] Auto session refresh
+- [x] Auth state change listener
+- [x] Error handling with user-friendly messages
+- [x] Loading states during auth operations
+- [x] Mock mode for development without Supabase
+
+### Pending:
+- [ ] Password reset functionality
+- [ ] Email verification flow
+- [ ] OAuth deep linking for mobile
+- [ ] Profile update functionality
+
+### Current Tasks Status
+- [x] Implement Supabase authentication for signup
+- [x] Implement Supabase authentication for login
+- [ ] Add Input component from React Native Reusables for forms
+- [ ] Build out individual tab screens with content
+
+## Session Log - Wed Jan 28, 2026 (New Session - Full Project Study)
+
+### Project Cloned and Studied
+1. **Cloned repository** from `https://github.com/Malicious-Bunny/njambe.git`
+2. **Read todos.md** - Full project briefing and history understood (1086 lines)
+3. **Read react-native-reusables.md** - Component library patterns and CLI commands understood
+4. **Dependencies installed** with pnpm (766 packages)
+
+### Files Reviewed:
+**Core Configuration:**
+- `package.json` - Expo SDK 54, React Native 0.81.5, NativeWind 4.2.1, iconoir-react-native, Lucide icons, Zod 4.3.6
+- `app/_layout.tsx` - Root layout with Stack navigation, ThemeProvider, PortalHost
+- `global.css` - CSS variables for Zinc light/dark themes
+- `lib/theme.ts` - Zinc theme configuration with NAV_THEME, COLORS, THEME exports
+
+**Screen Files:**
+- `app/index.tsx` - Start/Landing screen with NjambeLogo, ServiceProvidersCarousel, 2 CTAs
+- `app/auth/login.tsx` - Login screen with underline-style inputs, social icons (Google, LinkedIn, Apple)
+- `app/(customer)/index.tsx` - Customer signup screen with full form (name, email, password, country, checkbox) + Zod validation
+- `app/(customer)/(tabs)/_layout.tsx` - 5-tab navigation (Requests, Service, Notifications, Messages, Account)
+- `app/(customer)/(tabs)/index.tsx` - Service screen with categories grid
+- `app/(provider)/index.tsx` - Provider home with stats and quick actions
+- `app/(provider)/onboarding.tsx` - 3-slide swipeable onboarding flow with FlatList
+
+**Data/Lib Files:**
+- `lib/customer/categories.ts` - 8 service categories with emoji icons
+- `lib/customer/countries.ts` - Country data (Cameroon) with emoji flags
+- `lib/start/service-providers.ts` - 3 service provider cards with Unsplash images
+- `lib/provider/onboarding-data.ts` - Onboarding slides data (Cameroon context, XAF currency)
+
+**UI Components:**
+- `components/ui/button.tsx` - Button with variants (default, destructive, outline, secondary, ghost, link)
+- `components/ui/text.tsx` - Text with variants (h1, h2, h3, h4, p, etc.)
+- `components/ui/card.tsx` - Card with CardHeader, CardTitle, CardDescription, CardContent, CardFooter
+- `components/ui/badge.tsx` - Badge with variants
+- `components/ui/separator.tsx` - Separator component
+
+### Project Understanding Summary
+
+**njambe** is a React Native Expo app that clones the RingTwice business model for Cameroon:
+- **Purpose**: Neighborhood-based services marketplace connecting users with local service providers
+- **Two user modes**: Customer (needs services) and Provider (offers services)
+- **Currency**: XAF (Central African CFA franc)
+- **Languages**: French/English (with flag selector)
+
+**Tech Stack:**
+| Technology | Version/Details |
+|------------|-----------------|
+| Expo SDK | 54 |
+| React Native | 0.81.5 |
+| Expo Router | v6 (file-based routing) |
+| NativeWind | v4.2.1 (Tailwind for RN) |
+| React Native Reusables | shadcn/ui port for React Native |
+| Icons | iconoir-react-native + lucide-react-native |
+| Animations | React Native Reanimated 4.1.1 |
+| Validation | Zod 4.3.6 |
+| Package Manager | pnpm |
+
+**Design System (Zinc Theme):**
+| Token | Light Mode | Dark Mode |
+|-------|------------|-----------|
+| background | white | zinc-950 |
+| foreground | zinc-950 | zinc-50 |
+| primary | zinc-900 | zinc-50 |
+| secondary | zinc-100 | zinc-800 |
+| muted | zinc-100 | zinc-800 |
+| border | zinc-200 | zinc-800 |
+| card | white | zinc-900 |
+
+**Current Screens:**
+1. **Start Screen** (`app/index.tsx`) - Landing with logo, service provider carousel, 2 CTAs
+2. **Login Screen** (`app/auth/login.tsx`) - Underline inputs, social icons, create account
+3. **Customer Signup** (`app/(customer)/index.tsx`) - Full form with Zod validation
+4. **Customer Tabs** (`app/(customer)/(tabs)/`) - 5 tabs (Requests, Service, Notifications, Messages, Account)
+5. **Provider Home** (`app/(provider)/index.tsx`) - Stats, quick actions, job listings
+6. **Provider Onboarding** (`app/(provider)/onboarding.tsx`) - 3-slide swipeable onboarding flow
+
+**Pending Tasks:**
+- [ ] Add Input component from React Native Reusables for forms
+- [ ] Build provider join/signup screen (after onboarding)
+- [ ] Build out individual tab screens with content
+
+### Important Notes:
+1. **This is a React Native Expo project** - Cannot preview in web browser in Same
+2. **Use React Native Reusables CLI**: `npx @react-native-reusables/cli@latest add [component-name]`
+3. **Package manager**: pnpm
+4. **Follow Code Organization Pattern** when adding new pages/components
+5. **PortalHost** is already set up in root layout for dialogs/popovers
+
+### Ready for Instructions
+Project is fully studied and dependencies are installed. Awaiting user instructions for next tasks.

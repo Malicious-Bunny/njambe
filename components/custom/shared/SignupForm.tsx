@@ -8,6 +8,7 @@ import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import {
   ActivityIndicator,
+  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -33,7 +34,7 @@ interface SignupFormProps {
 export function SignupForm({ role, successRoute }: SignupFormProps) {
   const { colorScheme } = useColorScheme();
   const isDark = colorScheme === 'dark';
-  const { signup, socialLogin, isLoading } = useAuthStore();
+  const { signup, socialLogin, isLoading, error: authError, clearError } = useAuthStore();
 
   // Form state
   const [form, setForm] = React.useState({
@@ -54,6 +55,13 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
   const borderColor = isDark ? '#3f3f46' : '#e4e4e7';
   const checkboxBorderColor = isDark ? '#52525b' : '#d4d4d8';
 
+  // Clear auth error when component mounts or form changes
+  React.useEffect(() => {
+    if (authError) {
+      clearError();
+    }
+  }, [form.email, form.password]);
+
   // Update form field
   const updateField = (field: string, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -70,6 +78,8 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
   // Validate and submit
   const handleSignup = async () => {
     setSubmitted(true);
+    clearError();
+
     const result = signupSchema.safeParse(form);
 
     if (!result.success) {
@@ -85,7 +95,7 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
     }
 
     // Call signup from store
-    await signup({
+    const response = await signup({
       firstName: form.firstName,
       lastName: form.lastName,
       email: form.email,
@@ -95,13 +105,24 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
       acceptsPromos,
     });
 
-    // Navigate on success
-    router.replace(successRoute as any);
+    if (response.success) {
+      // Navigate on success
+      router.replace(successRoute as any);
+    } else if (response.error) {
+      // Show error alert for auth errors
+      Alert.alert('Signup Failed', response.error, [{ text: 'OK' }]);
+    }
   };
 
   const handleGoogleSignup = async () => {
-    await socialLogin('google');
-    router.replace(successRoute as any);
+    clearError();
+    const response = await socialLogin('google');
+
+    if (response.success) {
+      router.replace(successRoute as any);
+    } else if (response.error) {
+      Alert.alert('Google Signup Failed', response.error, [{ text: 'OK' }]);
+    }
   };
 
   const hasInput = Object.values(form).some((v) => v.trim() !== '');
@@ -122,7 +143,14 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
         keyboardShouldPersistTaps="handled"
       >
         <View className="px-6 pt-8">
-        
+          {/* Auth Error Banner */}
+          {authError && (
+            <View className="mb-4 p-3 bg-red-100 dark:bg-red-900/30 rounded-lg border border-red-200 dark:border-red-800">
+              <Text className="text-sm text-red-600 dark:text-red-400 text-center">
+                {authError}
+              </Text>
+            </View>
+          )}
 
           {/* First Name */}
           <View className="mb-6">
@@ -138,6 +166,8 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
               onChangeText={(v) => updateField('firstName', v)}
               autoCapitalize="words"
               editable={!isLoading}
+              placeholder="Enter your first name"
+              placeholderTextColor={iconColor}
             />
             {submitted && errors.firstName && (
               <Text className="text-xs text-red-500 mt-1">{errors.firstName}</Text>
@@ -158,6 +188,8 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
               onChangeText={(v) => updateField('lastName', v)}
               autoCapitalize="words"
               editable={!isLoading}
+              placeholder="Enter your last name"
+              placeholderTextColor={iconColor}
             />
             {submitted && errors.lastName && (
               <Text className="text-xs text-red-500 mt-1">{errors.lastName}</Text>
@@ -178,7 +210,10 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
               onChangeText={(v) => updateField('email', v)}
               keyboardType="email-address"
               autoCapitalize="none"
+              autoComplete="email"
               editable={!isLoading}
+              placeholder="Enter your email"
+              placeholderTextColor={iconColor}
             />
             {submitted && errors.email && (
               <Text className="text-xs text-red-500 mt-1">{errors.email}</Text>
@@ -199,6 +234,8 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
                 onChangeText={(v) => updateField('password', v)}
                 secureTextEntry={!showPassword}
                 editable={!isLoading}
+                placeholder="Create a password"
+                placeholderTextColor={iconColor}
               />
               <Pressable onPress={() => setShowPassword(!showPassword)} className="pb-3">
                 {showPassword ? (
@@ -211,6 +248,9 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
             {submitted && errors.password && (
               <Text className="text-xs text-red-500 mt-1">{errors.password}</Text>
             )}
+            <Text className="text-xs text-muted-foreground mt-2">
+              Must be at least 8 characters
+            </Text>
           </View>
 
           {/* Country Selector */}
