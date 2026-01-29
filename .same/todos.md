@@ -1460,7 +1460,6 @@ create table profiles (
 ### Ready for Instructions
 Project is fully studied and dependencies are installed. Awaiting user instructions for next tasks.
 
-
 ## Session Log - Wed Jan 28, 2026 (Phone Number Added)
 
 ### Changes Made
@@ -1468,3 +1467,87 @@ Project is fully studied and dependencies are installed. Awaiting user instructi
 - Zod validation: 9 digits, must start with 6 or 7
 - Phone stored in Supabase with full country code prefix
 
+## Session Log - Thu Jan 29, 2026 (Google OAuth Setup)
+
+### Google OAuth Implementation Complete
+
+**Packages Installed:**
+- `expo-auth-session` - For OAuth flow in Expo
+- `expo-web-browser` - For opening browser for OAuth
+- `expo-crypto` - For PKCE code generation
+
+**Files Created:**
+1. `lib/auth/google-auth.ts` - Google OAuth helper with PKCE flow:
+   - `signInWithGoogle()` - Initiates Google OAuth with Supabase
+   - `createOAuthProfile()` - Creates/updates user profile after OAuth
+   - `getRedirectUri()` - Gets the correct redirect URI for the platform
+
+**Files Updated:**
+1. `app/auth/login.tsx`:
+   - Added proper Google OAuth with `signInWithGoogle()`
+   - Added loading state for Google button specifically
+   - LinkedIn and Apple show "Coming Soon" alert
+
+2. `components/custom/shared/SignupForm.tsx`:
+   - Added proper Google OAuth with `signInWithGoogle()`
+   - Creates user profile with role after OAuth success
+   - Added loading state for Google button
+
+### Supabase Dashboard Setup Required
+
+**IMPORTANT: You must complete these steps in the Supabase Dashboard for Google OAuth to work:**
+
+#### 1. Enable Google Provider in Supabase
+1. Go to https://supabase.com/dashboard
+2. Select your project
+3. Go to **Authentication** → **Providers**
+4. Find **Google** and click to expand
+5. Toggle **Enable Sign in with Google**
+
+#### 2. Create Google OAuth Credentials
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project or select existing one
+3. Go to **APIs & Services** → **Credentials**
+4. Click **+ CREATE CREDENTIALS** → **OAuth client ID**
+5. Select **Web application**
+6. Add these authorized redirect URIs:
+   - `https://kumbvpzqtagbpocwnrxv.supabase.co/auth/v1/callback`
+7. Copy the **Client ID** and **Client Secret**
+
+#### 3. Configure Supabase with Google Credentials
+1. Back in Supabase Dashboard → **Authentication** → **Providers** → **Google**
+2. Paste the **Client ID** and **Client Secret** from Google Cloud Console
+3. Click **Save**
+
+#### 4. Add Redirect URL in Supabase
+1. Go to **Authentication** → **URL Configuration**
+2. Add these redirect URLs:
+   - `njambe://auth/callback` (for Expo Go / development)
+   - `com.njambe.app://auth/callback` (for production builds)
+   - `exp://127.0.0.1:8081/--/auth/callback` (for Expo Go local testing)
+
+### How the OAuth Flow Works
+
+```
+1. User taps "Sign up with Google" button
+2. App generates PKCE code_verifier and code_challenge
+3. App opens browser to Supabase OAuth URL with Google provider
+4. User authenticates with Google in browser
+5. Google redirects to Supabase callback
+6. Supabase redirects back to app with authorization code
+7. App exchanges code for session using Supabase SDK
+8. App creates/updates user profile in database
+9. User is navigated to appropriate screen
+```
+
+### Current OAuth Status
+- [x] Google OAuth - Implemented (requires Supabase Dashboard setup)
+- [ ] Apple OAuth - Not yet implemented (coming soon placeholder)
+- [ ] LinkedIn OAuth - Not yet implemented (coming soon placeholder)
+
+### Testing Google OAuth
+1. Complete the Supabase Dashboard setup above
+2. Run the app with `pnpm start`
+3. Tap the Google button on Login or Signup screen
+4. Browser should open with Google sign-in
+5. After authentication, app should receive the session

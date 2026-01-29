@@ -1,5 +1,6 @@
 import { LanguageSelector } from '@/components/custom/start';
 import { Text } from '@/components/ui/text';
+import { signInWithGoogle } from '@/lib/auth/google-auth';
 import { supabase } from '@/lib/supabase';
 import { router } from 'expo-router';
 import { NavArrowLeft, Eye, EyeClosed, Google, Linkedin, AppleMac } from 'iconoir-react-native';
@@ -14,6 +15,7 @@ export default function LoginScreen() {
   const [showPassword, setShowPassword] = React.useState(false);
   const [loginError, setLoginError] = React.useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = React.useState(false);
   const { colorScheme } = useColorScheme();
 
   const textColor = colorScheme === 'dark' ? '#fafafa' : '#18181b';
@@ -62,28 +64,38 @@ export default function LoginScreen() {
     }
   };
 
-  const handleSocialLogin = async (provider: 'google' | 'linkedin' | 'apple') => {
-    setIsLoading(true);
+  const handleGoogleLogin = async () => {
+    setIsGoogleLoading(true);
     setLoginError(null);
 
     try {
-      const oauthProvider = provider === 'linkedin' ? 'linkedin_oidc' : provider;
+      const result = await signInWithGoogle();
 
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: oauthProvider as 'google' | 'apple' | 'linkedin_oidc',
-        options: {
-          skipBrowserRedirect: true,
-        },
-      });
-
-      if (error) {
-        Alert.alert('Login Failed', error.message, [{ text: 'OK' }]);
+      if (!result.success) {
+        if (result.error !== 'Authentication was cancelled') {
+          Alert.alert('Login Failed', result.error || 'Google login failed', [{ text: 'OK' }]);
+        }
+        return;
       }
+
+      // Successfully authenticated - navigate to customer tabs
+      router.replace('/(customer)/(tabs)');
     } catch (error) {
-      Alert.alert('Login Failed', error instanceof Error ? error.message : 'Social login failed', [{ text: 'OK' }]);
+      Alert.alert('Login Failed', error instanceof Error ? error.message : 'Google login failed', [
+        { text: 'OK' },
+      ]);
     } finally {
-      setIsLoading(false);
+      setIsGoogleLoading(false);
     }
+  };
+
+  const handleSocialLogin = async (provider: 'linkedin' | 'apple') => {
+    // LinkedIn and Apple OAuth not yet implemented
+    Alert.alert(
+      'Coming Soon',
+      `${provider === 'linkedin' ? 'LinkedIn' : 'Apple'} login will be available soon.`,
+      [{ text: 'OK' }]
+    );
   };
 
   const handleCreateAccount = () => {
@@ -97,6 +109,8 @@ export default function LoginScreen() {
       [{ text: 'OK' }]
     );
   };
+
+  const anyLoading = isLoading || isGoogleLoading;
 
   return (
     <SafeAreaView className="flex-1 bg-background" edges={['top', 'bottom']}>
@@ -139,7 +153,7 @@ export default function LoginScreen() {
             keyboardType="email-address"
             autoCapitalize="none"
             autoComplete="email"
-            editable={!isLoading}
+            editable={!anyLoading}
           />
         </View>
 
@@ -160,7 +174,7 @@ export default function LoginScreen() {
               value={password}
               onChangeText={setPassword}
               secureTextEntry={!showPassword}
-              editable={!isLoading}
+              editable={!anyLoading}
             />
             <Pressable onPress={() => setShowPassword(!showPassword)} className="pb-3">
               {showPassword ? (
@@ -184,7 +198,7 @@ export default function LoginScreen() {
         {/* Login Button */}
         <Pressable
           onPress={handleLogin}
-          disabled={isLoading}
+          disabled={anyLoading}
           className="h-14 items-center justify-center rounded-full bg-primary active:bg-primary/90"
         >
           {isLoading ? (
@@ -204,22 +218,26 @@ export default function LoginScreen() {
         {/* Social Login Icons */}
         <View className="flex-row justify-center gap-4">
           <Pressable
-            onPress={() => handleSocialLogin('google')}
-            disabled={isLoading}
+            onPress={handleGoogleLogin}
+            disabled={anyLoading}
             className="h-12 w-12 items-center justify-center rounded-xl bg-secondary active:bg-accent"
           >
-            <Google width={22} height={22} color={textColor} />
+            {isGoogleLoading ? (
+              <ActivityIndicator size="small" color={textColor} />
+            ) : (
+              <Google width={22} height={22} color={textColor} />
+            )}
           </Pressable>
           <Pressable
             onPress={() => handleSocialLogin('linkedin')}
-            disabled={isLoading}
+            disabled={anyLoading}
             className="h-12 w-12 items-center justify-center rounded-xl bg-secondary active:bg-accent"
           >
             <Linkedin width={22} height={22} color={textColor} />
           </Pressable>
           <Pressable
             onPress={() => handleSocialLogin('apple')}
-            disabled={isLoading}
+            disabled={anyLoading}
             className="h-12 w-12 items-center justify-center rounded-xl bg-secondary active:bg-accent"
           >
             <AppleMac width={22} height={22} color={textColor} />
@@ -241,7 +259,7 @@ export default function LoginScreen() {
         <View className="h-px bg-border mb-4" />
         <Pressable
           onPress={handleCreateAccount}
-          disabled={isLoading}
+          disabled={anyLoading}
           className="h-14 items-center justify-center rounded-full border-2 border-primary bg-background active:bg-secondary"
         >
           <Text className="text-base font-semibold text-primary">

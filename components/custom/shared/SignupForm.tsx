@@ -1,5 +1,6 @@
 import { CountrySelector, OrDivider } from '@/components/custom/customer';
 import { Text } from '@/components/ui/text';
+import { signInWithGoogle, createOAuthProfile } from '@/lib/auth/google-auth';
 import { DEFAULT_COUNTRY, type Country } from '@/lib/customer/countries';
 import { supabase } from '@/lib/supabase';
 import { router } from 'expo-router';
@@ -56,6 +57,7 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
   const [errors, setErrors] = React.useState<Record<string, string>>({});
   const [submitted, setSubmitted] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = React.useState(false);
   const [authError, setAuthError] = React.useState<string | null>(null);
 
   // Phone country code (Cameroon default)
@@ -175,27 +177,45 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
 
   const handleGoogleSignup = async () => {
     setAuthError(null);
-    setIsLoading(true);
+    setIsGoogleLoading(true);
 
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          skipBrowserRedirect: true,
-        },
-      });
+      const result = await signInWithGoogle();
 
-      if (error) {
-        Alert.alert('Google Signup Failed', error.message, [{ text: 'OK' }]);
+      if (!result.success) {
+        if (result.error !== 'Authentication was cancelled') {
+          Alert.alert('Google Signup Failed', result.error || 'Failed to sign up with Google', [
+            { text: 'OK' },
+          ]);
+        }
+        return;
       }
+
+      // Create or update user profile with role
+      if (result.user) {
+        await createOAuthProfile(
+          result.user.id,
+          result.user.email || '',
+          result.user.user_metadata?.full_name || result.user.user_metadata?.name || '',
+          role
+        );
+      }
+
+      // Navigate on success
+      router.replace(successRoute as any);
     } catch (error) {
-      Alert.alert('Google Signup Failed', error instanceof Error ? error.message : 'Failed', [{ text: 'OK' }]);
+      Alert.alert(
+        'Google Signup Failed',
+        error instanceof Error ? error.message : 'Failed to sign up with Google',
+        [{ text: 'OK' }]
+      );
     } finally {
-      setIsLoading(false);
+      setIsGoogleLoading(false);
     }
   };
 
   const hasInput = Object.values(form).some((v) => v.trim() !== '');
+  const anyLoading = isLoading || isGoogleLoading;
 
   const getBorderColor = (field: string) => {
     return submitted && errors[field] ? '#ef4444' : borderColor;
@@ -235,7 +255,7 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
               value={form.firstName}
               onChangeText={(v) => updateField('firstName', v)}
               autoCapitalize="words"
-              editable={!isLoading}
+              editable={!anyLoading}
               placeholderTextColor={iconColor}
             />
             {submitted && errors.firstName && (
@@ -256,7 +276,7 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
               value={form.lastName}
               onChangeText={(v) => updateField('lastName', v)}
               autoCapitalize="words"
-              editable={!isLoading}
+              editable={!anyLoading}
               placeholderTextColor={iconColor}
             />
             {submitted && errors.lastName && (
@@ -279,7 +299,7 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
               keyboardType="email-address"
               autoCapitalize="none"
               autoComplete="email"
-              editable={!isLoading}
+              editable={!anyLoading}
               placeholderTextColor={iconColor}
             />
             {submitted && errors.email && (
@@ -296,7 +316,7 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
             >
               {/* Country Code Prefix */}
               <View className="flex-row items-center pr-3 border-r border-border">
-               
+
                 <Text className="text-base ml-2" style={{ color: textColor }}>
                   {phoneCountryCode}
                 </Text>
@@ -309,7 +329,7 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
                 onChangeText={handlePhoneChange}
                 keyboardType="phone-pad"
                 maxLength={9}
-                editable={!isLoading}
+                editable={!anyLoading}
                 placeholderTextColor={iconColor}
               />
             </View>
@@ -331,7 +351,7 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
                 value={form.password}
                 onChangeText={(v) => updateField('password', v)}
                 secureTextEntry={!showPassword}
-                editable={!isLoading}
+                editable={!anyLoading}
                 placeholderTextColor={iconColor}
               />
               <Pressable onPress={() => setShowPassword(!showPassword)} className="pb-3">
@@ -360,7 +380,7 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
           <Pressable
             onPress={() => setAcceptsPromos(!acceptsPromos)}
             className="flex-row items-start mb-8"
-            disabled={isLoading}
+            disabled={anyLoading}
           >
             <View
               className="w-5 h-5 rounded border-2 mr-3 mt-0.5 items-center justify-center"
@@ -383,10 +403,10 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
           {/* Google Signup Button */}
           <Pressable
             onPress={handleGoogleSignup}
-            disabled={isLoading}
+            disabled={anyLoading}
             className="h-14 flex-row items-center justify-center rounded-xl border-2 border-border bg-background mt-6 active:bg-secondary"
           >
-            {isLoading ? (
+            {isGoogleLoading ? (
               <ActivityIndicator size="small" color={textColor} />
             ) : (
               <>
@@ -404,9 +424,9 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
       <View className="px-6 pb-4 bg-background">
         <Pressable
           onPress={handleSignup}
-          disabled={!hasInput || isLoading}
+          disabled={!hasInput || anyLoading}
           className={`h-14 items-center justify-center rounded-xl ${
-            hasInput && !isLoading ? 'bg-primary active:bg-primary/90' : 'bg-muted'
+            hasInput && !anyLoading ? 'bg-primary active:bg-primary/90' : 'bg-muted'
           }`}
         >
           {isLoading ? (
