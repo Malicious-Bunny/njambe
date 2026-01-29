@@ -14,11 +14,14 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+const RESEND_COOLDOWN_SECONDS = 60;
+
 export default function ForgotPasswordScreen() {
   const [email, setEmail] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const [isSuccess, setIsSuccess] = React.useState(false);
+  const [countdown, setCountdown] = React.useState(0);
   const { colorScheme } = useColorScheme();
 
   const isDark = colorScheme === 'dark';
@@ -33,6 +36,23 @@ export default function ForgotPasswordScreen() {
       setError(null);
     }
   }, [email]);
+
+  // Countdown timer effect
+  React.useEffect(() => {
+    if (countdown <= 0) return;
+
+    const timer = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [countdown]);
 
   const handleResetPassword = async () => {
     if (!email.trim()) {
@@ -65,8 +85,36 @@ export default function ForgotPasswordScreen() {
         return;
       }
 
-      // Show success state
+      // Show success state and start countdown
       setIsSuccess(true);
+      setCountdown(RESEND_COOLDOWN_SECONDS);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to send reset email');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleResendEmail = async () => {
+    if (countdown > 0 || isLoading) return;
+
+    setIsLoading(true);
+
+    try {
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(
+        email.trim(),
+        {
+          redirectTo: 'njambe://auth/reset-password',
+        }
+      );
+
+      if (resetError) {
+        setError(resetError.message);
+        return;
+      }
+
+      // Reset countdown after successful resend
+      setCountdown(RESEND_COOLDOWN_SECONDS);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to send reset email');
     } finally {
@@ -80,6 +128,8 @@ export default function ForgotPasswordScreen() {
 
   // Success state - show confirmation message
   if (isSuccess) {
+    const canResend = countdown === 0 && !isLoading;
+
     return (
       <SafeAreaView className="flex-1 bg-background" edges={['top', 'bottom']}>
         {/* Header */}
@@ -116,15 +166,23 @@ export default function ForgotPasswordScreen() {
             Click the link in the email to reset your password. If you don't see it, check your spam folder.
           </Text>
 
-          {/* Resend Button */}
+          {/* Resend Button with Countdown */}
           <Pressable
-            onPress={handleResetPassword}
-            disabled={isLoading}
+            onPress={handleResendEmail}
+            disabled={!canResend}
             className="mt-8"
           >
-            <Text className="text-base text-primary underline">
-              Didn't receive it? Send again
-            </Text>
+            {isLoading ? (
+              <ActivityIndicator size="small" color={textColor} />
+            ) : countdown > 0 ? (
+              <Text className="text-base text-muted-foreground">
+                Resend in {countdown}s
+              </Text>
+            ) : (
+              <Text className="text-base text-foreground underline">
+                Didn't receive it? Send again
+              </Text>
+            )}
           </Pressable>
         </View>
 

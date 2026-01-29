@@ -1613,3 +1613,14 @@ Project is fully studied and dependencies are installed. Awaiting user instructi
 3. Tap the Google button on Login or Signup screen
 4. Browser should open with Google sign-in
 5. After authentication, app should receive the session
+
+## Session Log - Thu Jan 29, 2026 (Resend Email Countdown Timer)
+
+### Forgot Password - Resend Timer Implemented
+- Added 60-second countdown timer to "Didn't receive it? Send again" link
+- Link is disabled while countdown is active, showing "Resend in Xs"
+- Link becomes active (underlined) when countdown reaches 0
+- Clicking resend resets the timer and sends another email
+- Added loading indicator during resend
+- Separate `handleResendEmail` function for resending
+- `RESEND_COOLDOWN_SECONDS` constant (60s) for easy adjustment
