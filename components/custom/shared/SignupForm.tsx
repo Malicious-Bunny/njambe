@@ -180,7 +180,8 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
     setIsGoogleLoading(true);
 
     try {
-      const result = await signInWithGoogle();
+      // Use signUpWithGoogle which handles OAuth flow and profile creation
+      const result = await signUpWithGoogle(role);
 
       if (!result.success) {
         if (result.error !== 'Authentication was cancelled') {
@@ -189,16 +190,6 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
           ]);
         }
         return;
-      }
-
-      // Create or update user profile with role
-      if (result.user) {
-        await createOAuthProfile(
-          result.user.id,
-          result.user.email || '',
-          result.user.user_metadata?.full_name || result.user.user_metadata?.name || '',
-          role
-        );
       }
 
       // Navigate on success

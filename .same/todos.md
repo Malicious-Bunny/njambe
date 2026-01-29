@@ -1467,6 +1467,68 @@ Project is fully studied and dependencies are installed. Awaiting user instructi
 - Zod validation: 9 digits, must start with 6 or 7
 - Phone stored in Supabase with full country code prefix
 
+## Session Log - Thu Jan 29, 2026 (Password Reset Flow)
+
+### Password Reset Functionality Implemented
+
+**Files Created:**
+1. `app/auth/forgot-password.tsx` - Forgot password page with:
+   - Email input with validation
+   - Supabase `resetPasswordForEmail()` integration
+   - Success state showing "Check your email" message
+   - Resend email option
+   - Back to login navigation
+
+2. `app/auth/reset-password.tsx` - Reset password page with:
+   - New password and confirm password inputs
+   - Password visibility toggles
+   - Password strength indicator (Weak/Fair/Good/Strong)
+   - Password match validation
+   - Supabase `updateUser()` for password update
+   - Success state with "Continue to App" option
+   - Password requirements display
+
+**Files Updated:**
+1. `app/auth/login.tsx`:
+   - Changed `handleForgotPassword` to navigate to `/auth/forgot-password`
+   - Removed the placeholder Alert
+
+2. `app/_layout.tsx`:
+   - Added deep link handling for password reset (`expo-linking`)
+   - Handles `type=recovery` tokens from email links
+   - Sets recovery session with Supabase
+   - Added `PASSWORD_RECOVERY` auth state change handler
+   - Added Stack.Screen entries for forgot-password and reset-password
+
+### Password Reset Flow:
+1. User clicks "Forgot password?" on login page
+2. User enters email on forgot-password page
+3. Supabase sends reset email with link: `njambe://auth/reset-password#access_token=...&type=recovery`
+4. User clicks link in email → app opens
+5. Deep link handler extracts tokens and sets recovery session
+6. User is navigated to reset-password page
+7. User enters and confirms new password
+8. Password is updated via `supabase.auth.updateUser()`
+9. Success screen shown with option to continue or sign in again
+
+### Supabase Dashboard Setup Required:
+1. Go to Authentication → URL Configuration
+2. Add Site URL: `njambe://` (or your app scheme)
+3. Add Redirect URLs:
+   - `njambe://auth/reset-password`
+   - `njambe://auth/callback`
+
+## Session Log - Thu Jan 29, 2026 (SignupForm Google OAuth Fix)
+
+### Fixed SignupForm Google OAuth Implementation
+- Updated `handleGoogleSignup` in `components/custom/shared/SignupForm.tsx`
+- Was calling undefined `signInWithGoogle` + `createOAuthProfile`
+- Now correctly calls `signUpWithGoogle(role)` which:
+  - Handles the full OAuth browser flow
+  - Exchanges tokens/codes for session
+  - Creates user profile in `users` table with role
+- Simpler, cleaner implementation
+
 ## Session Log - Thu Jan 29, 2026 (Google OAuth Setup)
 
 ### Google OAuth Implementation Complete

@@ -103,11 +103,7 @@ export default function LoginScreen() {
   };
 
   const handleForgotPassword = () => {
-    Alert.alert(
-      'Forgot Password',
-      'Password reset functionality coming soon. Please contact support for assistance.',
-      [{ text: 'OK' }]
-    );
+    router.push('/auth/forgot-password');
   };
 
   const anyLoading = isLoading || isGoogleLoading;
