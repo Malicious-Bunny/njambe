@@ -296,9 +296,7 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
             >
               {/* Country Code Prefix */}
               <View className="flex-row items-center pr-3 border-r border-border">
-                <Text className="text-base" style={{ color: textColor }}>
-                  🇨🇲
-                </Text>
+               
                 <Text className="text-base ml-2" style={{ color: textColor }}>
                   {phoneCountryCode}
                 </Text>
@@ -310,7 +308,6 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
                 value={form.phone}
                 onChangeText={handlePhoneChange}
                 keyboardType="phone-pad"
-                placeholder="6XX XXX XXX"
                 maxLength={9}
                 editable={!isLoading}
                 placeholderTextColor={iconColor}
@@ -319,9 +316,6 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
             {submitted && errors.phone && (
               <Text className="text-xs text-red-500 mt-1">{errors.phone}</Text>
             )}
-            <Text className="text-xs text-muted-foreground mt-2">
-              Cameroon mobile number (9 digits starting with 6 or 7)
-            </Text>
           </View>
 
           {/* Password */}

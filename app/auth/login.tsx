@@ -133,7 +133,6 @@ export default function LoginScreen() {
               borderBottomColor: loginError ? '#ef4444' : borderColor,
               borderBottomWidth: 1,
             }}
-            placeholder="Enter your email"
             placeholderTextColor={placeholderColor}
             value={email}
             onChangeText={setEmail}
@@ -157,7 +156,6 @@ export default function LoginScreen() {
             <TextInput
               className="flex-1 text-base pb-3"
               style={{ color: textColor }}
-              placeholder="Enter your password"
               placeholderTextColor={placeholderColor}
               value={password}
               onChangeText={setPassword}
