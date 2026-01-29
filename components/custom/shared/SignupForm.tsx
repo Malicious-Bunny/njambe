@@ -1,6 +1,6 @@
 import { CountrySelector, OrDivider } from '@/components/custom/customer';
 import { Text } from '@/components/ui/text';
-import { signInWithGoogle, createOAuthProfile } from '@/lib/auth/google-auth';
+import { signUpWithGoogle } from '@/lib/auth/google-auth';
 import { DEFAULT_COUNTRY, type Country } from '@/lib/customer/countries';
 import { supabase } from '@/lib/supabase';
 import { router } from 'expo-router';

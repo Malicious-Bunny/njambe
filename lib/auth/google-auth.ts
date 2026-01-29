@@ -1,86 +1,68 @@
-import * as AuthSession from 'expo-auth-session';
 import * as WebBrowser from 'expo-web-browser';
-import * as Crypto from 'expo-crypto';
 import { supabase } from '@/lib/supabase';
-import { Platform } from 'react-native';
+import { makeRedirectUri } from 'expo-auth-session';
 
-// Warm up the browser for faster OAuth on Android
+// Ensure any incomplete auth sessions are completed
 WebBrowser.maybeCompleteAuthSession();
 
-// Supabase configuration
-const SUPABASE_URL = 'https://kumbvpzqtagbpocwnrxv.supabase.co';
-
-// Get the redirect URI based on platform
+// Get the redirect URI for OAuth callbacks
+// This needs to match what's configured in Supabase Dashboard
 export function getRedirectUri(): string {
-  // For Expo Go and development builds
-  const redirectUri = AuthSession.makeRedirectUri({
+  const redirectUri = makeRedirectUri({
     scheme: 'njambe',
     path: 'auth/callback',
   });
 
+  console.log('OAuth Redirect URI:', redirectUri);
   return redirectUri;
-}
-
-// Generate PKCE code verifier and challenge
-async function generatePKCE(): Promise<{ codeVerifier: string; codeChallenge: string }> {
-  // Generate a random code verifier (43-128 characters)
-  const randomBytes = await Crypto.getRandomBytesAsync(32);
-  const codeVerifier = Array.from(randomBytes)
-    .map((byte) => byte.toString(16).padStart(2, '0'))
-    .join('');
-
-  // Generate code challenge using SHA-256
-  const digest = await Crypto.digestStringAsync(
-    Crypto.CryptoDigestAlgorithm.SHA256,
-    codeVerifier,
-    { encoding: Crypto.CryptoEncoding.BASE64 }
-  );
-
-  // Convert to URL-safe base64
-  const codeChallenge = digest
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=+$/, '');
-
-  return { codeVerifier, codeChallenge };
 }
 
 export interface GoogleAuthResult {
   success: boolean;
   error?: string;
   user?: any;
+  session?: any;
 }
 
 /**
- * Initiates Google OAuth sign-in with Supabase
- * Uses PKCE flow for secure authentication
+ * Sign in with Google using Supabase OAuth
+ * This handles the full OAuth flow for login
  */
 export async function signInWithGoogle(): Promise<GoogleAuthResult> {
   try {
-    // Generate PKCE codes
-    const { codeVerifier, codeChallenge } = await generatePKCE();
-
-    // Get the redirect URI
     const redirectUri = getRedirectUri();
 
-    console.log('Redirect URI:', redirectUri);
+    // Get the OAuth URL from Supabase
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: redirectUri,
+        skipBrowserRedirect: true,
+      },
+    });
 
-    // Build the Supabase OAuth URL
-    const authUrl = new URL(`${SUPABASE_URL}/auth/v1/authorize`);
-    authUrl.searchParams.set('provider', 'google');
-    authUrl.searchParams.set('redirect_to', redirectUri);
-    authUrl.searchParams.set('code_challenge', codeChallenge);
-    authUrl.searchParams.set('code_challenge_method', 'S256');
+    if (error) {
+      console.error('Supabase OAuth error:', error);
+      return { success: false, error: error.message };
+    }
 
-    // Open the browser for Google sign-in
+    if (!data.url) {
+      return { success: false, error: 'No OAuth URL received from Supabase' };
+    }
+
+    console.log('Opening OAuth URL:', data.url);
+
+    // Open the browser for authentication
     const result = await WebBrowser.openAuthSessionAsync(
-      authUrl.toString(),
+      data.url,
       redirectUri,
       {
         showInRecents: true,
         preferEphemeralSession: false,
       }
     );
+
+    console.log('WebBrowser result:', result.type);
 
     if (result.type !== 'success') {
       if (result.type === 'cancel' || result.type === 'dismiss') {
@@ -89,32 +71,69 @@ export async function signInWithGoogle(): Promise<GoogleAuthResult> {
       return { success: false, error: 'Authentication failed' };
     }
 
-    // Parse the redirect URL to get the authorization code
-    const url = new URL(result.url);
-    const code = url.searchParams.get('code');
-    const errorParam = url.searchParams.get('error');
-    const errorDescription = url.searchParams.get('error_description');
+    // Parse the callback URL to extract tokens or code
+    const url = result.url;
+    console.log('Callback URL:', url);
+
+    // Extract the fragment (hash) params - Supabase returns tokens in the hash
+    const hashParams = new URLSearchParams(url.split('#')[1] || '');
+    const accessToken = hashParams.get('access_token');
+    const refreshToken = hashParams.get('refresh_token');
+
+    // Also check query params for code flow
+    const queryParams = new URLSearchParams(url.split('?')[1]?.split('#')[0] || '');
+    const code = queryParams.get('code');
+    const errorParam = queryParams.get('error');
+    const errorDescription = queryParams.get('error_description');
 
     if (errorParam) {
       return { success: false, error: errorDescription || errorParam };
     }
 
-    if (!code) {
-      return { success: false, error: 'No authorization code received' };
+    // If we have tokens directly (implicit flow)
+    if (accessToken && refreshToken) {
+      const { data: sessionData, error: sessionError } = await supabase.auth.setSession({
+        access_token: accessToken,
+        refresh_token: refreshToken,
+      });
+
+      if (sessionError) {
+        return { success: false, error: sessionError.message };
+      }
+
+      return {
+        success: true,
+        user: sessionData.user,
+        session: sessionData.session,
+      };
     }
 
-    // Exchange the code for a session using Supabase
-    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+    // If we have a code (PKCE flow), exchange it
+    if (code) {
+      const { data: sessionData, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
 
-    if (error) {
-      return { success: false, error: error.message };
+      if (exchangeError) {
+        return { success: false, error: exchangeError.message };
+      }
+
+      return {
+        success: true,
+        user: sessionData.user,
+        session: sessionData.session,
+      };
     }
 
-    if (data.session && data.user) {
-      return { success: true, user: data.user };
+    // Try to get the current session - sometimes the auth completes in the background
+    const { data: currentSession } = await supabase.auth.getSession();
+    if (currentSession.session) {
+      return {
+        success: true,
+        user: currentSession.session.user,
+        session: currentSession.session,
+      };
     }
 
-    return { success: false, error: 'Failed to establish session' };
+    return { success: false, error: 'No authentication data received' };
   } catch (error) {
     console.error('Google auth error:', error);
     return {
@@ -125,7 +144,154 @@ export async function signInWithGoogle(): Promise<GoogleAuthResult> {
 }
 
 /**
+ * Sign up with Google using Supabase OAuth
+ * This is specifically for signup flow where we also need to create a profile
+ */
+export async function signUpWithGoogle(
+  role: 'customer' | 'provider'
+): Promise<GoogleAuthResult> {
+  try {
+    const redirectUri = getRedirectUri();
+
+    // Get the OAuth URL from Supabase
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: redirectUri,
+        skipBrowserRedirect: true,
+        queryParams: {
+          prompt: 'consent',
+        },
+      },
+    });
+
+    if (error) {
+      console.error('Supabase OAuth error:', error);
+      return { success: false, error: error.message };
+    }
+
+    if (!data.url) {
+      return { success: false, error: 'No OAuth URL received from Supabase' };
+    }
+
+    console.log('Opening OAuth URL for signup:', data.url);
+
+    // Open the browser for authentication
+    const result = await WebBrowser.openAuthSessionAsync(
+      data.url,
+      redirectUri,
+      {
+        showInRecents: true,
+        preferEphemeralSession: false,
+      }
+    );
+
+    console.log('WebBrowser result:', result.type);
+
+    if (result.type !== 'success') {
+      if (result.type === 'cancel' || result.type === 'dismiss') {
+        return { success: false, error: 'Authentication was cancelled' };
+      }
+      return { success: false, error: 'Authentication failed' };
+    }
+
+    // Parse the callback URL
+    const url = result.url;
+    console.log('Callback URL:', url);
+
+    // Extract tokens from hash (implicit flow)
+    const hashParams = new URLSearchParams(url.split('#')[1] || '');
+    const accessToken = hashParams.get('access_token');
+    const refreshToken = hashParams.get('refresh_token');
+
+    // Also check for code (PKCE flow)
+    const queryParams = new URLSearchParams(url.split('?')[1]?.split('#')[0] || '');
+    const code = queryParams.get('code');
+    const errorParam = queryParams.get('error');
+    const errorDescription = queryParams.get('error_description');
+
+    if (errorParam) {
+      return { success: false, error: errorDescription || errorParam };
+    }
+
+    let user = null;
+    let session = null;
+
+    // If we have tokens directly
+    if (accessToken && refreshToken) {
+      const { data: sessionData, error: sessionError } = await supabase.auth.setSession({
+        access_token: accessToken,
+        refresh_token: refreshToken,
+      });
+
+      if (sessionError) {
+        return { success: false, error: sessionError.message };
+      }
+
+      user = sessionData.user;
+      session = sessionData.session;
+    }
+    // If we have a code, exchange it
+    else if (code) {
+      const { data: sessionData, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+
+      if (exchangeError) {
+        return { success: false, error: exchangeError.message };
+      }
+
+      user = sessionData.user;
+      session = sessionData.session;
+    }
+    // Check for existing session
+    else {
+      const { data: currentSession } = await supabase.auth.getSession();
+      if (currentSession.session) {
+        user = currentSession.session.user;
+        session = currentSession.session;
+      }
+    }
+
+    if (!user) {
+      return { success: false, error: 'No user data received' };
+    }
+
+    // Create or update the user profile with the specified role
+    const fullName = user.user_metadata?.full_name || user.user_metadata?.name || '';
+    const nameParts = fullName.trim().split(' ');
+    const firstName = nameParts[0] || '';
+    const lastName = nameParts.slice(1).join(' ') || '';
+
+    const { error: profileError } = await supabase.from('users').upsert({
+      id: user.id,
+      first_name: firstName,
+      last_name: lastName,
+      email: user.email || '',
+      role,
+      updated_at: new Date().toISOString(),
+    });
+
+    if (profileError) {
+      console.error('Error creating profile:', profileError);
+      // Don't fail the auth if profile creation fails
+    }
+
+    return {
+      success: true,
+      user,
+      session,
+    };
+  } catch (error) {
+    console.error('Google signup error:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'An unexpected error occurred',
+    };
+  }
+}
+
+/**
  * Creates or updates the user profile in the database after OAuth sign-in
+ * @deprecated Use signUpWithGoogle instead which handles profile creation
  */
 export async function createOAuthProfile(
   userId: string,
@@ -134,7 +300,6 @@ export async function createOAuthProfile(
   role: 'customer' | 'provider'
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    // Split full name into first and last name
     const nameParts = fullName.trim().split(' ');
     const firstName = nameParts[0] || '';
     const lastName = nameParts.slice(1).join(' ') || '';
