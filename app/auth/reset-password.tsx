@@ -205,15 +205,20 @@ export default function ResetPasswordScreen() {
           <View className="mb-2">
             <Text className="text-sm text-muted-foreground mb-2">New password</Text>
             <View
-              className="flex-row items-center border-b"
+              className="flex-row items-end border-b"
               style={{
                 borderBottomColor: error && !password ? '#ef4444' : borderColor,
                 borderBottomWidth: 1,
               }}
             >
               <TextInput
-                className="flex-1 text-base pb-3"
-                style={{ color: textColor }}
+                className="flex-1 text-base"
+                style={{
+                  color: textColor,
+                  paddingTop: 4,
+                  paddingBottom: 12,
+                  lineHeight: 22,
+                }}
                 placeholder="Enter new password"
                 placeholderTextColor={placeholderColor}
                 value={password}
@@ -255,7 +260,7 @@ export default function ResetPasswordScreen() {
           <View className="mb-8">
             <Text className="text-sm text-muted-foreground mb-2">Confirm password</Text>
             <View
-              className="flex-row items-center border-b"
+              className="flex-row items-end border-b"
               style={{
                 borderBottomColor:
                   error && confirmPassword && password !== confirmPassword
@@ -265,8 +270,13 @@ export default function ResetPasswordScreen() {
               }}
             >
               <TextInput
-                className="flex-1 text-base pb-3"
-                style={{ color: textColor }}
+                className="flex-1 text-base"
+                style={{
+                  color: textColor,
+                  paddingTop: 4,
+                  paddingBottom: 12,
+                  lineHeight: 22,
+                }}
                 placeholder="Confirm new password"
                 placeholderTextColor={placeholderColor}
                 value={confirmPassword}

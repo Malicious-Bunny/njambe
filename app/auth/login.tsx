@@ -137,11 +137,14 @@ export default function LoginScreen() {
         <View className="mb-6">
           <Text className="text-sm text-muted-foreground mb-2">Email address</Text>
           <TextInput
-            className="text-base pb-3 border-b"
+            className="text-base border-b"
             style={{
               color: textColor,
               borderBottomColor: loginError ? '#ef4444' : borderColor,
               borderBottomWidth: 1,
+              paddingTop: 4,
+              paddingBottom: 12,
+              lineHeight: 22,
             }}
             placeholderTextColor={placeholderColor}
             value={email}
@@ -157,15 +160,20 @@ export default function LoginScreen() {
         <View className="mb-4">
           <Text className="text-sm text-muted-foreground mb-2">Password</Text>
           <View
-            className="flex-row items-center border-b"
+            className="flex-row items-end border-b"
             style={{
               borderBottomColor: loginError ? '#ef4444' : borderColor,
               borderBottomWidth: 1
             }}
           >
             <TextInput
-              className="flex-1 text-base pb-3"
-              style={{ color: textColor }}
+              className="flex-1 text-base"
+              style={{
+                color: textColor,
+                paddingTop: 4,
+                paddingBottom: 12,
+                lineHeight: 22,
+              }}
               placeholderTextColor={placeholderColor}
               value={password}
               onChangeText={setPassword}

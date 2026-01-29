@@ -1624,3 +1624,27 @@ Project is fully studied and dependencies are installed. Awaiting user instructi
 - Added loading indicator during resend
 - Separate `handleResendEmail` function for resending
 - `RESEND_COOLDOWN_SECONDS` constant (60s) for easy adjustment
+
+## Session Log - Thu Jan 29, 2026 (TextInput Descender Fix)
+
+### Fixed TextInput Text Clipping Issue
+Letters with descenders (g, y, p, q, j) were getting cut off in all form inputs.
+
+**Root Cause:** `pb-3` (padding-bottom) alone wasn't providing enough space for descender rendering.
+
+**Fix Applied:** Updated all TextInput components with proper styling:
+```javascript
+style={{
+  paddingTop: 4,
+  paddingBottom: 12,
+  lineHeight: 22,
+}}
+```
+
+Also changed parent View from `items-center` to `items-end` for proper alignment with icons.
+
+**Files Updated:**
+1. `app/auth/login.tsx` - Email and password inputs
+2. `app/auth/forgot-password.tsx` - Email input
+3. `app/auth/reset-password.tsx` - New password and confirm password inputs
+4. `components/custom/shared/SignupForm.tsx` - All 5 form inputs (first name, last name, email, phone, password)

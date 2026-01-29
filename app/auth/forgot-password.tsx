@@ -242,15 +242,20 @@ export default function ForgotPasswordScreen() {
           <View className="mb-8">
             <Text className="text-sm text-muted-foreground mb-2">Email address</Text>
             <View
-              className="flex-row items-center border-b"
+              className="flex-row items-end border-b"
               style={{
                 borderBottomColor: error ? '#ef4444' : borderColor,
                 borderBottomWidth: 1,
               }}
             >
               <TextInput
-                className="flex-1 text-base pb-3"
-                style={{ color: textColor }}
+                className="flex-1 text-base"
+                style={{
+                  color: textColor,
+                  paddingTop: 4,
+                  paddingBottom: 12,
+                  lineHeight: 22,
+                }}
                 placeholderTextColor={placeholderColor}
                 value={email}
                 onChangeText={setEmail}

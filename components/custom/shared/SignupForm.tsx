@@ -237,11 +237,14 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
           <View className="mb-6">
             <Text className="text-sm text-muted-foreground mb-2">First name</Text>
             <TextInput
-              className="text-base pb-3"
+              className="text-base"
               style={{
                 color: textColor,
                 borderBottomColor: getBorderColor('firstName'),
                 borderBottomWidth: 1,
+                paddingTop: 4,
+                paddingBottom: 12,
+                lineHeight: 22,
               }}
               value={form.firstName}
               onChangeText={(v) => updateField('firstName', v)}
@@ -258,11 +261,14 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
           <View className="mb-6">
             <Text className="text-sm text-muted-foreground mb-2">Last name</Text>
             <TextInput
-              className="text-base pb-3"
+              className="text-base"
               style={{
                 color: textColor,
                 borderBottomColor: getBorderColor('lastName'),
                 borderBottomWidth: 1,
+                paddingTop: 4,
+                paddingBottom: 12,
+                lineHeight: 22,
               }}
               value={form.lastName}
               onChangeText={(v) => updateField('lastName', v)}
@@ -279,11 +285,14 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
           <View className="mb-6">
             <Text className="text-sm text-muted-foreground mb-2">Email address</Text>
             <TextInput
-              className="text-base pb-3"
+              className="text-base"
               style={{
                 color: textColor,
                 borderBottomColor: getBorderColor('email'),
                 borderBottomWidth: 1,
+                paddingTop: 4,
+                paddingBottom: 12,
+                lineHeight: 22,
               }}
               value={form.email}
               onChangeText={(v) => updateField('email', v)}
@@ -302,20 +311,24 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
           <View className="mb-6">
             <Text className="text-sm text-muted-foreground mb-2">Phone number</Text>
             <View
-              className="flex-row items-center"
+              className="flex-row items-end"
               style={{ borderBottomColor: getBorderColor('phone'), borderBottomWidth: 1 }}
             >
               {/* Country Code Prefix */}
-              <View className="flex-row items-center pr-3 border-r border-border">
-
+              <View className="flex-row items-center pr-3 pb-3 border-r border-border">
                 <Text className="text-base ml-2" style={{ color: textColor }}>
                   {phoneCountryCode}
                 </Text>
               </View>
               {/* Phone Input */}
               <TextInput
-                className="flex-1 text-base pb-3 pl-3"
-                style={{ color: textColor }}
+                className="flex-1 text-base pl-3"
+                style={{
+                  color: textColor,
+                  paddingTop: 4,
+                  paddingBottom: 12,
+                  lineHeight: 22,
+                }}
                 value={form.phone}
                 onChangeText={handlePhoneChange}
                 keyboardType="phone-pad"
@@ -333,12 +346,17 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
           <View className="mb-6">
             <Text className="text-sm text-muted-foreground mb-2">Password</Text>
             <View
-              className="flex-row items-center"
+              className="flex-row items-end"
               style={{ borderBottomColor: getBorderColor('password'), borderBottomWidth: 1 }}
             >
               <TextInput
-                className="flex-1 text-base pb-3"
-                style={{ color: textColor }}
+                className="flex-1 text-base"
+                style={{
+                  color: textColor,
+                  paddingTop: 4,
+                  paddingBottom: 12,
+                  lineHeight: 22,
+                }}
                 value={form.password}
                 onChangeText={(v) => updateField('password', v)}
                 secureTextEntry={!showPassword}
