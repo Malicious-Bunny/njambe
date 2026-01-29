@@ -193,7 +193,6 @@ export default function ForgotPasswordScreen() {
               <TextInput
                 className="flex-1 text-base pb-3"
                 style={{ color: textColor }}
-                placeholder="Enter your email"
                 placeholderTextColor={placeholderColor}
                 value={email}
                 onChangeText={setEmail}
@@ -237,7 +236,7 @@ export default function ForgotPasswordScreen() {
             <Pressable onPress={handleBackToLogin}>
               <Text className="text-sm text-muted-foreground">
                 Remember your password?{' '}
-                <Text className="text-primary underline">Sign In</Text>
+                <Text className="text-primary underline">sign in</Text>
               </Text>
             </Pressable>
           </View>
