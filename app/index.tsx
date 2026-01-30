@@ -12,7 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function StartScreen() {
   const handleCustomerMode = () => {
-    router.push('/(customer)');
+    router.push('/(customer)/onboarding');
   };
 
   const handleProviderMode = () => {
