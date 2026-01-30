@@ -1694,3 +1694,13 @@ Replaced all hardcoded zinc colors with semantic design system tokens:
 | Hardcoded `#18181b` | Dynamic `arrowColor` from theme |
 
 Added `useColorScheme` hook and `COLORS` import for dynamic icon colors.
+
+## Session Log - Thu Jan 30, 2026 (Onboarding Updates)
+
+### Changes Made
+1. **Image section size**: Changed from 55% to 50% (2/4 of screen)
+2. **Pagination dots styling**:
+   - Increased height from `h-1` to `h-1.5` for better visibility
+   - Active dot: Pure white (`#FFFFFF`) in dark mode, zinc-900 (`#18181B`) in light mode
+   - Inactive dots: Zinc-700 (`#3F3F46`) in dark mode, zinc-300 (`#D4D4D8`) in light mode
+   - Using inline styles for precise color control based on theme

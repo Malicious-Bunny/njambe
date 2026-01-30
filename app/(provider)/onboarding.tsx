@@ -61,7 +61,7 @@ export default function ProviderOnboardingScreen() {
   const renderSlide = ({ item }: { item: OnboardingSlide }) => {
     return (
       <View style={{ width: SCREEN_WIDTH }} className="flex-1">
-        {/* Image Container - takes about 55% of screen */}
+        {/* Image Container - takes 50% of screen */}
         <View className="flex-1 px-4 pt-4">
           <Image
             source={{ uri: item.image }}
@@ -106,11 +106,16 @@ export default function ProviderOnboardingScreen() {
             {ONBOARDING_SLIDES.map((_, index) => (
               <View
                 key={index}
-                className={`h-1 rounded-full mr-2 ${
+                className={`h-1.5 rounded-full mr-2 ${
                   index === currentSlide
-                    ? 'w-8 bg-foreground'
-                    : 'w-2 bg-muted'
+                    ? 'w-8'
+                    : 'w-2'
                 }`}
+                style={{
+                  backgroundColor: index === currentSlide
+                    ? (isDark ? '#FFFFFF' : '#18181B')
+                    : (isDark ? '#3F3F46' : '#D4D4D8')
+                }}
               />
             ))}
           </View>
