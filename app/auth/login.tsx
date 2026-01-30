@@ -29,7 +29,7 @@ export default function LoginScreen() {
       setLoginError(null);
     }
   }, [email, password]);
-
+//marlon
   const handleLogin = async () => {
     if (!email.trim()) {
       setLoginError('Please enter your email');
