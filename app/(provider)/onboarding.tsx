@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Text } from '@/components/ui/text';
-import { COLORS } from '@/lib/theme';
+import { THEME } from '@/lib/theme';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -25,8 +25,8 @@ export default function ProviderOnboardingScreen() {
   const flatListRef = React.useRef<FlatList>(null);
   const totalSlides = ONBOARDING_SLIDES.length;
 
-  // Dynamic colors based on theme
-  const arrowColor = isDark ? COLORS.dark.primary : COLORS.light.foreground;
+  // Dynamic colors based on theme - arrow is inside primary button, needs primaryForeground color
+  const arrowColor = isDark ? THEME.dark.primaryForeground : THEME.light.primaryForeground;
 
   const handleNext = () => {
     if (currentSlide < totalSlides - 1) {
