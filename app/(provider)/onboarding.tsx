@@ -7,19 +7,26 @@ import {
   FlatList,
   Image,
   Pressable,
+  useColorScheme,
   View,
   type ViewToken,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Text } from '@/components/ui/text';
+import { COLORS } from '@/lib/theme';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 export default function ProviderOnboardingScreen() {
   const router = useRouter();
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
   const [currentSlide, setCurrentSlide] = React.useState(0);
   const flatListRef = React.useRef<FlatList>(null);
   const totalSlides = ONBOARDING_SLIDES.length;
+
+  // Dynamic colors based on theme
+  const arrowColor = isDark ? COLORS.dark.primary : COLORS.light.foreground;
 
   const handleNext = () => {
     if (currentSlide < totalSlides - 1) {
@@ -54,7 +61,7 @@ export default function ProviderOnboardingScreen() {
   const renderSlide = ({ item }: { item: OnboardingSlide }) => {
     return (
       <View style={{ width: SCREEN_WIDTH }} className="flex-1">
-        {/* Image Container - takes about 60% of screen */}
+        {/* Image Container - takes about 55% of screen */}
         <View className="flex-1 px-4 pt-4">
           <Image
             source={{ uri: item.image }}
@@ -67,9 +74,9 @@ export default function ProviderOnboardingScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-zinc-950" edges={['top', 'bottom']}>
+    <SafeAreaView className="flex-1 bg-background" edges={['top', 'bottom']}>
       {/* Swipeable Image Content */}
-      <View className="flex-1" style={{ maxHeight: '60%' }}>
+      <View className="flex-1" style={{ maxHeight: '55%' }}>
         <FlatList
           ref={flatListRef}
           data={ONBOARDING_SLIDES}
@@ -90,55 +97,63 @@ export default function ProviderOnboardingScreen() {
         />
       </View>
 
-      {/* Bottom Content */}
-      <View className="px-6 pt-6 pb-4">
-        {/* Pagination Dots */}
-        <View className="flex-row items-center mb-6">
-          {ONBOARDING_SLIDES.map((_, index) => (
-            <View
-              key={index}
-              className={`h-1 rounded-full mr-2 ${
-                index === currentSlide
-                  ? 'w-8 bg-zinc-100'
-                  : 'w-2 bg-zinc-700'
-              }`}
-            />
-          ))}
-        </View>
+      {/* Bottom Content - flex-1 to fill remaining space, justify-between to push buttons to bottom */}
+      <View className="flex-1 px-6 pt-6 pb-4 justify-between">
+        {/* Top section: Pagination + Title + Description */}
+        <View>
+          {/* Pagination Dots */}
+          <View className="flex-row items-center mb-6">
+            {ONBOARDING_SLIDES.map((_, index) => (
+              <View
+                key={index}
+                className={`h-1 rounded-full mr-2 ${
+                  index === currentSlide
+                    ? 'w-8 bg-foreground'
+                    : 'w-2 bg-muted'
+                }`}
+              />
+            ))}
+          </View>
 
-        {/* Title Text */}
-        <View className="mb-8">
-          <Text className="text-4xl font-bold text-zinc-100 leading-tight">
-            {ONBOARDING_SLIDES[currentSlide].title}
-          </Text>
-          {ONBOARDING_SLIDES[currentSlide].highlightedWord && (
-            <Text className="text-4xl font-bold text-zinc-100 leading-tight">
-              {ONBOARDING_SLIDES[currentSlide].highlightedWord}
+          {/* Title Text */}
+          <View className="mb-3">
+            <Text className="text-4xl font-bold text-foreground leading-tight">
+              {ONBOARDING_SLIDES[currentSlide].title}
             </Text>
-          )}
+            {ONBOARDING_SLIDES[currentSlide].highlightedWord && (
+              <Text className="text-4xl font-bold text-foreground leading-tight">
+                {ONBOARDING_SLIDES[currentSlide].highlightedWord}
+              </Text>
+            )}
+          </View>
+
+          {/* Description Paragraph */}
+          <Text className="text-base text-muted-foreground leading-relaxed">
+            {ONBOARDING_SLIDES[currentSlide].description}
+          </Text>
         </View>
 
-        {/* Navigation Buttons */}
+        {/* Navigation Buttons - locked at bottom */}
         <View className="flex-row items-center justify-between">
           {/* Skip Button */}
           <Pressable
             onPress={handleSkip}
-            className="py-3 px-4 rounded-full bg-zinc-800 active:bg-zinc-700"
+            className="py-3 px-4 rounded-full bg-secondary active:opacity-80"
           >
-            <Text className="text-base font-medium text-zinc-100">Skip</Text>
+            <Text className="text-base font-medium text-foreground">Skip</Text>
           </Pressable>
 
           {/* Next Button */}
           <Pressable
             onPress={handleNext}
-            className="flex-row items-center py-3 px-8 rounded-full bg-zinc-100 active:bg-zinc-300"
+            className="flex-row items-center py-3 px-8 rounded-full bg-primary active:opacity-90"
           >
-            <Text className="text-base font-semibold text-zinc-900 mr-2">
+            <Text className="text-base font-semibold text-primary-foreground mr-2">
               Next
             </Text>
             <View className="flex-row">
-              <NavArrowRight width={18} height={18} color="#18181b" strokeWidth={2} />
-              <NavArrowRight width={18} height={18} color="#18181b" strokeWidth={2} style={{ marginLeft: -8 }} />
+              <NavArrowRight width={18} height={18} color={arrowColor} strokeWidth={2} />
+              <NavArrowRight width={18} height={18} color={arrowColor} strokeWidth={2} style={{ marginLeft: -8 }} />
             </View>
           </Pressable>
         </View>

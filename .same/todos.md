@@ -562,16 +562,12 @@ Both screens now show the updated language selector with proper flags.
    - `app/_layout.tsx` - Root layout with Stack navigation, ThemeProvider, PortalHost
    - `app/index.tsx` - Start screen with logo, carousel, CTAs
    - `app/auth/login.tsx` - Login screen with email/password form
-   - `app/(customer)/index.tsx` - Customer signup screen
    - `app/(customer)/(tabs)/index.tsx` - Service screen with categories grid
    - `app/(provider)/index.tsx` - Provider home with stats and actions
    - `app/(provider)/onboarding.tsx` - 3-slide swipeable onboarding flow
    - `lib/theme.ts` - Zinc theme configuration
    - `global.css` - CSS variables for light/dark themes
-   - `lib/customer/categories.ts` - Service categories data
-   - `lib/start/service-providers.ts` - Service provider card data
-   - `lib/provider/onboarding-data.ts` - Onboarding slides data
-   - Various custom component files in `components/custom/`
+   - Various custom components in `components/custom/`
 5. **Installed dependencies** with pnpm (765 packages)
 
 ### Project Understanding Summary
@@ -1648,3 +1644,53 @@ Also changed parent View from `items-center` to `items-end` for proper alignment
 2. `app/auth/forgot-password.tsx` - Email input
 3. `app/auth/reset-password.tsx` - New password and confirm password inputs
 4. `components/custom/shared/SignupForm.tsx` - All 5 form inputs (first name, last name, email, phone, password)
+
+## Session Log - Thu Jan 30, 2026 (Onboarding Design Update)
+
+### Onboarding Page Redesign
+Added description paragraphs under titles and locked buttons at bottom.
+
+**Files Updated:**
+1. `lib/provider/onboarding-data.ts`:
+   - Added `description` field to `OnboardingSlide` interface
+   - Added descriptions for all 3 slides:
+     - Slide 1: "Discover job opportunities in your neighborhood..."
+     - Slide 2: "Build your reputation with reviews and ratings..."
+     - Slide 3: "Receive payments directly and securely..."
+
+2. `app/(provider)/onboarding.tsx`:
+   - Reduced image area from 60% to 55% to make room for description
+   - Added description paragraph under title with `text-zinc-400` styling
+   - Changed bottom content to use `flex-1 justify-between` to push buttons to bottom
+   - Wrapped pagination + title + description in a top section View
+   - Buttons now stay locked at the bottom regardless of content length
+
+### Layout Structure:
+```
+SafeAreaView
+├── Image FlatList (55% max height)
+└── Bottom Content (flex-1, justify-between)
+    ├── Top Section
+    │   ├── Pagination dots
+    │   ├── Title
+    │   └── Description paragraph
+    └── Navigation Buttons (locked at bottom)
+```
+
+### Color Token Migration (NativeWind Design System)
+Replaced all hardcoded zinc colors with semantic design system tokens:
+
+| Before (Hardcoded) | After (Design System) |
+|--------------------|----------------------|
+| `bg-zinc-950` | `bg-background` |
+| `text-zinc-100` | `text-foreground` |
+| `text-zinc-400` | `text-muted-foreground` |
+| `bg-zinc-800` | `bg-secondary` |
+| `bg-zinc-700` (pagination) | `bg-muted` |
+| `bg-zinc-100` (button) | `bg-primary` |
+| `text-zinc-900` | `text-primary-foreground` |
+| `active:bg-zinc-700` | `active:opacity-80` |
+| `active:bg-zinc-300` | `active:opacity-90` |
+| Hardcoded `#18181b` | Dynamic `arrowColor` from theme |
+
+Added `useColorScheme` hook and `COLORS` import for dynamic icon colors.
