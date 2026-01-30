@@ -1,39 +1,25 @@
-import {
-  OnboardingNavButton,
-  OnboardingPagination,
-  OnboardingSlide1,
-  OnboardingSlide2,
-  OnboardingSlide3,
-} from '@/components/custom/provider/onboarding';
-import {
-  ONBOARDING_SLIDES,
-  type OnboardingSlide1Data,
-  type OnboardingSlide2Data,
-  type OnboardingSlide3Data,
-} from '@/lib/provider/onboarding-data';
+import { ONBOARDING_SLIDES, type OnboardingSlide } from '@/lib/provider/onboarding-data';
 import { useRouter } from 'expo-router';
-import { NavArrowLeft } from 'iconoir-react-native';
-import { useColorScheme } from 'nativewind';
+import { NavArrowRight } from 'iconoir-react-native';
 import * as React from 'react';
 import {
   Dimensions,
   FlatList,
+  Image,
   Pressable,
   View,
   type ViewToken,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Text } from '@/components/ui/text';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 export default function ProviderOnboardingScreen() {
   const router = useRouter();
-  const { colorScheme } = useColorScheme();
   const [currentSlide, setCurrentSlide] = React.useState(0);
   const flatListRef = React.useRef<FlatList>(null);
   const totalSlides = ONBOARDING_SLIDES.length;
-
-  const arrowColor = colorScheme === 'dark' ? '#fafafa' : '#18181b';
 
   const handleNext = () => {
     if (currentSlide < totalSlides - 1) {
@@ -47,15 +33,9 @@ export default function ProviderOnboardingScreen() {
     }
   };
 
-  const handleBack = () => {
-    if (currentSlide > 0) {
-      flatListRef.current?.scrollToIndex({
-        index: currentSlide - 1,
-        animated: true,
-      });
-    } else {
-      router.back();
-    }
+  const handleSkip = () => {
+    // Skip onboarding and go directly to signup
+    router.push('/(provider)/signup');
   };
 
   const onViewableItemsChanged = React.useCallback(
@@ -71,57 +51,96 @@ export default function ProviderOnboardingScreen() {
     itemVisiblePercentThreshold: 50,
   }).current;
 
-  const renderSlide = ({ item }: { item: (typeof ONBOARDING_SLIDES)[number] }) => {
+  const renderSlide = ({ item }: { item: OnboardingSlide }) => {
     return (
-      <View style={{ width: SCREEN_WIDTH }} className="flex-1 pt-8">
-        {item.type === 'join' && <OnboardingSlide1 data={item as OnboardingSlide1Data} />}
-        {item.type === 'stats' && <OnboardingSlide2 data={item as OnboardingSlide2Data} />}
-        {item.type === 'howItWorks' && <OnboardingSlide3 data={item as OnboardingSlide3Data} />}
+      <View style={{ width: SCREEN_WIDTH }} className="flex-1">
+        {/* Image Container - takes about 60% of screen */}
+        <View className="flex-1 px-4 pt-4">
+          <Image
+            source={{ uri: item.image }}
+            className="w-full h-full rounded-3xl"
+            resizeMode="cover"
+          />
+        </View>
       </View>
     );
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background dark:bg-background">
-      {/* Back Button */}
-      <View className="px-4 py-2">
-        <Pressable
-          onPress={handleBack}
-          className="w-10 h-10 items-center justify-center"
-        >
-          <NavArrowLeft width={24} height={24} color={arrowColor} />
-        </Pressable>
+    <SafeAreaView className="flex-1 bg-zinc-950" edges={['top', 'bottom']}>
+      {/* Swipeable Image Content */}
+      <View className="flex-1" style={{ maxHeight: '60%' }}>
+        <FlatList
+          ref={flatListRef}
+          data={ONBOARDING_SLIDES}
+          renderItem={renderSlide}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          bounces={false}
+          onViewableItemsChanged={onViewableItemsChanged}
+          viewabilityConfig={viewabilityConfig}
+          getItemLayout={(_, index) => ({
+            length: SCREEN_WIDTH,
+            offset: SCREEN_WIDTH * index,
+            index,
+          })}
+          keyExtractor={(item) => item.id.toString()}
+          className="flex-1"
+        />
       </View>
 
-      {/* Swipeable Slide Content */}
-      <FlatList
-        ref={flatListRef}
-        data={ONBOARDING_SLIDES}
-        renderItem={renderSlide}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        bounces={false}
-        onViewableItemsChanged={onViewableItemsChanged}
-        viewabilityConfig={viewabilityConfig}
-        getItemLayout={(_, index) => ({
-          length: SCREEN_WIDTH,
-          offset: SCREEN_WIDTH * index,
-          index,
-        })}
-        keyExtractor={(_, index) => index.toString()}
-        className="flex-1"
-      />
+      {/* Bottom Content */}
+      <View className="px-6 pt-6 pb-4">
+        {/* Pagination Dots */}
+        <View className="flex-row items-center mb-6">
+          {ONBOARDING_SLIDES.map((_, index) => (
+            <View
+              key={index}
+              className={`h-1 rounded-full mr-2 ${
+                index === currentSlide
+                  ? 'w-8 bg-zinc-100'
+                  : 'w-2 bg-zinc-700'
+              }`}
+            />
+          ))}
+        </View>
 
-      {/* Bottom Navigation */}
-      <View className="px-6 pb-6 flex-row items-center justify-between">
-        <View className="flex-1" />
-        <OnboardingPagination
-          totalSlides={totalSlides}
-          currentSlide={currentSlide}
-        />
-        <View className="flex-1 items-end">
-          <OnboardingNavButton onPress={handleNext} />
+        {/* Title Text */}
+        <View className="mb-8">
+          <Text className="text-4xl font-bold text-zinc-100 leading-tight">
+            {ONBOARDING_SLIDES[currentSlide].title}
+          </Text>
+          {ONBOARDING_SLIDES[currentSlide].highlightedWord && (
+            <Text className="text-4xl font-bold text-zinc-100 leading-tight">
+              {ONBOARDING_SLIDES[currentSlide].highlightedWord}
+            </Text>
+          )}
+        </View>
+
+        {/* Navigation Buttons */}
+        <View className="flex-row items-center justify-between">
+          {/* Skip Button */}
+          <Pressable
+            onPress={handleSkip}
+            className="py-3 px-4 rounded-full bg-zinc-800 active:bg-zinc-700"
+          >
+            <Text className="text-base font-medium text-zinc-100">Skip</Text>
+          </Pressable>
+
+          {/* Next Button */}
+          <Pressable
+            onPress={handleNext}
+            className="flex-row items-center py-3 px-8 rounded-full bg-zinc-100 active:bg-zinc-300"
+          >
+            <Text className="text-base font-semibold text-zinc-900 mr-2">
+              Next
+            </Text>
+            <View className="flex-row">
+              <NavArrowRight width={18} height={18} color="#18181b" strokeWidth={2} />
+              <NavArrowRight width={18} height={18} color="#18181b" strokeWidth={2} style={{ marginLeft: -8 }} />
+            </View>
+          </Pressable>
         </View>
       </View>
     </SafeAreaView>
