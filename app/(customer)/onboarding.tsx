@@ -158,7 +158,6 @@ export default function CustomerOnboardingScreen() {
             </Text>
             <View className="flex-row">
               <NavArrowRight width={18} height={18} color={arrowColor} strokeWidth={2} />
-              <NavArrowRight width={18} height={18} color={arrowColor} strokeWidth={2} style={{ marginLeft: -8 }} />
             </View>
           </Pressable>
         </View>
