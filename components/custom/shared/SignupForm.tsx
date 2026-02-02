@@ -1,4 +1,5 @@
 import { CountrySelector, OrDivider } from '@/components/custom/customer';
+import { Input } from '@/components/ui/input';
 import { Text } from '@/components/ui/text';
 import { signUpWithGoogle } from '@/lib/auth/google-auth';
 import { DEFAULT_COUNTRY, type Country } from '@/lib/customer/countries';
@@ -14,7 +15,6 @@ import {
   Platform,
   Pressable,
   ScrollView,
-  TextInput,
   View,
 } from 'react-native';
 import { z } from 'zod';
@@ -208,10 +208,6 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
   const hasInput = Object.values(form).some((v) => v.trim() !== '');
   const anyLoading = isLoading || isGoogleLoading;
 
-  const getBorderColor = (field: string) => {
-    return submitted && errors[field] ? '#ef4444' : borderColor;
-  };
-
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -236,21 +232,12 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
           {/* First Name */}
           <View className="mb-6">
             <Text className="text-sm text-muted-foreground mb-2">First name</Text>
-            <TextInput
-              className="text-base"
-              style={{
-                color: textColor,
-                borderBottomColor: getBorderColor('firstName'),
-                borderBottomWidth: 1,
-                paddingTop: 4,
-                paddingBottom: 12,
-                lineHeight: 22,
-              }}
+            <Input
               value={form.firstName}
               onChangeText={(v) => updateField('firstName', v)}
               autoCapitalize="words"
               editable={!anyLoading}
-              placeholderTextColor={iconColor}
+              hasError={submitted && !!errors.firstName}
             />
             {submitted && errors.firstName && (
               <Text className="text-xs text-red-500 mt-1">{errors.firstName}</Text>
@@ -260,21 +247,12 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
           {/* Last Name */}
           <View className="mb-6">
             <Text className="text-sm text-muted-foreground mb-2">Last name</Text>
-            <TextInput
-              className="text-base"
-              style={{
-                color: textColor,
-                borderBottomColor: getBorderColor('lastName'),
-                borderBottomWidth: 1,
-                paddingTop: 4,
-                paddingBottom: 12,
-                lineHeight: 22,
-              }}
+            <Input
               value={form.lastName}
               onChangeText={(v) => updateField('lastName', v)}
               autoCapitalize="words"
               editable={!anyLoading}
-              placeholderTextColor={iconColor}
+              hasError={submitted && !!errors.lastName}
             />
             {submitted && errors.lastName && (
               <Text className="text-xs text-red-500 mt-1">{errors.lastName}</Text>
@@ -284,23 +262,14 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
           {/* Email */}
           <View className="mb-6">
             <Text className="text-sm text-muted-foreground mb-2">Email address</Text>
-            <TextInput
-              className="text-base"
-              style={{
-                color: textColor,
-                borderBottomColor: getBorderColor('email'),
-                borderBottomWidth: 1,
-                paddingTop: 4,
-                paddingBottom: 12,
-                lineHeight: 22,
-              }}
+            <Input
               value={form.email}
               onChangeText={(v) => updateField('email', v)}
               keyboardType="email-address"
               autoCapitalize="none"
               autoComplete="email"
               editable={!anyLoading}
-              placeholderTextColor={iconColor}
+              hasError={submitted && !!errors.email}
             />
             {submitted && errors.email && (
               <Text className="text-xs text-red-500 mt-1">{errors.email}</Text>
@@ -311,30 +280,28 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
           <View className="mb-6">
             <Text className="text-sm text-muted-foreground mb-2">Phone number</Text>
             <View
-              className="flex-row items-end"
-              style={{ borderBottomColor: getBorderColor('phone'), borderBottomWidth: 1 }}
+              className="flex-row items-center"
+              style={{ borderBottomColor: submitted && errors.phone ? '#ef4444' : borderColor, borderBottomWidth: 1 }}
             >
               {/* Country Code Prefix */}
-              <View className="flex-row items-center pr-3 pb-3 border-r border-border">
+              <View className="flex-row items-center pr-3 border-r border-border" style={{ minHeight: 44, justifyContent: 'center' }}>
                 <Text className="text-base ml-2" style={{ color: textColor }}>
                   {phoneCountryCode}
                 </Text>
               </View>
               {/* Phone Input */}
-              <TextInput
-                className="flex-1 text-base pl-3"
+              <Input
                 style={{
-                  color: textColor,
-                  paddingTop: 4,
-                  paddingBottom: 12,
-                  lineHeight: 22,
+                  flex: 1,
+                  paddingLeft: 12,
+                  borderBottomWidth: 0,
                 }}
                 value={form.phone}
                 onChangeText={handlePhoneChange}
                 keyboardType="phone-pad"
                 maxLength={9}
                 editable={!anyLoading}
-                placeholderTextColor={iconColor}
+                hasError={false}
               />
             </View>
             {submitted && errors.phone && (
@@ -346,24 +313,21 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
           <View className="mb-6">
             <Text className="text-sm text-muted-foreground mb-2">Password</Text>
             <View
-              className="flex-row items-end"
-              style={{ borderBottomColor: getBorderColor('password'), borderBottomWidth: 1 }}
+              className="flex-row items-center"
+              style={{ borderBottomColor: submitted && errors.password ? '#ef4444' : borderColor, borderBottomWidth: 1 }}
             >
-              <TextInput
-                className="flex-1 text-base"
+              <Input
                 style={{
-                  color: textColor,
-                  paddingTop: 4,
-                  paddingBottom: 12,
-                  lineHeight: 22,
+                  flex: 1,
+                  borderBottomWidth: 0,
                 }}
                 value={form.password}
                 onChangeText={(v) => updateField('password', v)}
                 secureTextEntry={!showPassword}
                 editable={!anyLoading}
-                placeholderTextColor={iconColor}
+                hasError={false}
               />
-              <Pressable onPress={() => setShowPassword(!showPassword)} className="pb-3">
+              <Pressable onPress={() => setShowPassword(!showPassword)} className="p-2">
                 {showPassword ? (
                   <Eye width={20} height={20} color={iconColor} />
                 ) : (

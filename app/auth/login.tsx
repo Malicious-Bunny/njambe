@@ -1,4 +1,5 @@
 import { LanguageSelector } from '@/components/custom/start';
+import { Input } from '@/components/ui/input';
 import { Text } from '@/components/ui/text';
 import { signInWithGoogle } from '@/lib/auth/google-auth';
 import { supabase } from '@/lib/supabase';
@@ -6,7 +7,7 @@ import { router } from 'expo-router';
 import { NavArrowLeft, Eye, EyeClosed, Google, Linkedin, AppleMac } from 'iconoir-react-native';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
-import { ActivityIndicator, Alert, Pressable, TextInput, View } from 'react-native';
+import { ActivityIndicator, Alert, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function LoginScreen() {
@@ -29,7 +30,7 @@ export default function LoginScreen() {
       setLoginError(null);
     }
   }, [email, password]);
-//marlon
+
   const handleLogin = async () => {
     if (!email.trim()) {
       setLoginError('Please enter your email');
@@ -136,23 +137,15 @@ export default function LoginScreen() {
         {/* Email Input - Underline Style */}
         <View className="mb-6">
           <Text className="text-sm text-muted-foreground mb-2">Email address</Text>
-          <TextInput
-            className="text-base border-b"
-            style={{
-              color: textColor,
-              borderBottomColor: loginError ? '#ef4444' : borderColor,
-              borderBottomWidth: 1,
-              paddingTop: 4,
-              paddingBottom: 12,
-              lineHeight: 22,
-            }}
-            placeholderTextColor={placeholderColor}
+          <Input
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
             autoCapitalize="none"
             autoComplete="email"
             editable={!anyLoading}
+            hasError={!!loginError}
+            placeholder="Enter your email"
           />
         </View>
 
@@ -160,27 +153,25 @@ export default function LoginScreen() {
         <View className="mb-4">
           <Text className="text-sm text-muted-foreground mb-2">Password</Text>
           <View
-            className="flex-row items-end border-b"
+            className="flex-row items-center"
             style={{
               borderBottomColor: loginError ? '#ef4444' : borderColor,
               borderBottomWidth: 1
             }}
           >
-            <TextInput
-              className="flex-1 text-base"
+            <Input
               style={{
-                color: textColor,
-                paddingTop: 4,
-                paddingBottom: 12,
-                lineHeight: 22,
+                flex: 1,
+                borderBottomWidth: 0,
               }}
-              placeholderTextColor={placeholderColor}
               value={password}
               onChangeText={setPassword}
               secureTextEntry={!showPassword}
               editable={!anyLoading}
+              hasError={false}
+              placeholder="Enter your password"
             />
-            <Pressable onPress={() => setShowPassword(!showPassword)} className="pb-3">
+            <Pressable onPress={() => setShowPassword(!showPassword)} className="p-2">
               {showPassword ? (
                 <Eye width={20} height={20} color={iconColor} />
               ) : (
