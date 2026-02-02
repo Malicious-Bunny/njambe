@@ -219,7 +219,6 @@ export default function ResetPasswordScreen() {
                   paddingBottom: 12,
                   lineHeight: 22,
                 }}
-                placeholder="Enter new password"
                 placeholderTextColor={placeholderColor}
                 value={password}
                 onChangeText={setPassword}
@@ -277,7 +276,6 @@ export default function ResetPasswordScreen() {
                   paddingBottom: 12,
                   lineHeight: 22,
                 }}
-                placeholder="Confirm new password"
                 placeholderTextColor={placeholderColor}
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}

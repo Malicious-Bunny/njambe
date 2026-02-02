@@ -145,7 +145,6 @@ export default function LoginScreen() {
             autoComplete="email"
             editable={!anyLoading}
             hasError={!!loginError}
-            placeholder="Enter your email"
           />
         </View>
 
@@ -169,7 +168,6 @@ export default function LoginScreen() {
               secureTextEntry={!showPassword}
               editable={!anyLoading}
               hasError={false}
-              placeholder="Enter your password"
             />
             <Pressable onPress={() => setShowPassword(!showPassword)} className="p-2">
               {showPassword ? (
