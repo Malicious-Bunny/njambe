@@ -151,10 +151,8 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
           last_name: form.lastName,
           email: form.email.trim(),
           phone: fullPhoneNumber,
-          country_code: selectedCountry.code,
-          country_name: selectedCountry.name,
           role,
-          accepts_promos: acceptsPromos,
+          accepts_promo: acceptsPromos,
           updated_at: new Date().toISOString(),
         });
 
