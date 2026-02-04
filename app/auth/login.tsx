@@ -15,7 +15,7 @@ export default function LoginScreen() {
   // Navigation handlers - route based on user role
   const handleLoginSuccess = (role: UserRole) => {
     if (role === 'provider') {
-      router.replace('/(provider)/');
+      router.replace('/(provider)');
     } else {
       router.replace('/(customer)/(tabs)');
     }
