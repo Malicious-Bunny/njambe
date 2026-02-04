@@ -4,8 +4,8 @@ import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
 
 // Supabase configuration
-const supabaseUrl = 'https://kumbvpzqtagbpocwnrxv.supabase.co';
-const supabaseAnonKey = 'sb_secret_aQu1WA5i05bBfRCDW7TiDA_N6aVoUj2';
+const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL || 'ss';
+const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_KEY || 'ss';
 
 // Custom storage adapter for React Native using SecureStore
 const ExpoSecureStoreAdapter = {
@@ -59,11 +59,10 @@ export interface UserProfile {
   id: string;
   first_name: string;
   last_name: string;
+  phone : string;
   email: string;
-  country_code: string;
-  country_name: string;
   role: 'customer' | 'provider';
-  accepts_promos: boolean;
+  accepts_promo: boolean;
   created_at: string;
   updated_at: string;
 }

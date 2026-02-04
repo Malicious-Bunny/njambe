@@ -131,7 +131,6 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
           data: {
             first_name: form.firstName,
             last_name: form.lastName,
-            role,
             phone: fullPhoneNumber,
           },
         },
@@ -139,6 +138,8 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
 
       if (signUpError) {
         setAuthError(signUpError.message);
+        // console log full error details for debugging
+
         Alert.alert('Signup Failed', signUpError.message, [{ text: 'OK' }]);
         return;
       }
@@ -158,6 +159,7 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
 
         if (profileError) {
           console.error('Error creating profile:', profileError);
+          Alert.alert("Failed to set user profile",profileError.message,[{ text: 'OK' }]);
           // Don't fail signup if profile creation fails - user can update later
         }
 
@@ -282,28 +284,32 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
               style={{ borderBottomColor: submitted && errors.phone ? '#ef4444' : borderColor, borderBottomWidth: 1 }}
             >
               {/* Country Code Prefix */}
-              <View
-                className="flex-row pr-3 border-r border-border"
-                style={{ paddingTop: 4, paddingBottom: 12, minHeight: 44 }}
-              >
-                <Text className="text-base ml-2" style={{ color: textColor, fontSize: 16, lineHeight: 22 }}>
-                  {phoneCountryCode}
-                </Text>
-              </View>
-              {/* Phone Input */}
-              <Input
-                style={{
-                  flex: 1,
-                  paddingLeft: 12,
-                  borderBottomWidth: 0,
-                }}
-                value={form.phone}
-                onChangeText={handlePhoneChange}
-                keyboardType="phone-pad"
-                maxLength={9}
-                editable={!anyLoading}
-                hasError={false}
-              />
+             <View
+                  className="flex-row pr-3 border-r border-border"
+                  style={{ paddingTop: 4, paddingBottom: 12, minHeight: 44 }}
+                >
+                  <Text
+                    className="text-base ml-2"
+                    style={{ color: textColor, fontSize: 16, lineHeight: 22 }}
+                  >
+                    {phoneCountryCode}
+                  </Text>
+                </View>
+
+                {/* Phone Input */}
+                <Input
+                  style={{
+                    flex: 1,
+                    paddingLeft: 12,
+                    borderBottomWidth: 0,
+                  }}
+                  value={form.phone}
+                  onChangeText={handlePhoneChange}
+                  keyboardType="phone-pad"
+                  maxLength={9}
+                  editable={!anyLoading}
+                  hasError={false}
+                />
             </View>
             {submitted && errors.phone && (
               <Text className="text-xs text-red-500 mt-1">{errors.phone}</Text>
