@@ -15,6 +15,7 @@ import {
   Platform,
   Pressable,
   ScrollView,
+  TextInput,
   View,
 } from 'react-native';
 import { z } from 'zod';
@@ -153,7 +154,7 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
           first_name: form.firstName,
           last_name: form.lastName,
           email: form.email.trim(),
-          
+
           phone: fullPhoneNumber,
           role,
           accept_promo: acceptsPromos,
@@ -283,30 +284,48 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
           <View className="mb-6">
             <Text className="text-sm text-muted-foreground mb-2">Phone number</Text>
             <View
-              className="flex-row"
-              style={{ borderBottomColor: submitted && errors.phone ? '#ef4444' : borderColor, borderBottomWidth: 1 }}
+              className="flex-row items-center"
+              style={{
+                borderBottomColor: submitted && errors.phone ? '#ef4444' : borderColor,
+                borderBottomWidth: 1,
+                minHeight: 44,
+              }}
             >
               {/* Country Code Prefix */}
-             <View
-                  className="flex-row pr-3 "
-                  style={{ paddingTop: 4, paddingBottom: 12, minHeight: 44 }}
+              <View className="flex-row items-center">
+                <Text
+                  className="text-base font-medium"
+                  style={{ color: textColor, fontSize: 16, lineHeight: 22 }}
                 >
-                
-                </View>
-
-                {/* Phone Input */}
-                <Input
+                  +237
+                </Text>
+                <View
+                  className="mx-3"
                   style={{
-                    flex: 1,
-                    borderBottomWidth: 0,
+                    width: 1,
+                    height: 20,
+                    backgroundColor: borderColor
                   }}
-                  value={form.phone}
-                  onChangeText={handlePhoneChange}
-                  keyboardType="phone-pad"
-                  maxLength={9}
-                  editable={!anyLoading}
-                  hasError={false}
                 />
+              </View>
+
+              {/* Phone Input */}
+              <TextInput
+                style={{
+                  flex: 1,
+                  fontSize: 16,
+                  lineHeight: 22,
+                  paddingVertical: 10,
+                  color: textColor,
+                }}
+                value={form.phone}
+                onChangeText={handlePhoneChange}
+                keyboardType="phone-pad"
+                maxLength={9}
+                editable={!anyLoading}
+                placeholder="6XXXXXXXX"
+                placeholderTextColor={isDark ? '#71717a' : '#a1a1aa'}
+              />
             </View>
             {submitted && errors.phone && (
               <Text className="text-xs text-red-500 mt-1">{errors.phone}</Text>
