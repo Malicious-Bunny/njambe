@@ -121,6 +121,8 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
 
     // Format full phone number with country code
     const fullPhoneNumber = `${phoneCountryCode}${form.phone}`;
+    // log the datatype of fullPhoneNumber for debugging
+    console.log('Full Phone Number Type:', typeof fullPhoneNumber);
 
     try {
       // Sign up with Supabase Auth
@@ -131,7 +133,7 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
           data: {
             first_name: form.firstName,
             last_name: form.lastName,
-            phone: fullPhoneNumber,
+            role
           },
         },
       });
@@ -146,14 +148,15 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
 
       if (authData.user) {
         // Create user profile in database
-        const { error: profileError } = await supabase.from('users').upsert({
+        const { error: profileError } = await supabase.from('global.users').upsert({
           id: authData.user.id,
           first_name: form.firstName,
           last_name: form.lastName,
           email: form.email.trim(),
+          
           phone: fullPhoneNumber,
           role,
-          accepts_promo: acceptsPromos,
+          accept_promo: acceptsPromos,
           updated_at: new Date().toISOString(),
         });
 
