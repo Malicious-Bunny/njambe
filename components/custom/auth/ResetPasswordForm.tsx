@@ -1,6 +1,6 @@
 import { Text } from '@/components/ui/text';
+import { getPasswordStrength, validatePassword } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
-import { router } from 'expo-router';
 import { Eye, EyeClosed, Lock, CheckCircle } from 'iconoir-react-native';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
@@ -42,16 +42,8 @@ export function ResetPasswordForm({ onBackToLogin, onContinue }: ResetPasswordFo
     }
   }, [password, confirmPassword]);
 
-  const validatePassword = (): string | null => {
-    if (!password.trim()) return 'Please enter a new password';
-    if (password.length < 8) return 'Password must be at least 8 characters';
-    if (!confirmPassword.trim()) return 'Please confirm your password';
-    if (password !== confirmPassword) return 'Passwords do not match';
-    return null;
-  };
-
   const handleResetPassword = async () => {
-    const validationError = validatePassword();
+    const validationError = validatePassword(password, confirmPassword);
     if (validationError) {
       setError(validationError);
       return;
@@ -78,22 +70,7 @@ export function ResetPasswordForm({ onBackToLogin, onContinue }: ResetPasswordFo
     }
   };
 
-  const getPasswordStrength = (): { label: string; color: string; width: string } => {
-    if (password.length === 0) return { label: '', color: borderColor, width: '0%' };
-    if (password.length < 6) return { label: 'Weak', color: '#ef4444', width: '25%' };
-    if (password.length < 8) return { label: 'Fair', color: '#f59e0b', width: '50%' };
-
-    const hasUppercase = /[A-Z]/.test(password);
-    const hasLowercase = /[a-z]/.test(password);
-    const hasNumber = /[0-9]/.test(password);
-    const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-    const strength = [hasUppercase, hasLowercase, hasNumber, hasSpecial].filter(Boolean).length;
-
-    if (strength >= 3) return { label: 'Strong', color: '#22c55e', width: '100%' };
-    return { label: 'Good', color: '#22c55e', width: '75%' };
-  };
-
-  const passwordStrength = getPasswordStrength();
+  const passwordStrength = getPasswordStrength(password, borderColor);
 
   if (isSuccess) {
     return (

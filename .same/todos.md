@@ -1,5 +1,98 @@
 # Njambe Project - Todos & Progress Tracker
 
+## Study Notes (AI Session)
+
+**Last Updated**: February 4, 2026
+
+I have studied the entire project structure. Here's my comprehensive understanding:
+
+### Project Summary
+**njambe** is a React Native/Expo mobile app for a neighborhood-based services marketplace (similar to RingTwice). It connects local service providers (cleaners, gardeners, repair workers) with customers in their community.
+
+### Key Technical Insights
+
+1. **This is a React Native/Expo project** - It runs on mobile devices (iOS/Android) and web, NOT a typical Next.js web project
+2. **Expo SDK 54** with **React Native 0.81.5** - Latest versions
+3. **File-based routing** via Expo Router v6 - Similar to Next.js App Router
+4. **NativeWind v4.2.1** - Tailwind CSS for React Native
+5. **React Native Reusables** - shadcn/ui port for React Native
+6. **Supabase** - Backend for authentication and database
+7. **Zustand** - State management
+
+### Current App Flows
+
+1. **Start Screen** (`app/index.tsx`)
+   - Language selector (EN/FR)
+   - Service providers carousel
+   - CTA buttons for Customer/Provider paths
+
+2. **Customer Flow** (`app/(customer)/`)
+   - Onboarding carousel
+   - Signup with country selector
+   - Tab navigation: Home, Requests, Messages, Notifications, Account
+   - Home screen with categories grid and search
+
+3. **Provider Flow** (`app/(provider)/`)
+   - Provider-specific onboarding
+   - Provider signup
+   - Dashboard (pending)
+
+4. **Auth Flow** (`app/auth/`)
+   - Login with email/password
+   - Google OAuth
+   - Forgot password flow
+   - Reset password with deep linking
+
+### Architecture Rules
+
+1. **Components**: `components/custom/[route_name]/` for page-specific, `components/ui/` for reusables
+2. **Data**: `lib/[page_name]/[data_name].ts` for static data
+3. **Barrel Exports**: Every folder needs an `index.ts`
+4. **Lean Pages**: Pages should only handle layout and orchestration
+
+---
+
+## Auth Route Refactoring (Completed)
+
+### Changes Made
+- [x] Refactored `app/auth/login.tsx` to use extracted components
+- [x] Refactored `app/auth/forgot-password.tsx` to use extracted components
+- [x] Refactored `app/auth/reset-password.tsx` to use extracted components
+- [x] Created `components/custom/auth/PrivacyPolicyLink.tsx`
+- [x] Created `components/custom/auth/CreateAccountButton.tsx`
+- [x] Created `lib/auth/constants.ts` with auth constants
+- [x] Created `lib/auth/validation.ts` with validation utilities
+- [x] Created `lib/auth/index.ts` barrel export
+- [x] Updated barrel exports in `components/custom/auth/index.ts`
+- [x] Updated form components to use extracted utilities
+
+### Component Structure (Post-Refactor)
+```
+components/custom/auth/
+├── BackHeader.tsx         # Back button header with optional language selector
+├── CreateAccountButton.tsx # Bottom CTA for account creation
+├── ErrorBanner.tsx        # Error message display
+├── ForgotPasswordForm.tsx # Full forgot password flow
+├── LoginForm.tsx          # Email/password login form
+├── PrivacyPolicyLink.tsx  # Privacy policy link
+├── ResetPasswordForm.tsx  # Password reset form with strength indicator
+├── SocialLoginButtons.tsx # Google/LinkedIn/Apple login buttons
+└── index.ts               # Barrel export
+
+lib/auth/
+├── constants.ts           # Auth constants (cooldowns, URLs, regex)
+├── google-auth.ts         # Google OAuth logic
+├── validation.ts          # Email/password validation utilities
+└── index.ts               # Barrel export
+```
+
+### Page Files (Now Lean)
+- `app/auth/login.tsx` - 53 lines (was 265 lines)
+- `app/auth/forgot-password.tsx` - 18 lines (was 310 lines)
+- `app/auth/reset-password.tsx` - 28 lines (was 342 lines)
+
+---
+
 ## Project Overview
 **njambe** is a neighborhood-based services marketplace (like RingTwice) connecting users with local service providers for cleaning, gardening, repairs, and other services.
 

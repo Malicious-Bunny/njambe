@@ -1,6 +1,10 @@
 import { Text } from '@/components/ui/text';
+import {
+  PASSWORD_RESET_REDIRECT_URL,
+  RESEND_COOLDOWN_SECONDS,
+  validateEmail,
+} from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
-import { router } from 'expo-router';
 import { Mail } from 'iconoir-react-native';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
@@ -13,8 +17,6 @@ import {
   View,
 } from 'react-native';
 import { ErrorBanner } from './ErrorBanner';
-
-const RESEND_COOLDOWN_SECONDS = 60;
 
 interface ForgotPasswordFormProps {
   onBackToLogin: () => void;
@@ -59,14 +61,9 @@ export function ForgotPasswordForm({ onBackToLogin }: ForgotPasswordFormProps) {
   }, [countdown]);
 
   const handleResetPassword = async () => {
-    if (!email.trim()) {
-      setError('Please enter your email address');
-      return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email.trim())) {
-      setError('Please enter a valid email address');
+    const validationError = validateEmail(email);
+    if (validationError) {
+      setError(validationError);
       return;
     }
 
@@ -75,7 +72,7 @@ export function ForgotPasswordForm({ onBackToLogin }: ForgotPasswordFormProps) {
 
     try {
       const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-        redirectTo: 'njambe://auth/reset-password',
+        redirectTo: PASSWORD_RESET_REDIRECT_URL,
       });
 
       if (resetError) {
@@ -99,7 +96,7 @@ export function ForgotPasswordForm({ onBackToLogin }: ForgotPasswordFormProps) {
 
     try {
       const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-        redirectTo: 'njambe://auth/reset-password',
+        redirectTo: PASSWORD_RESET_REDIRECT_URL,
       });
 
       if (resetError) {

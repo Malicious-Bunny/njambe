@@ -1,5 +1,5 @@
 import { Text } from '@/components/ui/text';
-import { signInWithGoogle } from '@/lib/auth/google-auth';
+import { signInWithGoogle } from '@/lib/auth';
 import { Google, Linkedin, AppleMac } from 'iconoir-react-native';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
