@@ -1,5 +1,6 @@
 import { Input } from '@/components/ui/input';
 import { Text } from '@/components/ui/text';
+import { getUserRole, type UserRole } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
 import { Eye, EyeClosed } from 'iconoir-react-native';
 import { useColorScheme } from 'nativewind';
@@ -7,7 +8,8 @@ import * as React from 'react';
 import { ActivityIndicator, Pressable, View } from 'react-native';
 import { ErrorBanner } from './ErrorBanner';
 
-export type UserRole = 'customer' | 'provider';
+// Re-export UserRole for backward compatibility
+export type { UserRole } from '@/lib/auth';
 
 interface LoginFormProps {
   onSuccess: (role: UserRole) => void;
@@ -31,37 +33,6 @@ export function LoginForm({ onSuccess, onForgotPassword }: LoginFormProps) {
       setLoginError(null);
     }
   }, [email, password]);
-
-  /**
-   * Fetch user role from user_metadata or users table
-   */
-  const getUserRole = async (userId: string, userMetadata: any): Promise<UserRole> => {
-    // First try to get role from user_metadata (set during signup)
-    if (userMetadata?.role && (userMetadata.role === 'customer' || userMetadata.role === 'provider')) {
-      console.log('Role from user_metadata:', userMetadata.role);
-      return userMetadata.role as UserRole;
-    }
-
-    // Fallback: query the users table
-    try {
-      const { data: profile, error } = await supabase
-        .from('users')
-        .select('role')
-        .eq('id', userId)
-        .single();
-
-      if (!error && profile?.role) {
-        console.log('Role from users table:', profile.role);
-        return profile.role as UserRole;
-      }
-    } catch (error) {
-      console.error('Error fetching user role from database:', error);
-    }
-
-    // Default to customer if no role found
-    console.log('No role found, defaulting to customer');
-    return 'customer';
-  };
 
   const handleLogin = async () => {
     if (!email.trim()) {

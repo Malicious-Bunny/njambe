@@ -1,5 +1,6 @@
 import '@/global.css';
 
+import { getUserRole, getRouteForRole } from '@/lib/auth';
 import { NAV_THEME } from '@/lib/theme';
 import { supabase } from '@/lib/supabase';
 import { ThemeProvider } from '@react-navigation/native';
@@ -78,12 +79,30 @@ export default function RootLayout() {
     };
   }, []);
 
-  // Initialize auth on app start
+  // Initialize auth on app start and redirect if session exists
   React.useEffect(() => {
     const initAuth = async () => {
       try {
         // Check for existing session
-        await supabase.auth.getSession();
+        const { data: { session }, error } = await supabase.auth.getSession();
+
+        if (error) {
+          console.error('Error getting session:', error);
+          setIsInitialized(true);
+          return;
+        }
+
+        // If user has an active session, redirect to their dashboard
+        if (session?.user) {
+          console.log('Existing session found, redirecting user...');
+          const role = await getUserRole(session.user.id, session.user.user_metadata);
+          const route = getRouteForRole(role);
+
+          // Use setTimeout to ensure navigation happens after layout is mounted
+          setTimeout(() => {
+            router.replace(route as any);
+          }, 0);
+        }
       } catch (error) {
         console.error('Auth initialization error:', error);
       } finally {
@@ -94,12 +113,26 @@ export default function RootLayout() {
     initAuth();
 
     // Listen for auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log('Auth state changed:', event);
 
       // Handle password recovery event
       if (event === 'PASSWORD_RECOVERY') {
         router.replace('/auth/reset-password');
+        return;
+      }
+
+      // Handle sign out - redirect to start screen
+      if (event === 'SIGNED_OUT') {
+        router.replace('/');
+        return;
+      }
+
+      // Handle sign in - redirect to appropriate dashboard
+      if (event === 'SIGNED_IN' && session?.user) {
+        const role = await getUserRole(session.user.id, session.user.user_metadata);
+        const route = getRouteForRole(role);
+        router.replace(route as any);
       }
     });
 
