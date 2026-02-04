@@ -288,22 +288,16 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
             >
               {/* Country Code Prefix */}
              <View
-                  className="flex-row pr-3 border-r border-border"
+                  className="flex-row pr-3 "
                   style={{ paddingTop: 4, paddingBottom: 12, minHeight: 44 }}
                 >
-                  <Text
-                    className="text-base ml-2"
-                    style={{ color: textColor, fontSize: 16, lineHeight: 22 }}
-                  >
-                    {phoneCountryCode}
-                  </Text>
+                
                 </View>
 
                 {/* Phone Input */}
                 <Input
                   style={{
                     flex: 1,
-                    paddingLeft: 12,
                     borderBottomWidth: 0,
                   }}
                   value={form.phone}
