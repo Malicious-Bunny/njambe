@@ -5,15 +5,20 @@ import {
   PrivacyPolicyLink,
   SocialLoginButtons,
 } from '@/components/custom/auth';
+import type { UserRole } from '@/components/custom/auth';
 import { router } from 'expo-router';
 import * as React from 'react';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function LoginScreen() {
-  // Navigation handlers
-  const handleLoginSuccess = () => {
-    router.replace('/(customer)/(tabs)');
+  // Navigation handlers - route based on user role
+  const handleLoginSuccess = (role: UserRole) => {
+    if (role === 'provider') {
+      router.replace('/(provider)/');
+    } else {
+      router.replace('/(customer)/(tabs)');
+    }
   };
 
   const handleForgotPassword = () => {

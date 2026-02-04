@@ -149,6 +149,33 @@ lib/auth/
 
 ---
 
+## Role-Based Login Implementation (Completed)
+
+### Changes Made
+- [x] Updated `LoginForm` component to fetch user role after login
+- [x] Updated `SocialLoginButtons` to fetch user role after Google OAuth
+- [x] Modified `app/auth/login.tsx` to route based on role:
+  - **Customer** → `/(customer)/(tabs)`
+  - **Provider** → `/(provider)/`
+- [x] Added `UserRole` type export to barrel file
+- [x] Role detection priority:
+  1. First checks `user_metadata.role` (set during signup)
+  2. Falls back to querying `users` table
+  3. Defaults to `customer` if no role found
+
+### Supabase Configuration for Email Confirmation
+
+**To enable login without email confirmation:**
+
+1. Go to your Supabase Dashboard
+2. Navigate to **Authentication** → **Providers** → **Email**
+3. Toggle OFF "Confirm email" option
+4. Save changes
+
+**Note:** Disabling email confirmation allows users to log in immediately after signup without verifying their email address. This is less secure but provides a better user experience for development/testing.
+
+---
+
 ## Project Overview
 **njambe** is a neighborhood-based services marketplace (like RingTwice) connecting users with local service providers for cleaning, gardening, repairs, and other services.
 

@@ -1,15 +1,16 @@
 import { Input } from '@/components/ui/input';
 import { Text } from '@/components/ui/text';
 import { supabase } from '@/lib/supabase';
-import { router } from 'expo-router';
 import { Eye, EyeClosed } from 'iconoir-react-native';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import { ActivityIndicator, Pressable, View } from 'react-native';
 import { ErrorBanner } from './ErrorBanner';
 
+export type UserRole = 'customer' | 'provider';
+
 interface LoginFormProps {
-  onSuccess: () => void;
+  onSuccess: (role: UserRole) => void;
   onForgotPassword: () => void;
 }
 
@@ -31,6 +32,37 @@ export function LoginForm({ onSuccess, onForgotPassword }: LoginFormProps) {
     }
   }, [email, password]);
 
+  /**
+   * Fetch user role from user_metadata or users table
+   */
+  const getUserRole = async (userId: string, userMetadata: any): Promise<UserRole> => {
+    // First try to get role from user_metadata (set during signup)
+    if (userMetadata?.role && (userMetadata.role === 'customer' || userMetadata.role === 'provider')) {
+      console.log('Role from user_metadata:', userMetadata.role);
+      return userMetadata.role as UserRole;
+    }
+
+    // Fallback: query the users table
+    try {
+      const { data: profile, error } = await supabase
+        .from('users')
+        .select('role')
+        .eq('id', userId)
+        .single();
+
+      if (!error && profile?.role) {
+        console.log('Role from users table:', profile.role);
+        return profile.role as UserRole;
+      }
+    } catch (error) {
+      console.error('Error fetching user role from database:', error);
+    }
+
+    // Default to customer if no role found
+    console.log('No role found, defaulting to customer');
+    return 'customer';
+  };
+
   const handleLogin = async () => {
     if (!email.trim()) {
       setLoginError('Please enter your email');
@@ -51,12 +83,19 @@ export function LoginForm({ onSuccess, onForgotPassword }: LoginFormProps) {
       });
 
       if (error) {
-        setLoginError(error.message);
+        // Handle email not confirmed error specifically
+        if (error.message.includes('Email not confirmed')) {
+          setLoginError('Please confirm your email address before signing in.');
+        } else {
+          setLoginError(error.message);
+        }
         return;
       }
 
       if (data.user) {
-        onSuccess();
+        // Fetch user role and route accordingly
+        const role = await getUserRole(data.user.id, data.user.user_metadata);
+        onSuccess(role);
       }
     } catch (error) {
       setLoginError(error instanceof Error ? error.message : 'Login failed');

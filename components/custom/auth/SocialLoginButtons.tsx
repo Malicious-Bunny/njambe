@@ -1,12 +1,14 @@
 import { Text } from '@/components/ui/text';
 import { signInWithGoogle } from '@/lib/auth';
+import { supabase } from '@/lib/supabase';
 import { Google, Linkedin, AppleMac } from 'iconoir-react-native';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import { ActivityIndicator, Alert, Pressable, View } from 'react-native';
+import type { UserRole } from './LoginForm';
 
 interface SocialLoginButtonsProps {
-  onSuccess: () => void;
+  onSuccess: (role: UserRole) => void;
   disabled?: boolean;
 }
 
@@ -14,6 +16,37 @@ export function SocialLoginButtons({ onSuccess, disabled = false }: SocialLoginB
   const [isGoogleLoading, setIsGoogleLoading] = React.useState(false);
   const { colorScheme } = useColorScheme();
   const textColor = colorScheme === 'dark' ? '#fafafa' : '#18181b';
+
+  /**
+   * Fetch user role from user_metadata or users table
+   */
+  const getUserRole = async (userId: string, userMetadata: any): Promise<UserRole> => {
+    // First try to get role from user_metadata (set during signup)
+    if (userMetadata?.role && (userMetadata.role === 'customer' || userMetadata.role === 'provider')) {
+      console.log('Role from user_metadata:', userMetadata.role);
+      return userMetadata.role as UserRole;
+    }
+
+    // Fallback: query the users table
+    try {
+      const { data: profile, error } = await supabase
+        .from('users')
+        .select('role')
+        .eq('id', userId)
+        .single();
+
+      if (!error && profile?.role) {
+        console.log('Role from users table:', profile.role);
+        return profile.role as UserRole;
+      }
+    } catch (error) {
+      console.error('Error fetching user role from database:', error);
+    }
+
+    // Default to customer if no role found
+    console.log('No role found, defaulting to customer');
+    return 'customer';
+  };
 
   const handleGoogleLogin = async () => {
     setIsGoogleLoading(true);
@@ -28,7 +61,20 @@ export function SocialLoginButtons({ onSuccess, disabled = false }: SocialLoginB
         return;
       }
 
-      onSuccess();
+      // Get user role after successful login
+      if (result.user) {
+        const role = await getUserRole(result.user.id, result.user.user_metadata);
+        onSuccess(role);
+      } else {
+        // If no user returned but success, try to get current session
+        const { data: session } = await supabase.auth.getSession();
+        if (session?.session?.user) {
+          const role = await getUserRole(session.session.user.id, session.session.user.user_metadata);
+          onSuccess(role);
+        } else {
+          onSuccess('customer'); // Default fallback
+        }
+      }
     } catch (error) {
       Alert.alert('Login Failed', error instanceof Error ? error.message : 'Google login failed', [
         { text: 'OK' },
