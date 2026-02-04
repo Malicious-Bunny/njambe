@@ -280,12 +280,15 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
           <View className="mb-6">
             <Text className="text-sm text-muted-foreground mb-2">Phone number</Text>
             <View
-              className="flex-row items-center"
+              className="flex-row"
               style={{ borderBottomColor: submitted && errors.phone ? '#ef4444' : borderColor, borderBottomWidth: 1 }}
             >
               {/* Country Code Prefix */}
-              <View className="flex-row items-center pr-3 border-r border-border" style={{ minHeight: 44, justifyContent: 'center' }}>
-                <Text className="text-base ml-2" style={{ color: textColor }}>
+              <View
+                className="flex-row pr-3 border-r border-border"
+                style={{ paddingTop: 4, paddingBottom: 12, minHeight: 44 }}
+              >
+                <Text className="text-base ml-2" style={{ color: textColor, fontSize: 16, lineHeight: 22 }}>
                   {phoneCountryCode}
                 </Text>
               </View>

@@ -2,53 +2,109 @@
 
 ## Study Notes (AI Session)
 
-**Last Updated**: February 4, 2026
+**Last Updated**: February 4, 2026 (Current Session)
 
-I have studied the entire project structure. Here's my comprehensive understanding:
+I have fully studied the entire project structure, `llms.txt`, and all key files. Here's my comprehensive understanding:
+
+---
 
 ### Project Summary
-**njambe** is a React Native/Expo mobile app for a neighborhood-based services marketplace (similar to RingTwice). It connects local service providers (cleaners, gardeners, repair workers) with customers in their community.
+**njambe** is a React Native/Expo mobile app for a **neighborhood-based services marketplace** (similar to RingTwice). It connects local service providers (cleaners, gardeners, repair workers) with customers in their community.
 
-### Key Technical Insights
+---
 
-1. **This is a React Native/Expo project** - It runs on mobile devices (iOS/Android) and web, NOT a typical Next.js web project
-2. **Expo SDK 54** with **React Native 0.81.5** - Latest versions
-3. **File-based routing** via Expo Router v6 - Similar to Next.js App Router
-4. **NativeWind v4.2.1** - Tailwind CSS for React Native
-5. **React Native Reusables** - shadcn/ui port for React Native
-6. **Supabase** - Backend for authentication and database
-7. **Zustand** - State management
+### Key Technical Stack
 
-### Current App Flows
+| Technology | Version/Details |
+|------------|-----------------|
+| **Framework** | Expo SDK 54 |
+| **React Native** | 0.81.5 |
+| **Routing** | Expo Router v6 (File-based) |
+| **Styling** | NativeWind v4.2.1 (Tailwind CSS for RN) |
+| **UI Components** | React Native Reusables (shadcn/ui port) |
+| **Icons** | iconoir-react-native + lucide-react-native |
+| **Animations** | React Native Reanimated 4.1.1 |
+| **State Management** | Zustand |
+| **Backend** | Supabase (Auth + Database) |
+| **Validation** | Zod 4.3.6 |
+| **Package Manager** | pnpm/bun |
 
-1. **Start Screen** (`app/index.tsx`)
-   - Language selector (EN/FR)
-   - Service providers carousel
-   - CTA buttons for Customer/Provider paths
+---
 
-2. **Customer Flow** (`app/(customer)/`)
-   - Onboarding carousel
-   - Signup with country selector
-   - Tab navigation: Home, Requests, Messages, Notifications, Account
-   - Home screen with categories grid and search
+### Architecture Rules (from llms.txt - MANDATORY)
 
-3. **Provider Flow** (`app/(provider)/`)
-   - Provider-specific onboarding
-   - Provider signup
-   - Dashboard (pending)
+1. **React Native Reusables First**: Always prefer React Native Reusables components over custom implementations
+   - Install via: `npx @react-native-reusables/cli@latest add [component-name]`
 
-4. **Auth Flow** (`app/auth/`)
-   - Login with email/password
-   - Google OAuth
-   - Forgot password flow
-   - Reset password with deep linking
+2. **Component Organization**:
+   - `components/ui/` - React Native Reusables (shadcn/ui primitives)
+   - `components/custom/[route_name]/` - Page-specific custom components
+   - `components/custom/shared/` - Shared across multiple pages
 
-### Architecture Rules
+3. **Data Organization**:
+   - `lib/[page_name]/[data_name].ts` - Static data and logic for pages
 
-1. **Components**: `components/custom/[route_name]/` for page-specific, `components/ui/` for reusables
-2. **Data**: `lib/[page_name]/[data_name].ts` for static data
-3. **Barrel Exports**: Every folder needs an `index.ts`
-4. **Lean Pages**: Pages should only handle layout and orchestration
+4. **Barrel Exports**: Every folder in `components/custom/` MUST have an `index.ts`
+
+5. **Lean Pages**: Page files in `app/` should only handle layout and orchestration
+
+---
+
+### Design System (Zinc Theme)
+
+| Token | Light Mode | Dark Mode |
+|-------|------------|-----------|
+| background | white | zinc-950 |
+| foreground | zinc-950 | zinc-50 |
+| primary | zinc-900 | zinc-50 |
+| secondary | zinc-100 | zinc-800 |
+| muted | zinc-100 | zinc-800 |
+| border | zinc-200 | zinc-800 |
+| card | white | zinc-900 |
+
+---
+
+### Current Route Structure
+
+```
+app/
+├── index.tsx                      # Start screen (language selector, provider carousel, CTAs)
+├── _layout.tsx                    # Root layout with auth & deep link handling
+├── (customer)/
+│   ├── _layout.tsx                # Customer stack layout
+│   ├── index.tsx                  # Redirects to onboarding
+│   ├── onboarding.tsx             # Swipeable onboarding slides
+│   ├── signup.tsx                 # Registration form with country selector
+│   └── (tabs)/
+│       ├── _layout.tsx            # Tab navigation
+│       ├── index.tsx              # Home/Services (categories grid, search)
+│       ├── requests.tsx           # Service requests
+│       ├── messages.tsx           # Chat
+│       ├── notifications.tsx      # Notifications
+│       └── account.tsx            # Profile
+├── (provider)/
+│   ├── _layout.tsx                # Provider stack layout
+│   ├── index.tsx                  # Redirects to onboarding
+│   ├── onboarding.tsx             # Provider onboarding
+│   └── signup.tsx                 # Provider registration
+└── auth/
+    ├── login.tsx                  # Sign in (email/password + Google OAuth)
+    ├── forgot-password.tsx        # Password recovery
+    └── reset-password.tsx         # New password (with deep linking)
+```
+
+---
+
+### Key Files Reference
+
+| File | Purpose |
+|------|---------|
+| `lib/supabase.ts` | Supabase client with SecureStore adapter |
+| `lib/stores/app-store.ts` | Zustand store (language, onboarding state) |
+| `lib/theme.ts` | Navigation theme configuration |
+| `lib/auth/` | Auth constants, validation, Google OAuth |
+| `lib/customer/` | Categories, countries, onboarding data |
+| `lib/provider/` | Provider onboarding data |
 
 ---
 
@@ -140,35 +196,6 @@ lib/auth/
 - [ ] User profile management
 - [ ] Settings screen
 - [ ] LinkedIn/Apple OAuth integration
-
-## Route Structure
-```
-app/
-├── index.tsx                      # Start screen
-├── _layout.tsx                    # Root layout with auth
-├── (customer)/
-│   ├── _layout.tsx                # Customer stack layout
-│   ├── index.tsx                  # Redirects to onboarding
-│   ├── onboarding.tsx             # Swipeable onboarding slides
-│   ├── signup.tsx                 # Registration form
-│   └── (tabs)/
-│       ├── _layout.tsx            # Tab navigation
-│       ├── index.tsx              # Home/Services
-│       ├── requests.tsx           # Service requests
-│       ├── messages.tsx           # Chat
-│       ├── notifications.tsx      # Notifications
-│       └── account.tsx            # Profile
-├── (provider)/
-│   ├── _layout.tsx                # Provider stack layout
-│   ├── index.tsx                  # Redirects to onboarding
-│   ├── onboarding.tsx             # Provider onboarding
-│   └── signup.tsx                 # Provider registration
-└── auth/
-    ├── login.tsx                  # Sign in
-    ├── forgot-password.tsx        # Password recovery
-    └── reset-password.tsx         # New password
-
-```
 
 ## Design System (Zinc Theme)
 | Token | Light Mode | Dark Mode |
