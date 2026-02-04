@@ -1,0 +1,151 @@
+# Project: njambe - Ultimate LLM Setup Guide
+
+> **njambe** is a neighborhood-based services marketplace connecting users with local service providers, modeled after [RingTwice](https://ringtwice.be). This guide provides the context, technical stack, and architectural rules for AI-assisted development (vibe coding).
+
+## Project Context & Guidelines
+
+- **App Name**: njambe
+- **Business Model**: A marketplace for local services (cleaning, gardening, repairs, etc.) connecting neighbors.
+- **UI Approach**: 
+    - Inspired by RingTwice but with unique "njambe" branding.
+    - **Component Library**: [React Native Reusables](https://reactnativereusables.com/docs) is the primary UI source.
+    - **Rule**: Always prefer React Native Reusables components. Use `npx @react-native-reusables/cli@latest add [component-name]` to install.
+    - **Customization**: Only build custom components when React Native Reusables does not provide a suitable primitive.
+- **Strict Component Usage**: **Always** prioritize and use React Native Reusables components. Avoid hardcoding UI elements or creating custom components if a suitable Reusables component exists. The goal is to maximize reusability and maintain consistency.
+
+## Tech Stack
+
+| Technology | Version/Details |
+|------------|-----------------|
+| **Framework** | Expo SDK 54 |
+| **React Native** | 0.81.5 |
+| **Routing** | Expo Router v6 (File-based) |
+| **Styling** | NativeWind v4.2.1 (Tailwind CSS for RN) |
+| **UI Components** | React Native Reusables (shadcn/ui port) |
+| **Icons** | iconoir-react-native + lucide-react-native |
+| **Animations** | React Native Reanimated 4.1.1 |
+| **Validation** | Zod 4.3.6 |
+| **Package Manager** | pnpm |
+
+## Design System (Zinc Theme)
+
+| Token | Light Mode | Dark Mode |
+|-------|------------|-----------|
+| background | white | zinc-950 |
+| foreground | zinc-950 | zinc-50 |
+| primary | zinc-900 | zinc-50 |
+| secondary | zinc-100 | zinc-800 |
+| muted | zinc-100 | zinc-800 |
+| border | zinc-200 | zinc-800 |
+| card | white | zinc-900 |
+
+## Code Organization Pattern (MANDATORY)
+
+Follow this structure strictly for all new features and pages:
+
+### 1. Components Structure
+```text
+components/
+├── ui/                           # React Native Reusables (shadcn/ui)
+│   ├── button.tsx
+│   ├── text.tsx
+│   └── ...
+└── custom/                       # Page-specific or shared custom comp    ├── [route_name]/             # e.g., start/, customer/, provider/, auth/
+    │   └── [page_name]/          # Specific page within a route
+    │       ├── component.tsx     # Individual components              # Barrel export
+    └── shared/                   # Shared across multiple pages
+        ├── Header.tsx
+        ├── LocationSelector.tsx
+        └── index.ts
+```
+
+### 2. Data & Library Structure
+```text
+lib/
+├── utils.ts                      # Utility functions (e.g., cn helper)
+├── theme.ts                      # Theme configuration
+└── [page_name]/                  # Data specific to a page
+    └── [data_name].ts            # e.g., service-providers.ts, categories.ts
+```
+
+### 3. Rules for New Pages
+1. **Extract Data**: Move static data or logic to `lib/[page_name]/[data_name].ts`.
+2. **Extract Components**: Move UI chunks to `components/custom/[route_name]/[page_name]/component.tsx`.
+3. **Barrel Exports**: Every folder in `components/custom/` must have an `index.ts`.
+4. **Lean Pages**: Page files in `app/` should only handle layout and orchestration.
+
+## React Native Reusables Registry
+
+### Layout & Navigation
+- [Accordion](https://reactnativereusables.com/docs/components/accordion)
+  `npx @react-native-reusables/cli@latest add accordion`
+- [Collapsible](https://reactnativereusables.com/docs/components/collapsible)
+  `npx @react-native-reusables/cli@latest add collapsible`
+- [Context Menu](https://reactnativereusables.com/docs/components/context-menu)
+  `npx @react-native-reusables/cli@latest add context-menu`
+- [Dropdown Menu](https://reactnativereusables.com/docs/components/dropdown-menu)
+  `npx @react-native-reusables/cli@latest add dropdown-menu`
+- [Menubar](https://reactnativereusables.com/docs/components/menubar)
+  `npx @react-native-reusables/cli@latest add menubar`
+- [Separator](https://reactnativereusables.com/docs/components/separator)
+  `npx @react-native-reusables/cli@latest add separator`
+- [Tabs](https://reactnativereusables.com/docs/components/tabs)
+  `npx @react-native-reusables/cli@latest add tabs`
+
+### Form & Input
+- [Button](https://reactnativereusables.com/docs/components/button)
+  `npx @react-native-reusables/cli@latest add button`
+- [Checkbox](https://reactnativereusables.com/docs/components/checkbox)
+  `npx @react-native-reusables/cli@latest add checkbox`
+- [Input](https://reactnativereusables.com/docs/components/input)
+  `npx @react-native-reusables/cli@latest add input`
+- [Label](https://reactnativereusables.com/docs/components/label)
+  `npx @react-native-reusables/cli@latest add label`
+- [Radio Group](https://reactnativereusables.com/docs/components/radio-group)
+  `npx @react-native-reusables/cli@latest add radio-group`
+- [Select](https://reactnativereusables.com/docs/components/select)
+  `npx @react-native-reusables/cli@latest add select`
+- [Switch](https://reactnativereusables.com/docs/components/switch)
+  `npx @react-native-reusables/cli@latest add switch`
+- [Textarea](https://reactnativereusables.com/docs/components/textarea)
+  `npx @react-native-reusables/cli@latest add textarea`
+- [Toggle](https://reactnativereusables.com/docs/components/toggle)
+  `npx @react-native-reusables/cli@latest add toggle`
+
+### Overlays & Dialogs
+- [Alert Dialog](https://reactnativereusables.com/docs/components/alert-dialog)
+  `npx @react-native-reusables/cli@latest add alert-dialog`
+- [Dialog](https://reactnativereusables.com/docs/components/dialog)
+  `npx @react-native-reusables/cli@latest add dialog`
+- [Hover Card](https://reactnativereusables.com/docs/components/hover-card)
+  `npx @react-native-reusables/cli@latest add hover-card`
+- [Popover](https://reactnativereusables.com/docs/components/popover)
+  `npx @react-native-reusables/cli@latest add popover`
+- [Tooltip](https://reactnativereusables.com/docs/components/tooltip)
+  `npx @react-native-reusables/cli@latest add tooltip`
+
+### Feedback & Status
+- [Alert](https://reactnativereusables.com/docs/components/alert)
+  `npx @react-native-reusables/cli@latest add alert`
+- [Badge](https://reactnativereusables.com/docs/components/badge)
+  `npx @react-native-reusables/cli@latest add badge`
+- [Progress](https://reactnativereusables.com/docs/components/progress)
+  `npx @react-native-reusables/cli@latest add progress`
+- [Skeleton](https://reactnativereusables.com/docs/components/skeleton)
+  `npx @react-native-reusables/cli@latest add skeleton`
+
+### Display & Media
+- [Aspect Ratio](https://reactnativereusables.com/docs/components/aspect-ratio)
+  `npx @react-native-reusables/cli@latest add aspect-ratio`
+- [Avatar](https://reactnativereusables.com/docs/components/avatar)
+  `npx @react-native-reusables/cli@latest add avatar`
+- [Card](https://reactnativereusables.com/docs/components/card)
+  `npx @react-native-reusables/cli@latest add card`
+- [Text](https://reactnativereusables.com/docs/components/text)
+  `npx @react-native-reusables/cli@latest add text`
+
+## Advanced Reference
+- [CLI Docs](https://reactnativereusables.com/docs/cli)
+- [Customization Guide](https://reactnativereusables.com/docs/customization)
+- [Nativewind Docs](https://www.nativewind.dev/)
+- [RN Primitives](https://github.com/mrzachnugent/react-native-reusables)
