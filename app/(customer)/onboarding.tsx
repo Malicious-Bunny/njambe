@@ -14,7 +14,6 @@ export default function CustomerOnboardingScreen() {
   const handleSkip = () => {
     router.push('/(customer)/signup');
   };
-
   return (
     <SafeAreaView className="flex-1 bg-background" edges={['top', 'bottom']}>
       <OnboardingCarousel
