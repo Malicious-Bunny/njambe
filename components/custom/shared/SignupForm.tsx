@@ -323,7 +323,6 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
                 keyboardType="phone-pad"
                 maxLength={9}
                 editable={!anyLoading}
-                placeholder="6XXXXXXXX"
                 placeholderTextColor={isDark ? '#71717a' : '#a1a1aa'}
               />
             </View>
