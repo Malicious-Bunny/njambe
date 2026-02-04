@@ -26,7 +26,12 @@
 - Service categories grid
 - Location/country selection
 
+## Conventions & Guidelines
+- **SafeAreaView**: ALWAYS use `SafeAreaView` from `react-native-safe-area-context`, NEVER from `react-native`. Import as: `import { SafeAreaView } from 'react-native-safe-area-context';`
+- Use `edges` prop to control which edges have safe area padding (e.g., `edges={['top']}` or `edges={['top', 'bottom']}`)
+
 ## Todos
+- [x] Replace SafeAreaView with react-native-safe-area-context on all screens
 - [ ] Awaiting user instructions
 
 ## Notes

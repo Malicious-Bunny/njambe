@@ -3,6 +3,7 @@ import { EmptyState, Header, LocationSelector } from '@/components/custom/shared
 import { Text } from '@/components/ui/text';
 import * as React from 'react';
 import { ScrollView, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ServiceScreen() {
   const handleCategoryPress = (categoryId: number) => {
@@ -16,35 +17,37 @@ export default function ServiceScreen() {
   };
 
   return (
-    <ScrollView className="flex-1 bg-background" contentContainerStyle={{ paddingBottom: 100 }}>
-      {/* Header */}
-      <Header showBackButton={false} />
+    <SafeAreaView className="flex-1 bg-background" edges={['top']}>
+      <ScrollView className="flex-1 bg-background" contentContainerStyle={{ paddingBottom: 100 }}>
+        {/* Header */}
+        <Header showBackButton={false} />
 
-      {/* Location */}
-      <LocationSelector />
+        {/* Location */}
+        <LocationSelector />
 
-      {/* Search Bar */}
-      <SearchBar onPress={handleSearchPress} />
+        {/* Search Bar */}
+        <SearchBar onPress={handleSearchPress} />
 
-      {/* Welcome Section */}
-      <View className="px-5 pb-6">
-        <Text className="text-2xl font-bold text-foreground">Find skilled neighbors</Text>
-        <Text className="mt-1 text-muted-foreground">
-          Browse services offered by people in your community
-        </Text>
-      </View>
+        {/* Welcome Section */}
+        <View className="px-5 pb-6">
+          <Text className="text-2xl font-bold text-foreground">Find skilled neighbors</Text>
+          <Text className="mt-1 text-muted-foreground">
+            Browse services offered by people in your community
+          </Text>
+        </View>
 
-      {/* Categories Grid */}
-      <CategoriesGrid onCategoryPress={handleCategoryPress} />
+        {/* Categories Grid */}
+        <CategoriesGrid onCategoryPress={handleCategoryPress} />
 
-      {/* Recent Section Placeholder */}
-      <View className="mt-8 px-5">
-        <Text className="mb-4 text-lg font-semibold text-foreground">Popular near you</Text>
-        <EmptyState
-          title="No services available yet"
-          subtitle="Check back soon!"
-        />
-      </View>
-    </ScrollView>
+        {/* Recent Section Placeholder */}
+        <View className="mt-8 px-5">
+          <Text className="mb-4 text-lg font-semibold text-foreground">Popular near you</Text>
+          <EmptyState
+            title="No services available yet"
+            subtitle="Check back soon!"
+          />
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
