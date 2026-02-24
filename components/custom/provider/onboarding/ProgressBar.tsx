@@ -19,14 +19,16 @@ export function ProgressBar({ currentStep, totalSteps }: ProgressBarProps) {
   const indicatorColor = colorScheme === 'dark' ? '#fafafa' : '#18181b'; // zinc-50 / zinc-900
 
   return (
-    <View className="flex-1">
-      <ProgressTrack style={{ backgroundColor: trackColor, height: 4 }}>
-        <ProgressIndicator
-          value={progressPercent}
-          style={{ backgroundColor: indicatorColor }}
-          animated={true}
-        />
-      </ProgressTrack>
+    <View className="items-center justify-center">
+      <View style={{ width: '70%' }}>
+        <ProgressTrack style={{ backgroundColor: trackColor, height: 2.5, borderRadius: 4 }}>
+          <ProgressIndicator
+            value={progressPercent}
+            style={{ backgroundColor: indicatorColor, borderRadius: 4 }}
+            animated={true}
+          />
+        </ProgressTrack>
+      </View>
     </View>
   );
 }

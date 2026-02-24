@@ -10,6 +10,7 @@ import * as React from 'react';
 import {
   ActivityIndicator,
   Alert,
+  Animated,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -38,8 +39,58 @@ export default function CategoryExperienceScreen() {
   const [description, setDescription] = React.useState('');
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
+  // Animation values
+  const fadeAnim = React.useRef(new Animated.Value(1)).current;
+  const slideAnim = React.useRef(new Animated.Value(0)).current;
+  const [displayedIndex, setDisplayedIndex] = React.useState(currentCategoryIndex);
+
   const currentCategory = getCurrentCategory();
   const totalCategories = categoryExperiences.length;
+
+  // Animate when category index changes
+  React.useEffect(() => {
+    if (displayedIndex !== currentCategoryIndex) {
+      // Determine slide direction
+      const isGoingForward = currentCategoryIndex > displayedIndex;
+      const slideOutValue = isGoingForward ? -30 : 30;
+      const slideInValue = isGoingForward ? 30 : -30;
+
+      // Animate out
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          duration: 150,
+          useNativeDriver: true,
+        }),
+        Animated.timing(slideAnim, {
+          toValue: slideOutValue,
+          duration: 150,
+          useNativeDriver: true,
+        }),
+      ]).start(() => {
+        // Update displayed index
+        setDisplayedIndex(currentCategoryIndex);
+
+        // Reset slide position for entrance
+        slideAnim.setValue(slideInValue);
+
+        // Animate in
+        Animated.parallel([
+          Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 200,
+            useNativeDriver: true,
+          }),
+          Animated.spring(slideAnim, {
+            toValue: 0,
+            friction: 8,
+            tension: 60,
+            useNativeDriver: true,
+          }),
+        ]).start();
+      });
+    }
+  }, [currentCategoryIndex, displayedIndex]);
 
   // Initialize description from store when category changes
   React.useEffect(() => {
@@ -203,8 +254,14 @@ export default function CategoryExperienceScreen() {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          {/* Main Content */}
-          <View className="flex-1 px-5">
+          {/* Animated Main Content */}
+          <Animated.View
+            className="flex-1 px-5"
+            style={{
+              opacity: fadeAnim,
+              transform: [{ translateX: slideAnim }],
+            }}
+          >
             {/* Title with category emoji, name and subcategories in brackets */}
             <Text className="text-xl font-bold text-foreground">
               Décrivez votre expérience en
@@ -236,7 +293,7 @@ export default function CategoryExperienceScreen() {
                 Catégorie {currentCategoryIndex + 1} sur {totalCategories}
               </Text>
             </View>
-          </View>
+          </Animated.View>
 
           {/* Bottom Buttons */}
           <View className="flex-row items-center justify-between px-5 pb-8 pt-4">

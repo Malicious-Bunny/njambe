@@ -18,6 +18,16 @@
     - Line 1: "Décrivez votre expérience en"
     - Line 2: "[emoji] [Category Name]"
     - Line 3: "(Subcategory1, Subcategory2, ...)" in muted text
+- [x] Fixed ProgressBar component:
+  - Made it 70% width (shorter horizontally)
+  - Reduced height from 4px to 2.5px (40% shorter)
+  - Centralized with items-center justify-center
+  - Added borderRadius for smoother look
+- [x] Added page transition animation to category-experience.tsx:
+  - Fade out + slide animation when switching between categories
+  - Direction-aware: slides left when going forward, right when going back
+  - Uses React Native Animated API with spring physics for smooth entrance
+  - Wrapped main content in Animated.View with opacity and translateX transforms
 
 ---
 
