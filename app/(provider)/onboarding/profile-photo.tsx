@@ -2,11 +2,11 @@ import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { ProgressBar } from '@/components/custom/provider/onboarding';
 import { useProviderOnboardingStore } from '@/lib/stores';
-import { NavArrowLeft, CartPlus, CheckCircle, XmarkCircle } from 'iconoir-react-native';
+import { NavArrowLeft, Camera, Check, Xmark } from 'iconoir-react-native';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
-import { Alert, Image, Pressable, View } from 'react-native';
+import { ActivityIndicator, Alert, Image, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 // Example photos showing good and bad profile photos
@@ -31,8 +31,10 @@ const EXAMPLE_PHOTOS = [
 export default function ProfilePhotoScreen() {
   const { colorScheme } = useColorScheme();
   const router = useRouter();
-  const { profileImage, setProfileImage } = useProviderOnboardingStore();
+  const { profileImage, setProfileImage, getOnboardingData, resetOnboarding } =
+    useProviderOnboardingStore();
   const [selectedImage, setSelectedImage] = React.useState<string | null>(profileImage);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const handleBack = () => {
     router.back();
@@ -48,12 +50,14 @@ export default function ProfilePhotoScreen() {
         {
           text: 'Galerie',
           onPress: () => {
+            // Placeholder: Set a sample image
             setSelectedImage('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face');
           },
         },
         {
           text: 'Appareil photo',
           onPress: () => {
+            // Placeholder: Set a sample image
             setSelectedImage('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face');
           },
         },
@@ -62,23 +66,22 @@ export default function ProfilePhotoScreen() {
     );
   };
 
-  const handleContinue = () => {
-    setProfileImage(selectedImage);
-    router.push('/(provider)/onboarding/services-selection');
-  };
+  const handleComplete = async () => {
+    router.push('/(provider)/onboarding/services-selection')
+  }
+   const iconColor = colorScheme === 'dark' ? '#fafafa' : '#18181b';
+  const mutedColor = colorScheme === 'dark' ? '#71717a' : '#a1a1aa';
 
-  const handleSkip = () => {
-    setProfileImage(null);
-    router.push('/(provider)/onboarding/services-selection');
-  };
-
-  const iconColor = colorScheme === 'dark' ? '#fafafa' : '#18181b';
-  const mutedColor = colorScheme === 'dark' ? '#52525b' : '#a1a1aa';
 
   return (
     <SafeAreaView className="flex-1 bg-background" edges={['top']}>
-      {/* Header Row: Back Button + Progress Bar */}
-      <View className="flex-row items-center px-2 pt-2">
+      {/* Progress Bar - Full width aligned with content */}
+      <View className="px-5 pt-2">
+        <ProgressBar currentStep={1} totalSteps={2} />
+      </View>
+
+      {/* Header with Back Button */}
+      <View className="flex-row items-center px-2 py-2">
         <Pressable
           onPress={handleBack}
           className="p-3 active:opacity-70"
@@ -86,14 +89,9 @@ export default function ProfilePhotoScreen() {
         >
           <NavArrowLeft width={24} height={24} color={iconColor} strokeWidth={2} />
         </Pressable>
-        <View className="flex-1 px-4">
-          <ProgressBar currentStep={1} totalSteps={3} />
-        </View>
-        <View className="w-12" />
       </View>
 
-      {/* Content */}
-      <View className="flex-1 px-5 pt-6">
+      <View className="flex-1 px-5">
         {/* Title */}
         <Text className="text-2xl font-bold text-foreground">
           Ajoutez votre plus belle photo !
@@ -106,8 +104,14 @@ export default function ProfilePhotoScreen() {
 
         {/* Photo Upload Area */}
         <View className="flex-1 items-center justify-center">
-          <Pressable onPress={handleSelectPhoto} className="active:opacity-80">
-            <View className="h-44 w-44 items-center justify-center rounded-full border-2 border-dashed border-border bg-secondary/30">
+          <Pressable
+            onPress={handleSelectPhoto}
+            className="active:opacity-80"
+          >
+            <View
+              className="h-48 w-48 items-center justify-center rounded-full border-2 border-dashed border-border bg-card"
+              style={{ borderStyle: 'dashed' }}
+            >
               {selectedImage ? (
                 <Image
                   source={{ uri: selectedImage }}
@@ -115,15 +119,15 @@ export default function ProfilePhotoScreen() {
                   resizeMode="cover"
                 />
               ) : (
-                <CartPlus width={48} height={48} color={mutedColor} strokeWidth={1.5} />
+                <Camera width={48} height={48} color={mutedColor} strokeWidth={1.5} />
               )}
             </View>
           </Pressable>
         </View>
 
         {/* Example Photos */}
-        <View className="mb-6">
-          <View className="flex-row items-center justify-center gap-8">
+        <View className="mb-8">
+          <View className="flex-row items-center justify-center gap-6">
             {EXAMPLE_PHOTOS.map((photo) => (
               <View key={photo.id} className="items-center">
                 <View className="relative">
@@ -133,11 +137,15 @@ export default function ProfilePhotoScreen() {
                     resizeMode="cover"
                   />
                   {/* Badge */}
-                  <View className="absolute -bottom-1 -right-1">
+                  <View
+                    className={`absolute -bottom-1 -right-1 h-6 w-6 items-center justify-center rounded-full ${
+                      photo.isGood ? 'bg-green-500' : 'bg-red-500'
+                    }`}
+                  >
                     {photo.isGood ? (
-                      <CheckCircle width={24} height={24} color="#22c55e" fill="#22c55e" strokeWidth={0} />
+                      <Check width={14} height={14} color="#ffffff" strokeWidth={2.5} />
                     ) : (
-                      <XmarkCircle width={24} height={24} color="#ef4444" fill="#ef4444" strokeWidth={0} />
+                      <Xmark width={14} height={14} color="#ffffff" strokeWidth={2.5} />
                     )}
                   </View>
                 </View>
@@ -147,19 +155,14 @@ export default function ProfilePhotoScreen() {
         </View>
       </View>
 
-      {/* Bottom Buttons - Side by Side */}
-      <View className="flex-row items-center gap-4 px-5 pb-8">
-        {/* Skip Button */}
-        <Pressable onPress={handleSkip} className="flex-1 items-center justify-center py-4 active:opacity-70">
-          <Text className="text-base font-medium text-muted-foreground">Passer</Text>
-        </Pressable>
-
-        {/* Continue Button */}
+      {/* Bottom Button */}
+      <View className="px-5 pb-8">
         <Button
-          onPress={handleContinue}
-          className="h-14 flex-[2] rounded-xl bg-primary"
+          onPress={handleComplete}
+          disabled={!selectedImage}
+          className={`h-14 w-full rounded-xl ${selectedImage ? 'bg-primary' : 'bg-muted'}`}
         >
-          <Text className="text-lg font-semibold text-primary-foreground">
+          <Text className={`text-lg font-semibold ${selectedImage ? 'text-primary-foreground' : 'text-muted-foreground'}`}>
             Continuer
           </Text>
         </Button>
