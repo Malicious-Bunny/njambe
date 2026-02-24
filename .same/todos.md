@@ -1,5 +1,26 @@
 # Njambe Project - Todos & Progress Tracker
 
+## Current AI Session - February 24, 2026 (Icon & Color Scheme Fixes)
+
+**Status**: Fixed icons and category experience page layout
+
+### Completed This Session
+- [x] Cloned the njambe repository from GitHub
+- [x] Read and studied .same/todos.md for project briefing
+- [x] Read and studied llms.txt for architecture rules
+- [x] Fixed services-selection.tsx:
+  - Replaced iconoir NavArrowLeft with phosphor ArrowLeft icon
+  - ServicesCategorySection already uses phosphor icons correctly
+- [x] Fixed category-experience.tsx:
+  - Replaced iconoir NavArrowLeft with phosphor ArrowLeft icon
+  - Fixed color scheme to use project's zinc theme (bg-background, text-foreground, etc.)
+  - Updated title display to show subcategories in brackets on separate line:
+    - Line 1: "Décrivez votre expérience en"
+    - Line 2: "[emoji] [Category Name]"
+    - Line 3: "(Subcategory1, Subcategory2, ...)" in muted text
+
+---
+
 ## Current AI Session - February 24, 2026 (Category Experience Pages)
 
 **Status**: Implementing category experience pages in provider onboarding

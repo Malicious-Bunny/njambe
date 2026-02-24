@@ -3,7 +3,7 @@ import { Text } from '@/components/ui/text';
 import { ProgressBar } from '@/components/custom/provider/onboarding';
 import { useProviderOnboardingStore } from '@/lib/stores';
 import { supabase } from '@/lib/supabase';
-import { NavArrowLeft } from 'iconoir-react-native';
+import { ArrowLeft } from 'phosphor-react-native';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
@@ -172,10 +172,8 @@ export default function CategoryExperienceScreen() {
   const categoryProgress = (currentCategoryIndex + 1) / totalCategories;
   const progressStep = baseProgress + categoryProgress * 0.9;
 
-  // Format category title with subcategories in brackets
-  const categoryTitle = currentCategory.subcategoryNames.length > 1
-    ? `${currentCategory.categoryIcon} ${currentCategory.categoryName} (${currentCategory.subcategoryNames.join(', ')})`
-    : `${currentCategory.categoryIcon} ${currentCategory.categoryName}`;
+  // Format subcategories in brackets
+  const subcategoriesText = `(${currentCategory.subcategoryNames.join(', ')})`;
 
   return (
     <SafeAreaView className="flex-1 bg-background" edges={['top']}>
@@ -195,7 +193,7 @@ export default function CategoryExperienceScreen() {
             className="p-3 active:opacity-70"
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
-            <NavArrowLeft width={24} height={24} color={iconColor} strokeWidth={2} />
+            <ArrowLeft size={24} color={iconColor} weight="regular" />
           </Pressable>
         </View>
 
@@ -212,7 +210,10 @@ export default function CategoryExperienceScreen() {
               Décrivez votre expérience en
             </Text>
             <Text className="mt-1 text-xl font-bold text-foreground">
-              {categoryTitle}
+              {currentCategory.categoryIcon} {currentCategory.categoryName}
+            </Text>
+            <Text className="mt-1 text-base leading-6 text-muted-foreground">
+              {subcategoriesText}
             </Text>
 
             {/* Textarea for experience description */}

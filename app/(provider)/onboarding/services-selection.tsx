@@ -131,7 +131,7 @@ export default function ServicesSelectionScreen() {
           className="p-3 active:opacity-70"
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
-          <NavArrowLeft width={24} height={24} color={iconColor} strokeWidth={2} />
+          <ArrowLeft size={24} color={iconColor} weight="regular" />
         </Pressable>
       </View>
 
