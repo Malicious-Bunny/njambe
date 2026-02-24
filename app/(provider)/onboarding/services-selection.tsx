@@ -4,7 +4,7 @@ import { ProgressBar, ServicesCategorySection } from '@/components/custom/provid
 import { useProviderOnboardingStore } from '@/lib/stores';
 import { fetchServiceCategories, type ServiceCategory } from '@/lib/provider/service-categories';
 import { supabase } from '@/lib/supabase';
-import { NavArrowLeft } from 'iconoir-react-native';
+import { ArrowLeft } from 'phosphor-react-native';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
@@ -156,7 +156,7 @@ export default function ServicesSelectionScreen() {
           className="p-3 active:opacity-70"
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
-          <NavArrowLeft width={24} height={24} color={iconColor} strokeWidth={2} />
+          <ArrowLeft size={24} color={iconColor} weight="bold" />
         </Pressable>
       </View>
 

@@ -2,14 +2,14 @@ import { Text } from '@/components/ui/text';
 import type { ServiceCategory, ServiceSubcategory } from '@/lib/provider/service-categories';
 import {
   Hammer,
-  HandCard,
+  Broom,
   Leaf,
-  Paw,
+  PawPrint,
   Car,
   GraduationCap,
-  Stroller,
-  HomeSimpleDoor,
-} from 'iconoir-react-native';
+  BabyCarriage,
+  House,
+} from 'phosphor-react-native';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import { Pressable, View } from 'react-native';
@@ -17,13 +17,13 @@ import { Pressable, View } from 'react-native';
 // Icon mapping for categories
 const CATEGORY_ICONS = {
   Hammer,
-  HandCard,
+  Broom,
   Leaf,
-  Paw,
+  PawPrint,
   Car,
   GraduationCap,
-  Stroller,
-  HomeSimpleDoor,
+  BabyCarriage,
+  House,
 } as const;
 
 interface ServicesCategorySectionProps {
@@ -46,7 +46,7 @@ export function ServicesCategorySection({
     <View className="mb-6">
       {/* Category Header */}
       <View className="mb-3 flex-row items-center gap-2">
-        <IconComponent width={24} height={24} color={iconColor} strokeWidth={1.5} />
+        <IconComponent size={24} color={iconColor} weight="regular" />
         <Text className="text-lg font-semibold text-foreground">{category.name}</Text>
       </View>
 

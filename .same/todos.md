@@ -2,7 +2,7 @@
 
 ## Current AI Session - February 24, 2026 (New Session)
 
-**Status**: Project cloned and studied - Ready for development
+**Status**: Project cloned and fully studied - Ready for development
 
 ### Completed This Session
 - [x] Cloned the njambe repository from GitHub
@@ -16,6 +16,20 @@
 - **Purpose**: Neighborhood services marketplace (like RingTwice)
 - **Stack**: Expo SDK 54, NativeWind, React Native Reusables, Zustand, Supabase
 - **Current Focus**: Provider onboarding flow (profile-photo.tsx was last addition)
+
+### Key Architecture Rules (from llms.txt)
+1. **React Native Reusables First**: Always use React Native Reusables components
+2. **Component Organization**:
+   - `components/ui/` - React Native Reusables primitives
+   - `components/custom/[route_name]/` - Page-specific components
+   - `components/custom/shared/` - Shared components
+3. **Data Organization**: `lib/[page_name]/[data_name].ts`
+4. **Barrel Exports**: Every `components/custom/` folder needs `index.ts`
+5. **Lean Pages**: Page files handle only layout/orchestration
+
+### Design System (Zinc Theme)
+- Light: white background, zinc-950 foreground, zinc-900 primary
+- Dark: zinc-950 background, zinc-50 foreground, zinc-50 primary
 
 ### Ready to Continue
 The project is now ready for continued development. Awaiting your instructions.

@@ -9,7 +9,7 @@ export interface ServiceSubcategory {
 export interface ServiceCategory {
   id: string;
   name: string;
-  icon: 'Hammer' | 'HandCard' | 'Leaf' | 'Paw' | 'Car' | 'GraduationCap' | 'Stroller' | 'HomeSimpleDoor';
+  icon: 'Hammer' | 'Broom' | 'Leaf' | 'PawPrint' | 'Car' | 'GraduationCap' | 'BabyCarriage' | 'House';
   subcategories: ServiceSubcategory[];
 }
 
@@ -45,7 +45,7 @@ export const MOCK_CATEGORIES: ServiceCategory[] = [
   {
     id: 'aide-menagere',
     name: 'Aide ménagère',
-    icon: 'HandCard',
+    icon: 'Broom',
     subcategories: [
       { id: 'nettoyage', name: 'Nettoyage' },
       { id: 'cuisine', name: 'Cuisine' },
@@ -65,7 +65,7 @@ export const MOCK_CATEGORIES: ServiceCategory[] = [
   {
     id: 'animaux',
     name: 'Animaux',
-    icon: 'Paw',
+    icon: 'PawPrint',
     subcategories: [
       { id: 'garde-petsitter', name: 'Garde chez le petsitter' },
       { id: 'promenade-chien', name: 'Promenade chien' },
@@ -97,7 +97,7 @@ export const MOCK_CATEGORIES: ServiceCategory[] = [
   {
     id: 'garde-enfants',
     name: 'Garde d\'enfants',
-    icon: 'Stroller',
+    icon: 'BabyCarriage',
     subcategories: [
       { id: 'babysitter', name: 'Babysitter' },
       { id: 'aide-devoirs', name: 'Aide aux devoirs' },
@@ -107,7 +107,7 @@ export const MOCK_CATEGORIES: ServiceCategory[] = [
   {
     id: 'services-seniors',
     name: 'Services seniors',
-    icon: 'HomeSimpleDoor',
+    icon: 'House',
     subcategories: [
       { id: 'compagnie', name: 'Compagnie' },
       { id: 'aide-quotidienne', name: 'Aide quotidienne' },

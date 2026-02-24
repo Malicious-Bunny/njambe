@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { ProgressBar } from '@/components/custom/provider/onboarding';
 import { useProviderOnboardingStore } from '@/lib/stores';
-import { NavArrowLeft, Camera, Check, Xmark } from 'iconoir-react-native';
+import { ArrowLeft, CameraPlus, Check, X } from 'phosphor-react-native';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
@@ -69,9 +69,8 @@ export default function ProfilePhotoScreen() {
   const handleComplete = async () => {
     router.push('/(provider)/onboarding/services-selection')
   }
-   const iconColor = colorScheme === 'dark' ? '#fafafa' : '#18181b';
+  const iconColor = colorScheme === 'dark' ? '#fafafa' : '#18181b';
   const mutedColor = colorScheme === 'dark' ? '#71717a' : '#a1a1aa';
-
 
   return (
     <SafeAreaView className="flex-1 bg-background" edges={['top']}>
@@ -87,7 +86,7 @@ export default function ProfilePhotoScreen() {
           className="p-3 active:opacity-70"
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
-          <NavArrowLeft width={24} height={24} color={iconColor} strokeWidth={2} />
+          <ArrowLeft size={24} color={iconColor} weight="bold" />
         </Pressable>
       </View>
 
@@ -119,7 +118,7 @@ export default function ProfilePhotoScreen() {
                   resizeMode="cover"
                 />
               ) : (
-                <Camera width={48} height={48} color={mutedColor} strokeWidth={1.5} />
+                <CameraPlus size={48} color={mutedColor} weight="light" />
               )}
             </View>
           </Pressable>
@@ -143,9 +142,9 @@ export default function ProfilePhotoScreen() {
                     }`}
                   >
                     {photo.isGood ? (
-                      <Check width={14} height={14} color="#ffffff" strokeWidth={2.5} />
+                      <Check size={14} color="#ffffff" weight="bold" />
                     ) : (
-                      <Xmark width={14} height={14} color="#ffffff" strokeWidth={2.5} />
+                      <X size={14} color="#ffffff" weight="bold" />
                     )}
                   </View>
                 </View>
