@@ -2,6 +2,16 @@ import { create } from 'zustand';
 
 export type WorkType = 'individual' | 'independent' | null;
 
+// Category experience data
+export interface CategoryExperience {
+  categoryId: string;
+  categoryName: string;
+  categoryIcon: string;
+  subcategoryIds: string[];
+  subcategoryNames: string[];
+  experienceDescription: string;
+}
+
 export interface ProviderOnboardingState {
   // Step tracking
   currentStep: number;
@@ -19,8 +29,12 @@ export interface ProviderOnboardingState {
   // Step 4: Profile photo
   profileImage: string | null;
 
-  // Step 5: Selected services
+  // Step 5: Selected services (subcategory IDs)
   selectedServices: string[];
+
+  // Step 6: Category experiences (dynamic pages based on selected categories)
+  categoryExperiences: CategoryExperience[];
+  currentCategoryIndex: number;
 }
 
 interface ProviderOnboardingActions {
@@ -36,8 +50,18 @@ interface ProviderOnboardingActions {
   setProfileImage: (uri: string | null) => void;
   setSelectedServices: (services: string[]) => void;
 
+  // Category experience methods
+  setCategoryExperiences: (experiences: CategoryExperience[]) => void;
+  updateCategoryExperience: (categoryId: string, description: string) => void;
+  setCurrentCategoryIndex: (index: number) => void;
+  nextCategory: () => boolean; // Returns true if there are more categories
+  prevCategory: () => boolean; // Returns true if went back
+  getCurrentCategory: () => CategoryExperience | null;
+  hasMoreCategories: () => boolean;
+  isFirstCategory: () => boolean;
+
   // Get all data for submission
-  getOnboardingData: () => Omit<ProviderOnboardingState, 'currentStep' | 'totalSteps'>;
+  getOnboardingData: () => Omit<ProviderOnboardingState, 'currentStep' | 'totalSteps' | 'currentCategoryIndex'>;
 
   // Reset store
   resetOnboarding: () => void;
@@ -53,6 +77,8 @@ const initialState: ProviderOnboardingState = {
   personalDescription: '',
   profileImage: null,
   selectedServices: [],
+  categoryExperiences: [],
+  currentCategoryIndex: 0,
 };
 
 export const useProviderOnboardingStore = create<ProviderOnboardingStore>((set, get) => ({
@@ -96,6 +122,55 @@ export const useProviderOnboardingStore = create<ProviderOnboardingStore>((set, 
     set({ selectedServices: services });
   },
 
+  setCategoryExperiences: (experiences: CategoryExperience[]) => {
+    set({ categoryExperiences: experiences, currentCategoryIndex: 0 });
+  },
+
+  updateCategoryExperience: (categoryId: string, description: string) => {
+    const { categoryExperiences } = get();
+    const updatedExperiences = categoryExperiences.map((exp) =>
+      exp.categoryId === categoryId ? { ...exp, experienceDescription: description } : exp
+    );
+    set({ categoryExperiences: updatedExperiences });
+  },
+
+  setCurrentCategoryIndex: (index: number) => {
+    set({ currentCategoryIndex: index });
+  },
+
+  nextCategory: () => {
+    const { currentCategoryIndex, categoryExperiences } = get();
+    if (currentCategoryIndex < categoryExperiences.length - 1) {
+      set({ currentCategoryIndex: currentCategoryIndex + 1 });
+      return true;
+    }
+    return false;
+  },
+
+  prevCategory: () => {
+    const { currentCategoryIndex } = get();
+    if (currentCategoryIndex > 0) {
+      set({ currentCategoryIndex: currentCategoryIndex - 1 });
+      return true;
+    }
+    return false;
+  },
+
+  getCurrentCategory: () => {
+    const { categoryExperiences, currentCategoryIndex } = get();
+    return categoryExperiences[currentCategoryIndex] || null;
+  },
+
+  hasMoreCategories: () => {
+    const { currentCategoryIndex, categoryExperiences } = get();
+    return currentCategoryIndex < categoryExperiences.length - 1;
+  },
+
+  isFirstCategory: () => {
+    const { currentCategoryIndex } = get();
+    return currentCategoryIndex === 0;
+  },
+
   getOnboardingData: () => {
     const state = get();
     return {
@@ -104,6 +179,7 @@ export const useProviderOnboardingStore = create<ProviderOnboardingStore>((set, 
       personalDescription: state.personalDescription,
       profileImage: state.profileImage,
       selectedServices: state.selectedServices,
+      categoryExperiences: state.categoryExperiences,
     };
   },
 

@@ -6,7 +6,7 @@ import { ArrowLeft, CameraPlus, Check, X } from 'phosphor-react-native';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
-import { ActivityIndicator, Alert, Image, Pressable, View } from 'react-native';
+import { Alert, Image, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 // Example photos showing good and bad profile photos
@@ -31,10 +31,8 @@ const EXAMPLE_PHOTOS = [
 export default function ProfilePhotoScreen() {
   const { colorScheme } = useColorScheme();
   const router = useRouter();
-  const { profileImage, setProfileImage, getOnboardingData, resetOnboarding } =
-    useProviderOnboardingStore();
+  const { profileImage, setProfileImage } = useProviderOnboardingStore();
   const [selectedImage, setSelectedImage] = React.useState<string | null>(profileImage);
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const handleBack = () => {
     router.back();
@@ -66,17 +64,26 @@ export default function ProfilePhotoScreen() {
     );
   };
 
-  const handleComplete = async () => {
-    router.push('/(provider)/onboarding/services-selection')
-  }
+  const handleSkip = () => {
+    // Skip photo upload
+    setProfileImage(null);
+    router.push('/(provider)/onboarding/services-selection');
+  };
+
+  const handleContinue = () => {
+    // Save the selected image to store
+    setProfileImage(selectedImage);
+    router.push('/(provider)/onboarding/services-selection');
+  };
+
   const iconColor = colorScheme === 'dark' ? '#fafafa' : '#18181b';
   const mutedColor = colorScheme === 'dark' ? '#71717a' : '#a1a1aa';
 
   return (
     <SafeAreaView className="flex-1 bg-background" edges={['top']}>
-      {/* Progress Bar - Full width aligned with content */}
+      {/* Progress Bar - Step 2 of 4 (work-type, profile/desc, services, category-exp) */}
       <View className="px-5 pt-2">
-        <ProgressBar currentStep={1} totalSteps={2} />
+        <ProgressBar currentStep={2} totalSteps={4} />
       </View>
 
       {/* Header with Back Button */}
@@ -154,16 +161,20 @@ export default function ProfilePhotoScreen() {
         </View>
       </View>
 
-      {/* Bottom Button */}
-      <View className="px-5 pb-8">
+      {/* Bottom Buttons - Skip and Continue */}
+      <View className="flex-row items-center justify-between px-5 pb-8">
+        {/* Skip button */}
+        <Pressable onPress={handleSkip} className="px-6 py-3 active:opacity-70">
+          <Text className="text-base font-medium text-muted-foreground">Passer</Text>
+        </Pressable>
+
+        {/* Continue button */}
         <Button
-          onPress={handleComplete}
-          disabled={!selectedImage}
-          className={`h-14 w-full rounded-xl ${selectedImage ? 'bg-primary' : 'bg-muted'}`}
+          onPress={handleContinue}
+          className="h-14 flex-1 ml-4 rounded-xl"
+          style={{ backgroundColor: '#16a34a' }}
         >
-          <Text className={`text-lg font-semibold ${selectedImage ? 'text-primary-foreground' : 'text-muted-foreground'}`}>
-            Continuer
-          </Text>
+          <Text className="text-lg font-semibold text-white">Continuer</Text>
         </Button>
       </View>
     </SafeAreaView>

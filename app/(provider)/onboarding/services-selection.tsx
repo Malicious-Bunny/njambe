@@ -1,9 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { ProgressBar, ServicesCategorySection } from '@/components/custom/provider/onboarding';
-import { useProviderOnboardingStore } from '@/lib/stores';
+import { useProviderOnboardingStore, type CategoryExperience } from '@/lib/stores';
 import { fetchServiceCategories, type ServiceCategory } from '@/lib/provider/service-categories';
-import { supabase } from '@/lib/supabase';
 import { ArrowLeft } from 'phosphor-react-native';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
@@ -11,15 +10,26 @@ import * as React from 'react';
 import { ActivityIndicator, Alert, Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+// Map category icons to emoji for display
+const CATEGORY_EMOJI_MAP: Record<string, string> = {
+  Hammer: '🔨',
+  Broom: '🧹',
+  Leaf: '🌿',
+  PawPrint: '🐾',
+  Car: '🚗',
+  GraduationCap: '🎓',
+  BabyCarriage: '👶',
+  House: '🏠',
+};
+
 export default function ServicesSelectionScreen() {
   const { colorScheme } = useColorScheme();
   const router = useRouter();
-  const { getOnboardingData, setSelectedServices, resetOnboarding } = useProviderOnboardingStore();
+  const { setSelectedServices, setCategoryExperiences } = useProviderOnboardingStore();
 
   const [categories, setCategories] = React.useState<ServiceCategory[]>([]);
   const [selectedSubcategories, setSelectedSubcategories] = React.useState<string[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   // Fetch categories on mount
   React.useEffect(() => {
@@ -55,7 +65,7 @@ export default function ServicesSelectionScreen() {
     });
   };
 
-  const handleConfirm = async () => {
+  const handleConfirm = () => {
     if (selectedSubcategories.length === 0) {
       Alert.alert(
         'Sélection requise',
@@ -65,61 +75,35 @@ export default function ServicesSelectionScreen() {
       return;
     }
 
-    setIsSubmitting(true);
-    try {
-      // Save selected services to store
-      setSelectedServices(selectedSubcategories);
+    // Save selected services to store
+    setSelectedServices(selectedSubcategories);
 
-      const onboardingData = getOnboardingData();
-      console.log('Submitting onboarding data:', {
-        ...onboardingData,
-        selectedServices: selectedSubcategories,
-      });
+    // Build CategoryExperience objects grouped by category
+    const categoryExperiences: CategoryExperience[] = [];
 
-      // Get current user
-      const {
-        data: { user },
-        error: userError,
-      } = await supabase.auth.getUser();
-
-      if (userError || !user) {
-        throw new Error('User not authenticated');
-      }
-
-      // Update user profile in database
-      const { error: updateError } = await supabase
-        .from('users')
-        .update({
-          work_type: onboardingData.workType,
-          address: onboardingData.address,
-          personal_description: onboardingData.personalDescription,
-          profile_image: onboardingData.profileImage,
-          selected_services: selectedSubcategories,
-          onboarding_completed: true,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', user.id);
-
-      if (updateError) {
-        console.error('Error updating profile:', updateError);
-        // Continue anyway for now, as table might not have these columns yet
-      }
-
-      // Reset onboarding store
-      resetOnboarding();
-
-      // Navigate to provider tabs
-      router.replace('/(provider)/(tabs)');
-    } catch (error) {
-      console.error('Error completing onboarding:', error);
-      Alert.alert(
-        'Erreur',
-        'Un problème est survenu lors de la sauvegarde. Veuillez réessayer.',
-        [{ text: 'OK' }]
+    for (const category of categories) {
+      // Find all selected subcategories for this category
+      const selectedSubs = category.subcategories.filter((sub) =>
+        selectedSubcategories.includes(sub.id)
       );
-    } finally {
-      setIsSubmitting(false);
+
+      if (selectedSubs.length > 0) {
+        categoryExperiences.push({
+          categoryId: category.id,
+          categoryName: category.name,
+          categoryIcon: CATEGORY_EMOJI_MAP[category.icon] || '📋',
+          subcategoryIds: selectedSubs.map((sub) => sub.id),
+          subcategoryNames: selectedSubs.map((sub) => sub.name),
+          experienceDescription: '',
+        });
+      }
     }
+
+    // Save category experiences to store
+    setCategoryExperiences(categoryExperiences);
+
+    // Navigate to category experience page
+    router.push('/(provider)/onboarding/category-experience');
   };
 
   const iconColor = colorScheme === 'dark' ? '#fafafa' : '#18181b';
@@ -133,20 +117,11 @@ export default function ServicesSelectionScreen() {
     );
   }
 
-  if (isSubmitting) {
-    return (
-      <SafeAreaView className="flex-1 items-center justify-center bg-background">
-        <ActivityIndicator size="large" color={iconColor} />
-        <Text className="mt-4 text-muted-foreground">Sauvegarde en cours...</Text>
-      </SafeAreaView>
-    );
-  }
-
   return (
     <SafeAreaView className="flex-1 bg-background" edges={['top']}>
       {/* Progress Bar - Full width aligned with content */}
       <View className="px-5 pt-2">
-        <ProgressBar currentStep={2} totalSteps={3} />
+        <ProgressBar currentStep={2} totalSteps={4} />
       </View>
 
       {/* Header with Back Button */}

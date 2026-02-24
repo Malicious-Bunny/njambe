@@ -1,38 +1,45 @@
 # Njambe Project - Todos & Progress Tracker
 
-## Current AI Session - February 24, 2026 (New Session)
+## Current AI Session - February 24, 2026 (Category Experience Pages)
 
-**Status**: Project cloned and fully studied - Ready for development
+**Status**: Implementing category experience pages in provider onboarding
 
 ### Completed This Session
 - [x] Cloned the njambe repository from GitHub
 - [x] Read and studied .same/todos.md for project briefing
 - [x] Read and studied llms.txt for architecture rules
 - [x] Reviewed package.json, app structure, and key files
-- [x] Understand the complete tech stack and codebase
+- [x] Updated provider-onboarding-store.ts:
+  - Added CategoryExperience interface
+  - Added categoryExperiences array to state
+  - Added currentCategoryIndex for tracking progress
+  - Added methods: setCategoryExperiences, updateCategoryExperience, nextCategory, prevCategory, getCurrentCategory, hasMoreCategories, isFirstCategory
+- [x] Updated services-selection.tsx:
+  - Added CATEGORY_EMOJI_MAP for category icons
+  - Build CategoryExperience objects from selected subcategories grouped by category
+  - Navigate to category-experience instead of completing onboarding
+- [x] Created category-experience.tsx:
+  - Dynamic page that shows experience form for each selected category
+  - Shows category emoji, name, and subcategories list
+  - Textarea for experience description
+  - Progress indicator showing current category out of total
+  - Skip and Continue buttons
+  - Handles navigation between categories
+  - Completes onboarding after last category
+- [x] Updated profile-photo.tsx:
+  - Added Skip button
+  - Fixed progress bar (2 of 4)
+  - Green Continue button styling
+- [x] Updated onboarding _layout.tsx to include category-experience screen
 
-### Project Understanding Summary
-- **Type**: React Native/Expo mobile app (NOT a web app)
-- **Purpose**: Neighborhood services marketplace (like RingTwice)
-- **Stack**: Expo SDK 54, NativeWind, React Native Reusables, Zustand, Supabase
-- **Current Focus**: Provider onboarding flow (profile-photo.tsx was last addition)
-
-### Key Architecture Rules (from llms.txt)
-1. **React Native Reusables First**: Always use React Native Reusables components
-2. **Component Organization**:
-   - `components/ui/` - React Native Reusables primitives
-   - `components/custom/[route_name]/` - Page-specific components
-   - `components/custom/shared/` - Shared components
-3. **Data Organization**: `lib/[page_name]/[data_name].ts`
-4. **Barrel Exports**: Every `components/custom/` folder needs `index.ts`
-5. **Lean Pages**: Page files handle only layout/orchestration
-
-### Design System (Zinc Theme)
-- Light: white background, zinc-950 foreground, zinc-900 primary
-- Dark: zinc-950 background, zinc-50 foreground, zinc-50 primary
-
-### Ready to Continue
-The project is now ready for continued development. Awaiting your instructions.
+### Current Flow
+1. work-type → Select individual/independent
+2. welcome-address → Enter address
+3. personal-description → General bio
+4. profile-photo → Upload photo (optional, can skip)
+5. services-selection → Select service categories
+6. category-experience → Describe experience per category (dynamic, 1 per selected category)
+7. → Complete to provider tabs
 
 ---
 

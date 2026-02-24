@@ -20,6 +20,7 @@ export default function OnboardingLayout() {
         <Stack.Screen name="personal-description" />
         <Stack.Screen name="profile-photo" />
         <Stack.Screen name="services-selection" />
+        <Stack.Screen name="category-experience" />
       </Stack>
     </ThemeProvider>
   );
