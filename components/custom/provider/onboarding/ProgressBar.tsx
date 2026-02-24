@@ -21,7 +21,7 @@ export function ProgressBar({ currentStep, totalSteps }: ProgressBarProps) {
   return (
     <View className="items-center justify-center">
       <View style={{ width: '70%' }}>
-        <ProgressTrack style={{ backgroundColor: trackColor, height: 2.5, borderRadius: 4 }}>
+        <ProgressTrack style={{ backgroundColor: trackColor, height: 5, borderRadius: 4 }}>
           <ProgressIndicator
             value={progressPercent}
             style={{ backgroundColor: indicatorColor, borderRadius: 4 }}
