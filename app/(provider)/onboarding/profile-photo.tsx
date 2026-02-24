@@ -106,7 +106,7 @@ export default function ProfilePhotoScreen() {
       resetOnboarding();
 
       // Navigate to provider tabs
-      router.replace('/(provider)/(tabs)/');
+      router.replace('/(provider)/(tabs)');
     } catch (error) {
       console.error('Error completing onboarding:', error);
       Alert.alert(
@@ -119,11 +119,7 @@ export default function ProfilePhotoScreen() {
     }
   };
 
-  const handleSkip = async () => {
-    // Skip photo upload and complete onboarding
-    setSelectedImage(null);
-    await handleComplete();
-  };
+
 
   const iconColor = colorScheme === 'dark' ? '#fafafa' : '#18181b';
   const mutedColor = colorScheme === 'dark' ? '#71717a' : '#a1a1aa';
@@ -219,20 +215,14 @@ export default function ProfilePhotoScreen() {
         </View>
       </View>
 
-      {/* Bottom Buttons */}
-      <View className="flex-row items-center gap-4 px-5 pb-8">
-        <Pressable
-          onPress={handleSkip}
-          className="flex-1 items-center justify-center py-4 active:opacity-70"
-        >
-          <Text className="text-lg text-muted-foreground">Passer</Text>
-        </Pressable>
-
+      {/* Bottom Button */}
+      <View className="px-5 pb-8">
         <Button
           onPress={handleComplete}
-          className="h-14 flex-[2] rounded-xl bg-primary"
+          disabled={!selectedImage}
+          className={`h-14 w-full rounded-xl ${selectedImage ? 'bg-primary' : 'bg-muted'}`}
         >
-          <Text className="text-lg font-semibold text-primary-foreground">
+          <Text className={`text-lg font-semibold ${selectedImage ? 'text-primary-foreground' : 'text-muted-foreground'}`}>
             Continuer
           </Text>
         </Button>
