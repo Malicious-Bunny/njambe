@@ -7,16 +7,15 @@ interface ProgressBarProps {
 }
 
 export function ProgressBar({ currentStep, totalSteps }: ProgressBarProps) {
+  // Calculate progress percentage (currentStep is 0-indexed, so add 1 for display)
+  const progressPercent = ((currentStep + 1) / totalSteps) * 100;
+
   return (
-    <View className="flex-row gap-2 px-5 py-3">
-      {Array.from({ length: totalSteps }).map((_, index) => (
-        <View
-          key={index}
-          className={`h-1.5 flex-1 rounded-full ${
-            index <= currentStep ? 'bg-foreground' : 'bg-border'
-          }`}
-        />
-      ))}
+    <View className="h-1 flex-1 rounded-full bg-border overflow-hidden">
+      <View
+        className="h-full rounded-full bg-amber-400"
+        style={{ width: `${progressPercent}%` }}
+      />
     </View>
   );
 }

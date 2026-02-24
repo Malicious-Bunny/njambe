@@ -1,9 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Text } from '@/components/ui/text';
-import { ProgressBar } from '@/components/custom/provider/onboarding';
 import { useProviderOnboardingStore } from '@/lib/stores';
-import { ArrowLeft, MapPin } from 'lucide-react-native';
+import { NavArrowLeft } from 'iconoir-react-native';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
@@ -34,18 +33,15 @@ export default function WelcomeAddressScreen() {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1"
       >
-        {/* Header with Back Button and Progress */}
+        {/* Header with Back Button */}
         <View className="flex-row items-center px-2 py-2">
           <Pressable
             onPress={handleBack}
             className="p-3 active:opacity-70"
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
-            <ArrowLeft size={24} color={iconColor} />
+            <NavArrowLeft width={24} height={24} color={iconColor} strokeWidth={2} />
           </Pressable>
-          <View className="flex-1 pr-12">
-            <ProgressBar currentStep={0} totalSteps={2} />
-          </View>
         </View>
 
         <ScrollView
@@ -55,8 +51,8 @@ export default function WelcomeAddressScreen() {
           showsVerticalScrollIndicator={false}
         >
           {/* Profile Image */}
-          <View className="items-center py-8">
-            <View className="h-32 w-32 overflow-hidden rounded-full border-4 border-border bg-secondary">
+          <View className="items-center pt-6 pb-12">
+            <View className="h-40 w-40 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
               <Image
                 source={{
                   uri: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=300&h=300&fit=crop',
@@ -68,46 +64,44 @@ export default function WelcomeAddressScreen() {
           </View>
 
           {/* Welcome Text */}
-          <View className="px-6">
-            <Text className="mb-1 text-sm font-medium uppercase tracking-wider text-muted-foreground">
-              Step 2 of 3
-            </Text>
+          <View className="px-5">
             <Text className="text-3xl font-bold text-foreground">
-              Welcome aboard!
+              Bienvenue !{' '}
+              <Text className="text-3xl">👋</Text>
             </Text>
 
-            <Text className="mt-4 text-base leading-relaxed text-muted-foreground">
-              We're thrilled to have you join our community of service providers. To help connect you with customers nearby, please share your location.
+            <Text className="mt-5 text-lg leading-7 text-foreground">
+              Nous sommes super heureux de vous compter parmi notre communauté de prestataires de service !
+            </Text>
+
+            <Text className="mt-4 text-lg leading-7 text-foreground">
+              Pour pouvoir vous envoyer des offres de jobs, veuillez compléter votre adresse ci-dessous.
             </Text>
           </View>
 
           {/* Spacer */}
-          <View className="flex-1 min-h-[40px]" />
+          <View className="flex-1 min-h-[60px]" />
 
           {/* Address Input Section */}
-          <View className="border-t border-border bg-card px-6 py-5">
-            <View className="flex-row items-center mb-3">
-              <MapPin size={18} color={iconColor} />
-              <Text className="ml-2 text-sm font-medium text-foreground">Your Address</Text>
-            </View>
+          <View className="border-t border-border bg-card px-5 py-4">
             <Input
-              placeholder="Enter your address"
+              placeholder="Indiquez votre adresse"
               value={localAddress}
               onChangeText={setLocalAddress}
-              className="bg-secondary border-0"
+              className="border-0 bg-transparent text-base"
               placeholderClassName="text-muted-foreground"
             />
           </View>
 
           {/* Continue Button */}
-          <View className="px-6 pb-8 pt-4">
+          <View className="px-5 pb-8 pt-4">
             <Button
               onPress={handleContinue}
               disabled={!isValid}
               className={`h-14 rounded-xl ${isValid ? 'bg-primary' : 'bg-muted'}`}
             >
               <Text className={`text-lg font-semibold ${isValid ? 'text-primary-foreground' : 'text-muted-foreground'}`}>
-                Continue
+                Continuer
               </Text>
             </Button>
           </View>
