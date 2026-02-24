@@ -1,13 +1,11 @@
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
-import { ProgressBar } from '@/components/custom/provider/onboarding';
 import { useProviderOnboardingStore } from '@/lib/stores';
 import { NavArrowLeft } from 'iconoir-react-native';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, TextInput, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 const MIN_CHARACTERS = 50;
 
@@ -32,16 +30,11 @@ export default function PersonalDescriptionScreen() {
   const placeholderColor = colorScheme === 'dark' ? '#71717a' : '#a1a1aa';
 
   return (
-    <SafeAreaView className="flex-1 bg-background" edges={['top']}>
+    <View className="flex-1 bg-background">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1"
       >
-        {/* Progress Bar - Full width aligned with content */}
-        <View className="px-5 pt-2">
-          <ProgressBar currentStep={0} totalSteps={2} />
-        </View>
-
         {/* Header with Back Button */}
         <View className="flex-row items-center px-2 py-2">
           <Pressable
@@ -113,6 +106,6 @@ export default function PersonalDescriptionScreen() {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   );
 }

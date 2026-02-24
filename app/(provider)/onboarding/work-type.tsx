@@ -5,7 +5,6 @@ import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import { Image, Pressable, View, useWindowDimensions } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 // Scattered profile images and colored dots for visual interest
 const PROFILE_CIRCLES: {
@@ -75,7 +74,7 @@ export default function WorkTypeScreen() {
   const iconColor = colorScheme === 'dark' ? '#fafafa' : '#18181b';
 
   return (
-    <SafeAreaView className="flex-1 bg-background" edges={['top']}>
+    <View className="flex-1 bg-background">
       {/* Header - Back Button Only */}
       <View className="flex-row items-center px-2 py-2">
         <Pressable
@@ -138,6 +137,6 @@ export default function WorkTypeScreen() {
           onPress={() => handleSelectWorkType('independent')}
         />
       </View>
-    </SafeAreaView>
+    </View>
   );
 }

@@ -7,7 +7,6 @@ import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import { Image, KeyboardAvoidingView, Platform, Pressable, ScrollView, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function WelcomeAddressScreen() {
   const { colorScheme } = useColorScheme();
@@ -28,7 +27,7 @@ export default function WelcomeAddressScreen() {
   const iconColor = colorScheme === 'dark' ? '#fafafa' : '#18181b';
 
   return (
-    <SafeAreaView className="flex-1 bg-background" edges={['top']}>
+    <View className="flex-1 bg-background">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1"
@@ -107,6 +106,6 @@ export default function WelcomeAddressScreen() {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   );
 }

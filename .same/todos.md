@@ -1,5 +1,49 @@
 # Njambe Project - Todos & Progress Tracker
 
+## Current AI Session - February 24, 2026 (Progress Bar Refactoring)
+
+**Status**: Completed - Progress bar separated from pages
+
+### Completed This Session
+- [x] Cloned the njambe repository from GitHub
+- [x] Read and studied .same/todos.md for project briefing
+- [x] Read and studied llms.txt for architecture rules
+- [x] Reviewed package.json, app structure, and key files
+- [x] **Refactored Progress Bar to Layout Level**:
+  - Moved ProgressBar component to `app/(provider)/onboarding/_layout.tsx`
+  - Progress bar now persists across route changes without re-rendering
+  - Uses `usePathname()` from expo-router to track current route
+  - Created route-to-step mapping for consistent progress tracking
+  - Progress bar only shows on relevant pages (personal-description, profile-photo, services-selection, category-experience)
+  - Dynamically calculates progress for category-experience page based on currentCategoryIndex
+  - SafeAreaView now handled at layout level
+
+- [x] **Updated Individual Pages** (removed ProgressBar):
+  - `personal-description.tsx` - Removed ProgressBar, changed SafeAreaView to View
+  - `profile-photo.tsx` - Removed ProgressBar, changed SafeAreaView to View
+  - `services-selection.tsx` - Removed ProgressBar, changed SafeAreaView to View
+  - `category-experience.tsx` - Removed ProgressBar, changed SafeAreaView to View
+  - `work-type.tsx` - Changed SafeAreaView to View (no progress bar on this page)
+  - `welcome-address.tsx` - Changed SafeAreaView to View (no progress bar on this page)
+
+### Architecture Changes
+```
+Before: Each page had its own ProgressBar → re-rendered on every route change
+After:  Layout has single ProgressBar → persists, only updates progress value
+```
+
+### Route to Step Mapping
+| Route | Step |
+|-------|------|
+| work-type | 0 |
+| welcome-address | 1 |
+| personal-description | 2 |
+| profile-photo | 3 |
+| services-selection | 4 |
+| category-experience | 5+ (dynamic) |
+
+---
+
 ## Current AI Session - February 24, 2026 (Icon & Color Scheme Fixes)
 
 **Status**: Fixed icons and category experience page layout

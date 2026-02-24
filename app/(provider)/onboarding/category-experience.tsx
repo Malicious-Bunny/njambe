@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
-import { ProgressBar } from '@/components/custom/provider/onboarding';
 import { useProviderOnboardingStore } from '@/lib/stores';
 import { supabase } from '@/lib/supabase';
 import { ArrowLeft } from 'phosphor-react-native';
@@ -18,7 +17,6 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function CategoryExperienceScreen() {
   const { colorScheme } = useColorScheme();
@@ -199,44 +197,33 @@ export default function CategoryExperienceScreen() {
   // If no category data, show loading or error
   if (!currentCategory) {
     return (
-      <SafeAreaView className="flex-1 items-center justify-center bg-background">
+      <View className="flex-1 items-center justify-center bg-background">
         <Text className="text-muted-foreground">Aucune catégorie sélectionnée</Text>
         <Button onPress={() => router.back()} className="mt-4">
           <Text>Retour</Text>
         </Button>
-      </SafeAreaView>
+      </View>
     );
   }
 
   if (isSubmitting) {
     return (
-      <SafeAreaView className="flex-1 items-center justify-center bg-background">
+      <View className="flex-1 items-center justify-center bg-background">
         <ActivityIndicator size="large" color={iconColor} />
         <Text className="mt-4 text-muted-foreground">Sauvegarde en cours...</Text>
-      </SafeAreaView>
+      </View>
     );
   }
-
-  // Calculate progress: we're on step 3 (category experience) out of 4
-  // But within this step, we show progress through categories
-  const baseProgress = 3;
-  const categoryProgress = (currentCategoryIndex + 1) / totalCategories;
-  const progressStep = baseProgress + categoryProgress * 0.9;
 
   // Format subcategories in brackets
   const subcategoriesText = `(${currentCategory.subcategoryNames.join(', ')})`;
 
   return (
-    <SafeAreaView className="flex-1 bg-background" edges={['top']}>
+    <View className="flex-1 bg-background">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1"
       >
-        {/* Progress Bar */}
-        <View className="px-5 pt-2">
-          <ProgressBar currentStep={progressStep} totalSteps={4} />
-        </View>
-
         {/* Header with Back Button */}
         <View className="flex-row items-center px-2 py-2">
           <Pressable
@@ -312,6 +299,6 @@ export default function CategoryExperienceScreen() {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   );
 }

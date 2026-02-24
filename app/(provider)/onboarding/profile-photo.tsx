@@ -1,13 +1,11 @@
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
-import { ProgressBar } from '@/components/custom/provider/onboarding';
 import { useProviderOnboardingStore } from '@/lib/stores';
 import { NavArrowLeft, Camera, Check, Xmark } from 'iconoir-react-native';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import { Alert, Image, Pressable, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 // Example photos showing good and bad profile photos
 const EXAMPLE_PHOTOS = [
@@ -80,12 +78,7 @@ export default function ProfilePhotoScreen() {
   const mutedColor = colorScheme === 'dark' ? '#71717a' : '#a1a1aa';
 
   return (
-    <SafeAreaView className="flex-1 bg-background" edges={['top']}>
-      {/* Progress Bar - Step 2 of 4 */}
-      <View className="px-5 pt-2">
-        <ProgressBar currentStep={2} totalSteps={4} />
-      </View>
-
+    <View className="flex-1 bg-background">
       {/* Header with Back Button */}
       <View className="flex-row items-center px-2 py-2">
         <Pressable
@@ -176,6 +169,6 @@ export default function ProfilePhotoScreen() {
           <Text className="text-lg font-semibold text-primary-foreground">Continuer</Text>
         </Button>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }

@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
-import { ProgressBar, ServicesCategorySection } from '@/components/custom/provider/onboarding';
+import { ServicesCategorySection } from '@/components/custom/provider/onboarding';
 import { useProviderOnboardingStore, type CategoryExperience } from '@/lib/stores';
 import { fetchServiceCategories, type ServiceCategory } from '@/lib/provider/service-categories';
 import { ArrowLeft } from 'phosphor-react-native';
@@ -8,7 +8,6 @@ import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import { ActivityIndicator, Alert, Pressable, ScrollView, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 // Map category icons to emoji for display
 const CATEGORY_EMOJI_MAP: Record<string, string> = {
@@ -110,20 +109,15 @@ export default function ServicesSelectionScreen() {
 
   if (isLoading) {
     return (
-      <SafeAreaView className="flex-1 items-center justify-center bg-background">
+      <View className="flex-1 items-center justify-center bg-background">
         <ActivityIndicator size="large" color={iconColor} />
         <Text className="mt-4 text-muted-foreground">Chargement des services...</Text>
-      </SafeAreaView>
+      </View>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-background" edges={['top']}>
-      {/* Progress Bar - Full width aligned with content */}
-      <View className="px-5 pt-2">
-        <ProgressBar currentStep={2} totalSteps={4} />
-      </View>
-
+    <View className="flex-1 bg-background">
       {/* Header with Back Button */}
       <View className="flex-row items-center px-2 py-2">
         <Pressable
@@ -179,6 +173,6 @@ export default function ServicesSelectionScreen() {
           </Text>
         </Button>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
