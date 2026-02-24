@@ -39,8 +39,8 @@ function WorkTypeOption({ title, description, onPress }: WorkTypeOptionProps) {
         <Text className="text-xl font-bold text-foreground">{title}</Text>
         <Text className="mt-1 text-base text-muted-foreground">{description}</Text>
       </View>
-      <View className="h-12 w-12 items-center justify-center rounded-full bg-emerald-500">
-        <ArrowRight size={24} color="white" />
+      <View className="h-12 w-12 items-center justify-center rounded-full bg-primary">
+        <ArrowRight size={24} className="text-primary-foreground" />
       </View>
     </Pressable>
   );

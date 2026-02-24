@@ -13,7 +13,7 @@ export function ProgressBar({ currentStep, totalSteps }: ProgressBarProps) {
         <View
           key={index}
           className={`h-1.5 flex-1 rounded-full ${
-            index <= currentStep ? 'bg-amber-400' : 'bg-zinc-200 dark:bg-zinc-700'
+            index <= currentStep ? 'bg-foreground' : 'bg-border'
           }`}
         />
       ))}

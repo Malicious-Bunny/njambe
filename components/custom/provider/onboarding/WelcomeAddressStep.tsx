@@ -19,10 +19,10 @@ export function WelcomeAddressStep() {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      className="flex-1 bg-[#FFF8F0] dark:bg-zinc-950"
+      className="flex-1 bg-background"
     >
       <ScrollView
-        className="flex-1 bg-[#FFF8F0] dark:bg-zinc-950"
+        className="flex-1 bg-background"
         contentContainerStyle={{ flexGrow: 1 }}
         keyboardShouldPersistTaps="handled"
       >
@@ -75,9 +75,9 @@ export function WelcomeAddressStep() {
           <Button
             onPress={handleContinue}
             disabled={!isValid}
-            className={`h-14 rounded-xl ${isValid ? 'bg-emerald-500' : 'bg-emerald-300'}`}
+            className={`h-14 rounded-xl ${isValid ? 'bg-primary' : 'bg-muted'}`}
           >
-            <Text className="text-lg font-semibold text-white">Continuer</Text>
+            <Text className={`text-lg font-semibold ${isValid ? 'text-primary-foreground' : 'text-muted-foreground'}`}>Continue</Text>
           </Button>
         </View>
       </ScrollView>
