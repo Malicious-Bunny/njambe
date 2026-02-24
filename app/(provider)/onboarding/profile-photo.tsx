@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { ProgressBar } from '@/components/custom/provider/onboarding';
 import { useProviderOnboardingStore } from '@/lib/stores';
-import { ArrowLeft, CameraPlus, Check, X } from 'phosphor-react-native';
+import { NavArrowLeft, Camera, Check, Xmark } from 'iconoir-react-native';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
@@ -81,7 +81,7 @@ export default function ProfilePhotoScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-background" edges={['top']}>
-      {/* Progress Bar - Step 2 of 4 (work-type, profile/desc, services, category-exp) */}
+      {/* Progress Bar - Step 2 of 4 */}
       <View className="px-5 pt-2">
         <ProgressBar currentStep={2} totalSteps={4} />
       </View>
@@ -93,7 +93,7 @@ export default function ProfilePhotoScreen() {
           className="p-3 active:opacity-70"
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
-          <ArrowLeft size={24} color={iconColor} weight="bold" />
+          <NavArrowLeft width={24} height={24} color={iconColor} strokeWidth={2} />
         </Pressable>
       </View>
 
@@ -125,7 +125,7 @@ export default function ProfilePhotoScreen() {
                   resizeMode="cover"
                 />
               ) : (
-                <CameraPlus size={48} color={mutedColor} weight="light" />
+                <Camera width={48} height={48} color={mutedColor} strokeWidth={1} />
               )}
             </View>
           </Pressable>
@@ -149,9 +149,9 @@ export default function ProfilePhotoScreen() {
                     }`}
                   >
                     {photo.isGood ? (
-                      <Check size={14} color="#ffffff" weight="bold" />
+                      <Check width={14} height={14} color="#ffffff" strokeWidth={3} />
                     ) : (
-                      <X size={14} color="#ffffff" weight="bold" />
+                      <Xmark width={14} height={14} color="#ffffff" strokeWidth={3} />
                     )}
                   </View>
                 </View>
@@ -171,10 +171,9 @@ export default function ProfilePhotoScreen() {
         {/* Continue button */}
         <Button
           onPress={handleContinue}
-          className="h-14 flex-1 ml-4 rounded-xl"
-          style={{ backgroundColor: '#16a34a' }}
+          className="h-14 flex-1 ml-4 rounded-xl bg-primary"
         >
-          <Text className="text-lg font-semibold text-white">Continuer</Text>
+          <Text className="text-lg font-semibold text-primary-foreground">Continuer</Text>
         </Button>
       </View>
     </SafeAreaView>

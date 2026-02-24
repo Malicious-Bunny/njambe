@@ -3,7 +3,7 @@ import { Text } from '@/components/ui/text';
 import { ProgressBar } from '@/components/custom/provider/onboarding';
 import { useProviderOnboardingStore } from '@/lib/stores';
 import { supabase } from '@/lib/supabase';
-import { ArrowLeft } from 'phosphor-react-native';
+import { NavArrowLeft } from 'iconoir-react-native';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
@@ -13,6 +13,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
+  ScrollView,
   TextInput,
   View,
 } from 'react-native';
@@ -142,7 +143,7 @@ export default function CategoryExperienceScreen() {
   };
 
   const iconColor = colorScheme === 'dark' ? '#fafafa' : '#18181b';
-  const backgroundColor = colorScheme === 'dark' ? '#18181b' : '#fefce8'; // Warm cream background like screenshot
+  const placeholderColor = colorScheme === 'dark' ? '#71717a' : '#a1a1aa';
 
   // If no category data, show loading or error
   if (!currentCategory) {
@@ -158,7 +159,7 @@ export default function CategoryExperienceScreen() {
 
   if (isSubmitting) {
     return (
-      <SafeAreaView className="flex-1 items-center justify-center" style={{ backgroundColor }}>
+      <SafeAreaView className="flex-1 items-center justify-center bg-background">
         <ActivityIndicator size="large" color={iconColor} />
         <Text className="mt-4 text-muted-foreground">Sauvegarde en cours...</Text>
       </SafeAreaView>
@@ -167,12 +168,17 @@ export default function CategoryExperienceScreen() {
 
   // Calculate progress: we're on step 3 (category experience) out of 4
   // But within this step, we show progress through categories
-  const baseProgress = 3; // This is the 3rd major step
+  const baseProgress = 3;
   const categoryProgress = (currentCategoryIndex + 1) / totalCategories;
-  const progressStep = baseProgress + categoryProgress * 0.9; // Use 0.9 so we don't hit exactly 4 until complete
+  const progressStep = baseProgress + categoryProgress * 0.9;
+
+  // Format category title with subcategories in brackets
+  const categoryTitle = currentCategory.subcategoryNames.length > 1
+    ? `${currentCategory.categoryIcon} ${currentCategory.categoryName} (${currentCategory.subcategoryNames.join(', ')})`
+    : `${currentCategory.categoryIcon} ${currentCategory.categoryName}`;
 
   return (
-    <SafeAreaView className="flex-1" style={{ backgroundColor }} edges={['top']}>
+    <SafeAreaView className="flex-1 bg-background" edges={['top']}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1"
@@ -189,74 +195,64 @@ export default function CategoryExperienceScreen() {
             className="p-3 active:opacity-70"
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
-            <ArrowLeft size={24} color={iconColor} weight="bold" />
+            <NavArrowLeft width={24} height={24} color={iconColor} strokeWidth={2} />
           </Pressable>
         </View>
 
-        {/* Main Content */}
-        <View className="flex-1 px-5">
-          {/* Title with category emoji and name */}
-          <Text className="text-xl font-bold text-foreground">
-            Décrivez votre expérience en
-          </Text>
-          <Text className="mt-1 text-2xl font-bold text-foreground">
-            {currentCategory.categoryIcon} {currentCategory.categoryName}
-          </Text>
-
-          {/* Subcategories list if multiple */}
-          {currentCategory.subcategoryNames.length > 1 && (
-            <Text className="mt-2 text-base leading-6 text-muted-foreground">
-              ({currentCategory.subcategoryNames.join(', ')})
+        <ScrollView
+          className="flex-1"
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Main Content */}
+          <View className="flex-1 px-5">
+            {/* Title with category emoji, name and subcategories in brackets */}
+            <Text className="text-xl font-bold text-foreground">
+              Décrivez votre expérience en
             </Text>
-          )}
+            <Text className="mt-1 text-xl font-bold text-foreground">
+              {categoryTitle}
+            </Text>
 
-          {/* Textarea for experience description */}
-          <View
-            className="mt-6 rounded-2xl border border-border/30 p-4"
-            style={{
-              backgroundColor: colorScheme === 'dark' ? '#27272a' : '#fffef5',
-              minHeight: 200,
-            }}
-          >
-            <TextInput
-              value={description}
-              onChangeText={setDescription}
-              placeholder="Écrivez votre description de compétence"
-              placeholderTextColor={colorScheme === 'dark' ? '#71717a' : '#a1a1aa'}
-              multiline
-              textAlignVertical="top"
-              style={{
-                flex: 1,
-                color: colorScheme === 'dark' ? '#fafafa' : '#18181b',
-                fontSize: 16,
-                lineHeight: 24,
-                minHeight: 180,
-              }}
-            />
+            {/* Textarea for experience description */}
+            <View className="mt-6 flex-1">
+              <View className="min-h-[200px] rounded-2xl border border-border bg-card p-4">
+                <TextInput
+                  value={description}
+                  onChangeText={setDescription}
+                  placeholder="Écrivez votre description de compétence"
+                  placeholderTextColor={placeholderColor}
+                  multiline
+                  textAlignVertical="top"
+                  className="flex-1 text-base text-foreground"
+                  style={{ minHeight: 180, color: colorScheme === 'dark' ? '#fafafa' : '#18181b' }}
+                />
+              </View>
+
+              {/* Category indicator */}
+              <Text className="mt-4 text-center text-sm text-muted-foreground">
+                Catégorie {currentCategoryIndex + 1} sur {totalCategories}
+              </Text>
+            </View>
           </View>
 
-          {/* Category indicator */}
-          <Text className="mt-4 text-center text-sm text-muted-foreground">
-            Catégorie {currentCategoryIndex + 1} sur {totalCategories}
-          </Text>
-        </View>
+          {/* Bottom Buttons */}
+          <View className="flex-row items-center justify-between px-5 pb-8 pt-4">
+            {/* Skip button */}
+            <Pressable onPress={handleSkip} className="px-6 py-3 active:opacity-70">
+              <Text className="text-base font-medium text-muted-foreground">Passer</Text>
+            </Pressable>
 
-        {/* Bottom Buttons */}
-        <View className="flex-row items-center justify-between px-5 pb-8 pt-4">
-          {/* Skip button */}
-          <Pressable onPress={handleSkip} className="px-6 py-3 active:opacity-70">
-            <Text className="text-base font-medium text-muted-foreground">Passer</Text>
-          </Pressable>
-
-          {/* Continue button */}
-          <Button
-            onPress={handleContinue}
-            className="h-14 flex-1 ml-4 rounded-xl"
-            style={{ backgroundColor: '#16a34a' }} // Green color from screenshot
-          >
-            <Text className="text-lg font-semibold text-white">Continuer</Text>
-          </Button>
-        </View>
+            {/* Continue button */}
+            <Button
+              onPress={handleContinue}
+              className="h-14 flex-1 ml-4 rounded-xl bg-primary"
+            >
+              <Text className="text-lg font-semibold text-primary-foreground">Continuer</Text>
+            </Button>
+          </View>
+        </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
