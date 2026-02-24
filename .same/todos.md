@@ -2,36 +2,33 @@
 
 ## Current AI Session - February 24, 2026
 
-**Status**: Redesigning provider onboarding pages to match new design
+**Status**: Adding profile photo upload page to provider onboarding
 
 ### Completed This Session
 - [x] Cloned and studied the entire project
-- [x] Redesigned ProgressBar to be continuous (not segmented)
-- [x] Updated work-type.tsx:
-  - Added scattered profile circles with colored dots (pink, amber)
-  - Removed step number text
-  - Changed to French text
-  - Used iconoir icons (NavArrowLeft, ArrowRight)
-  - White cards with green circular arrow buttons
-- [x] Updated welcome-address.tsx:
-  - Removed progress bar (not shown on this step per design)
-  - Circular profile image at top
-  - French welcome text with emoji
-  - Simplified address input
-  - Used iconoir icons
 - [x] Updated personal-description.tsx:
-  - Continuous progress bar in header
-  - French title with emoji
-  - Description with bold parts
-  - White textarea card
-  - Used iconoir icons
+  - Added minimum character indicator (50 chars) under textarea
+  - Aligned progress bar with content (moved to top, full width with px-5)
+  - Shows character count with green color when valid
+- [x] Created profile-photo.tsx:
+  - Progress bar aligned with content
+  - Back button with NavArrowLeft icon
+  - Title: "Ajoutez votre plus belle photo !"
+  - Subtitle explaining photo upload
+  - Large circular upload area with dashed border and Camera icon
+  - Example photos showing good/bad examples with Check/Xmark badges
+  - "Passer" (skip) text button and "Continuer" primary button
+  - Uses zinc color scheme (not green from reference)
+  - All icons from iconoir-react-native
+- [x] Updated onboarding _layout.tsx to include profile-photo screen
+- [x] Updated personal-description to navigate to profile-photo instead of completing
 
 ### Design Changes Made
-- Progress bar: Continuous amber fill on gray background
-- Icons: Switched from lucide-react-native to iconoir-react-native
+- Progress bar: Full width with px-5 padding, aligned with content
+- Icons: Using iconoir-react-native (NavArrowLeft, Camera, Check, Xmark)
 - Text: All French language
-- Cards: White background on zinc theme
-- Buttons: Green primary with white text
+- Color scheme: Zinc theme (not green from reference screenshot)
+- Example photos: 3 circular images with green check or red X badges
 
 ---
 

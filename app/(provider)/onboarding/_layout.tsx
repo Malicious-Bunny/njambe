@@ -18,6 +18,7 @@ export default function OnboardingLayout() {
         <Stack.Screen name="work-type" />
         <Stack.Screen name="welcome-address" />
         <Stack.Screen name="personal-description" />
+        <Stack.Screen name="profile-photo" />
       </Stack>
     </ThemeProvider>
   );

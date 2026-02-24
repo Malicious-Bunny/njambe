@@ -2,12 +2,11 @@ import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { ProgressBar } from '@/components/custom/provider/onboarding';
 import { useProviderOnboardingStore } from '@/lib/stores';
-import { supabase } from '@/lib/supabase';
 import { NavArrowLeft } from 'iconoir-react-native';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
-import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const MIN_CHARACTERS = 50;
@@ -15,79 +14,22 @@ const MIN_CHARACTERS = 50;
 export default function PersonalDescriptionScreen() {
   const { colorScheme } = useColorScheme();
   const router = useRouter();
-  const { personalDescription, setPersonalDescription, getOnboardingData, resetOnboarding } =
-    useProviderOnboardingStore();
+  const { personalDescription, setPersonalDescription } = useProviderOnboardingStore();
   const [localDescription, setLocalDescription] = React.useState(personalDescription);
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const handleBack = () => {
     router.back();
   };
 
-  const handleComplete = async () => {
-    setIsSubmitting(true);
-    try {
-      setPersonalDescription(localDescription);
-      const onboardingData = getOnboardingData();
-      console.log('Submitting onboarding data:', onboardingData);
-
-      // Get current user
-      const {
-        data: { user },
-        error: userError,
-      } = await supabase.auth.getUser();
-
-      if (userError || !user) {
-        throw new Error('User not authenticated');
-      }
-
-      // Update user profile in database
-      const { error: updateError } = await supabase
-        .from('users')
-        .update({
-          work_type: onboardingData.workType,
-          address: onboardingData.address,
-          personal_description: localDescription,
-          onboarding_completed: true,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', user.id);
-
-      if (updateError) {
-        console.error('Error updating profile:', updateError);
-        // Continue anyway for now, as table might not have these columns yet
-      }
-
-      // Reset onboarding store
-      resetOnboarding();
-
-      // Navigate to provider tabs
-      router.replace('/(provider)/(tabs)/');
-    } catch (error) {
-      console.error('Error completing onboarding:', error);
-      Alert.alert(
-        'Erreur',
-        'Un problème est survenu lors de la sauvegarde. Veuillez réessayer.',
-        [{ text: 'OK' }]
-      );
-    } finally {
-      setIsSubmitting(false);
-    }
+  const handleContinue = () => {
+    setPersonalDescription(localDescription);
+    router.push('/(provider)/onboarding/profile-photo');
   };
 
   const characterCount = localDescription.trim().length;
   const isValid = characterCount >= MIN_CHARACTERS;
   const iconColor = colorScheme === 'dark' ? '#fafafa' : '#18181b';
   const placeholderColor = colorScheme === 'dark' ? '#71717a' : '#a1a1aa';
-
-  if (isSubmitting) {
-    return (
-      <SafeAreaView className="flex-1 items-center justify-center bg-background">
-        <ActivityIndicator size="large" color={iconColor} />
-        <Text className="mt-4 text-muted-foreground">Sauvegarde en cours...</Text>
-      </SafeAreaView>
-    );
-  }
 
   return (
     <SafeAreaView className="flex-1 bg-background" edges={['top']}>
@@ -160,7 +102,7 @@ export default function PersonalDescriptionScreen() {
           {/* Continue Button */}
           <View className="px-5 pb-8 pt-4">
             <Button
-              onPress={handleComplete}
+              onPress={handleContinue}
               disabled={!isValid}
               className={`h-14 rounded-xl ${isValid ? 'bg-primary' : 'bg-muted'}`}
             >
