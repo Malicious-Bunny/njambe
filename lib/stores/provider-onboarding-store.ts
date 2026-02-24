@@ -16,8 +16,11 @@ export interface ProviderOnboardingState {
   // Step 3: Personal description
   personalDescription: string;
 
-  // Additional fields for future steps
+  // Step 4: Profile photo
   profileImage: string | null;
+
+  // Step 5: Selected services
+  selectedServices: string[];
 }
 
 interface ProviderOnboardingActions {
@@ -31,6 +34,7 @@ interface ProviderOnboardingActions {
   setAddress: (address: string) => void;
   setPersonalDescription: (description: string) => void;
   setProfileImage: (uri: string | null) => void;
+  setSelectedServices: (services: string[]) => void;
 
   // Get all data for submission
   getOnboardingData: () => Omit<ProviderOnboardingState, 'currentStep' | 'totalSteps'>;
@@ -43,11 +47,12 @@ type ProviderOnboardingStore = ProviderOnboardingState & ProviderOnboardingActio
 
 const initialState: ProviderOnboardingState = {
   currentStep: 0,
-  totalSteps: 3,
+  totalSteps: 5,
   workType: null,
   address: '',
   personalDescription: '',
   profileImage: null,
+  selectedServices: [],
 };
 
 export const useProviderOnboardingStore = create<ProviderOnboardingStore>((set, get) => ({
@@ -87,6 +92,10 @@ export const useProviderOnboardingStore = create<ProviderOnboardingStore>((set, 
     set({ profileImage: uri });
   },
 
+  setSelectedServices: (services: string[]) => {
+    set({ selectedServices: services });
+  },
+
   getOnboardingData: () => {
     const state = get();
     return {
@@ -94,6 +103,7 @@ export const useProviderOnboardingStore = create<ProviderOnboardingStore>((set, 
       address: state.address,
       personalDescription: state.personalDescription,
       profileImage: state.profileImage,
+      selectedServices: state.selectedServices,
     };
   },
 
