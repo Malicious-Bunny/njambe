@@ -44,7 +44,7 @@ function WorkTypeOption({ title, description, onPress }: WorkTypeOptionProps) {
   return (
     <Pressable
       onPress={onPress}
-      className="mb-4 flex-row items-center justify-between rounded-2xl bg-card p-5 active:opacity-80"
+      className="mb-4 flex-row items-center justify-between rounded-2xl border border-border bg-card p-5 active:opacity-80"
     >
       <View className="flex-1 pr-4">
         <Text className="text-xl font-bold text-foreground">{title}</Text>

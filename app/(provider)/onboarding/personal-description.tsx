@@ -129,7 +129,7 @@ export default function PersonalDescriptionScreen() {
 
             {/* Text Area */}
             <View className="mt-6 flex-1">
-              <View className="min-h-[250px] rounded-2xl bg-card p-4">
+              <View className="min-h-[250px] rounded-2xl border border-border bg-card p-4">
                 <TextInput
                   placeholder="Écrivez votre description personnelle"
                   placeholderTextColor={placeholderColor}

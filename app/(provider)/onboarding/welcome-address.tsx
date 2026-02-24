@@ -83,7 +83,7 @@ export default function WelcomeAddressScreen() {
           <View className="flex-1 min-h-[60px]" />
 
           {/* Address Input Section */}
-          <View className="border-t border-border bg-card px-5 py-4">
+          <View className="border border-border bg-card mx-5 rounded-2xl px-4 py-4">
             <Input
               placeholder="Indiquez votre adresse"
               value={localAddress}
