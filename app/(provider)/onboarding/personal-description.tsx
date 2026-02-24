@@ -10,6 +10,8 @@ import * as React from 'react';
 import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+const MIN_CHARACTERS = 50;
+
 export default function PersonalDescriptionScreen() {
   const { colorScheme } = useColorScheme();
   const router = useRouter();
@@ -73,7 +75,8 @@ export default function PersonalDescriptionScreen() {
     }
   };
 
-  const isValid = localDescription.trim().length >= 10;
+  const characterCount = localDescription.trim().length;
+  const isValid = characterCount >= MIN_CHARACTERS;
   const iconColor = colorScheme === 'dark' ? '#fafafa' : '#18181b';
   const placeholderColor = colorScheme === 'dark' ? '#71717a' : '#a1a1aa';
 
@@ -92,7 +95,12 @@ export default function PersonalDescriptionScreen() {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1"
       >
-        {/* Header with Back Button and Progress Bar */}
+        {/* Progress Bar - Full width aligned with content */}
+        <View className="px-5 pt-2">
+          <ProgressBar currentStep={0} totalSteps={2} />
+        </View>
+
+        {/* Header with Back Button */}
         <View className="flex-row items-center px-2 py-2">
           <Pressable
             onPress={handleBack}
@@ -101,11 +109,6 @@ export default function PersonalDescriptionScreen() {
           >
             <NavArrowLeft width={24} height={24} color={iconColor} strokeWidth={2} />
           </Pressable>
-          <View className="flex-1 mx-4">
-            <ProgressBar currentStep={0} totalSteps={2} />
-          </View>
-          {/* Spacer to balance the back button */}
-          <View className="w-12" />
         </View>
 
         <ScrollView
@@ -114,7 +117,7 @@ export default function PersonalDescriptionScreen() {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <View className="flex-1 px-5 pt-4">
+          <View className="flex-1 px-5 pt-2">
             {/* Title */}
             <Text className="text-2xl font-bold text-foreground">
               Dites-nous en plus sur vous !{' '}
@@ -140,6 +143,16 @@ export default function PersonalDescriptionScreen() {
                   className="flex-1 text-base text-foreground"
                   style={{ minHeight: 230, color: colorScheme === 'dark' ? '#fafafa' : '#18181b' }}
                 />
+              </View>
+
+              {/* Character Count Indicator */}
+              <View className="mt-3 flex-row items-center justify-between">
+                <Text className="text-sm text-muted-foreground">
+                  Minimum {MIN_CHARACTERS} caractères
+                </Text>
+                <Text className={`text-sm ${isValid ? 'text-green-600' : 'text-muted-foreground'}`}>
+                  {characterCount}/{MIN_CHARACTERS}
+                </Text>
               </View>
             </View>
           </View>
