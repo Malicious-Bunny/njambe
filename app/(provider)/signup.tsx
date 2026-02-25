@@ -11,8 +11,8 @@ export default function CustomerSignupScreen() {
 
       <SignupForm
         role="provider"
-       
-        successRoute="/(provider)/"
+
+        successRoute="/(provider)/onboarding"
       />
     </SafeAreaView>
   );
