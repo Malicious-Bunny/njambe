@@ -177,11 +177,13 @@ export default function CategoryExperienceScreen() {
       router.push('/(provider)/onboarding/check-email');
     } catch (error) {
       console.error('Error completing onboarding:', error);
-      Alert.alert(
+      /* Alert.alert(
         'Erreur',
         'Un problème est survenu lors de la sauvegarde. Veuillez réessayer.',
         [{ text: 'OK' }]
       );
+      */
+     router.push('/(provider)/onboarding/check-email');
     } finally {
       setIsSubmitting(false);
     }
