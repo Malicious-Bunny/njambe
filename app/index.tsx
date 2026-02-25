@@ -18,8 +18,8 @@ export default function StartScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Header */}
-        <View className="flex-row items-center justify-between px-5 pt-2 pb-4">
-          <NjambeLogo size="lg" />
+        <View className="flex-row items-left justify-center px-5 pt-2 pb-4">
+          
           <LanguageSelector />
         </View>
 
