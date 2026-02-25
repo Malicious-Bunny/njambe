@@ -8,19 +8,21 @@ import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import { Pressable, View } from 'react-native';
 
-// Theme colors for this success page
+// Zinc theme colors matching the app's design system
 const THEME_COLORS = {
   light: {
-    background: '#FDF7ED', // Warm beige for success page
-    foreground: '#18181b', // zinc-900
+    background: '#fafafa', // zinc-50
+    foreground: '#09090b', // zinc-950
     mutedForeground: '#71717a', // zinc-500
-    accent: '#EC4899', // Pink for "Plus tard" button
+    accent: '#18181b', // zinc-900 (primary)
+    muted: '#f4f4f5', // zinc-100
   },
   dark: {
-    background: '#1c1917', // stone-900 for warm dark mode
+    background: '#09090b', // zinc-950
     foreground: '#fafafa', // zinc-50
     mutedForeground: '#a1a1aa', // zinc-400
-    accent: '#F472B6', // Pink-400 for dark mode
+    accent: '#fafafa', // zinc-50 (primary in dark mode)
+    muted: '#27272a', // zinc-800
   },
 };
 
@@ -118,7 +120,8 @@ export default function CheckEmailScreen() {
       <View className="items-center pb-12 pt-6">
         <Pressable
           onPress={handleLater}
-          className="px-8 py-3 active:opacity-70"
+          className="rounded-full px-8 py-3 active:opacity-70"
+          style={{ backgroundColor: colors.muted }}
           hitSlop={{ top: 10, bottom: 10, left: 20, right: 20 }}
         >
           <Text
