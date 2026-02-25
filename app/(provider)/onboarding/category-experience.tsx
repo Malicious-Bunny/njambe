@@ -31,7 +31,6 @@ export default function CategoryExperienceScreen() {
     categoryExperiences,
     currentCategoryIndex,
     getOnboardingData,
-    resetOnboarding,
   } = useProviderOnboardingStore();
 
   const [description, setDescription] = React.useState('');
@@ -174,11 +173,8 @@ export default function CategoryExperienceScreen() {
         // Continue anyway for now, as table might not have these columns yet
       }
 
-      // Reset onboarding store
-      resetOnboarding();
-
-      // Navigate to provider tabs
-      router.replace('/(provider)/(tabs)');
+      // Navigate to check-email success page
+      router.push('/(provider)/onboarding/check-email');
     } catch (error) {
       console.error('Error completing onboarding:', error);
       Alert.alert(

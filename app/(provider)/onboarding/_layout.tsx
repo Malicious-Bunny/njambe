@@ -16,6 +16,7 @@ const ROUTE_STEP_MAP: Record<string, number> = {
   'profile-photo': 3,
   'services-selection': 4,
   'category-experience': 5,
+  'check-email': 6,
 };
 
 // Routes where progress bar should be visible
@@ -24,10 +25,11 @@ const PROGRESS_BAR_ROUTES = [
   'profile-photo',
   'services-selection',
   'category-experience',
+  'check-email',
 ];
 
 // Total number of steps (excluding category-experience which is dynamic)
-const TOTAL_BASE_STEPS = 5;
+const TOTAL_BASE_STEPS = 6;
 
 export default function OnboardingLayout() {
   const { colorScheme } = useColorScheme();
@@ -90,6 +92,7 @@ export default function OnboardingLayout() {
           <Stack.Screen name="profile-photo" />
           <Stack.Screen name="services-selection" />
           <Stack.Screen name="category-experience" />
+          <Stack.Screen name="check-email" />
         </Stack>
       </SafeAreaView>
     </ThemeProvider>

@@ -1,3 +1,4 @@
+export * from './EmailSuccessIllustration';
 export * from './PersonalDescriptionStep';
 export * from './ProgressBar';
 export * from './ServicesCategorySection';
