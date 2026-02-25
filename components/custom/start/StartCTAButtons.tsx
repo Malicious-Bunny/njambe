@@ -6,11 +6,11 @@ import { Pressable, View } from 'react-native';
 
 export function StartCTAButtons() {
   const handleCustomerMode = () => {
-    router.push('/(customer)/onboarding');
+    router.push('/(customer)');
   };
 
   const handleProviderMode = () => {
-    router.push('/(provider)/onboarding');
+    router.push('/(provider)');
   };
 
   const handleLogin = () => {
