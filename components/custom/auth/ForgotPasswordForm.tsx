@@ -5,7 +5,7 @@ import {
   validateEmail,
 } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
-import { Mail } from 'iconoir-react-native';
+import { EnvelopeIcon } from 'phosphor-react-native';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import {
@@ -120,7 +120,7 @@ export function ForgotPasswordForm({ onBackToLogin }: ForgotPasswordFormProps) {
       <View className="flex-1">
         <View className="flex-1 px-6 pt-16 items-center">
           <View className="w-20 h-20 rounded-full bg-primary/10 items-center justify-center mb-6">
-            <Mail width={40} height={40} color={textColor} />
+            <EnvelopeIcon size={40} color={textColor} weight="regular" />
           </View>
 
           <Text className="text-2xl font-bold text-foreground text-center mb-4">
@@ -207,7 +207,7 @@ export function ForgotPasswordForm({ onBackToLogin }: ForgotPasswordFormProps) {
               editable={!isLoading}
             />
             <View className="pb-3">
-              <Mail width={20} height={20} color={iconColor} />
+              <EnvelopeIcon size={20} color={iconColor} weight="regular" />
             </View>
           </View>
         </View>

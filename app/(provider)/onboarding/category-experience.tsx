@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { useProviderOnboardingStore } from '@/lib/stores';
 import { supabase } from '@/lib/supabase';
-import { ArrowLeft } from 'phosphor-react-native';
+import { ArrowLeftIcon } from 'phosphor-react-native';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
@@ -229,7 +229,7 @@ export default function CategoryExperienceScreen() {
             className="p-3 active:opacity-70"
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
-            <ArrowLeft size={24} color={iconColor} weight="regular" />
+            <ArrowLeftIcon size={24} color={iconColor} weight="regular" />
           </Pressable>
         </View>
 

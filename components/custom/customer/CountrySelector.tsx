@@ -1,6 +1,6 @@
 import { Text } from '@/components/ui/text';
 import { COUNTRIES, type Country } from '@/lib/customer/countries';
-import { NavArrowDown, Xmark } from 'iconoir-react-native';
+import { CaretDownIcon, XIcon } from 'phosphor-react-native';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import {
@@ -55,7 +55,7 @@ export function CountrySelector({
             <CountryFlag country={selectedCountry} size="md" />
             <Text className="text-base text-foreground">{selectedCountry.name}</Text>
           </View>
-          <NavArrowDown width={20} height={20} color={iconColor} />
+          <CaretDownIcon size={20} color={iconColor} weight="regular" />
         </View>
       </Pressable>
 
@@ -80,7 +80,7 @@ export function CountrySelector({
                 onPress={handleClose}
                 className="w-10 h-10 items-center justify-center"
               >
-                <Xmark width={24} height={24} color={iconColor} />
+                <XIcon size={24} color={iconColor} weight="regular" />
               </Pressable>
             </View>
 

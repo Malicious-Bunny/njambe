@@ -1,6 +1,6 @@
 import { EmptyState, Header } from '@/components/custom/shared';
 import { Text } from '@/components/ui/text';
-import { Bell } from 'iconoir-react-native';
+import { BellIcon } from 'phosphor-react-native';
 import * as React from 'react';
 import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -23,7 +23,7 @@ export default function NotificationsScreen() {
         {/* Empty State */}
         <View className="px-5">
           <EmptyState
-            icon={Bell}
+            icon={BellIcon}
             title="No notifications"
             subtitle="You're all caught up!"
           />

@@ -1,6 +1,6 @@
 import { Text } from '@/components/ui/text';
 import { useProviderOnboardingStore, WorkType } from '@/lib/stores';
-import { NavArrowLeft, ArrowRight } from 'iconoir-react-native';
+import { ArrowLeftIcon, ArrowRightIcon } from 'phosphor-react-native';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
@@ -50,7 +50,7 @@ function WorkTypeOption({ title, description, onPress }: WorkTypeOptionProps) {
         <Text className="mt-1 text-base text-muted-foreground">{description}</Text>
       </View>
       <View className="h-12 w-12 items-center justify-center rounded-full bg-primary">
-        <ArrowRight width={24} height={24} color="#ffffff" strokeWidth={2} />
+        <ArrowRightIcon size={24} color="#ffffff" weight="regular" />
       </View>
     </Pressable>
   );
@@ -82,7 +82,7 @@ export default function WorkTypeScreen() {
           className="p-3 active:opacity-70"
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
-          <NavArrowLeft width={24} height={24} color={iconColor} strokeWidth={2} />
+          <ArrowLeftIcon size={24} color={iconColor} weight="regular" />
         </Pressable>
       </View>
 

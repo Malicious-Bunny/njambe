@@ -5,7 +5,7 @@ import { signUpWithGoogle } from '@/lib/auth/google-auth';
 import { DEFAULT_COUNTRY, type Country } from '@/lib/customer/countries';
 import { supabase } from '@/lib/supabase';
 import { router } from 'expo-router';
-import { EyeClosed, Eye, Google, Check } from 'iconoir-react-native';
+import { EyeSlashIcon, EyeIcon, GoogleLogoIcon, CheckIcon } from 'phosphor-react-native';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import {
@@ -15,7 +15,6 @@ import {
   Platform,
   Pressable,
   ScrollView,
-  TextInput,
   View,
 } from 'react-native';
 import { z } from 'zod';
@@ -223,7 +222,7 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        <View className="px-6 pt-8">
+        <View className="px-6 pt-5">
           {/* Auth Error Banner */}
           {authError && (
             <View className="mb-4 p-3 bg-red-100 dark:bg-red-900/30 rounded-lg border border-red-200 dark:border-red-800">
@@ -234,9 +233,9 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
           )}
 
           {/* First Name */}
-          <View className="mb-6">
-            <Text className="text-sm text-muted-foreground mb-2">First name</Text>
+          <View className="mb-4">
             <Input
+              placeholder="First name"
               value={form.firstName}
               onChangeText={(v) => updateField('firstName', v)}
               autoCapitalize="words"
@@ -249,9 +248,9 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
           </View>
 
           {/* Last Name */}
-          <View className="mb-6">
-            <Text className="text-sm text-muted-foreground mb-2">Last name</Text>
+          <View className="mb-4">
             <Input
+              placeholder="Last name"
               value={form.lastName}
               onChangeText={(v) => updateField('lastName', v)}
               autoCapitalize="words"
@@ -264,9 +263,9 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
           </View>
 
           {/* Email */}
-          <View className="mb-6">
-            <Text className="text-sm text-muted-foreground mb-2">Email address</Text>
+          <View className="mb-4">
             <Input
+              placeholder="Email address"
               value={form.email}
               onChangeText={(v) => updateField('email', v)}
               keyboardType="email-address"
@@ -281,64 +280,29 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
           </View>
 
           {/* Phone Number */}
-          <View className="mb-6">
-            <Text className="text-sm text-muted-foreground mb-2">Phone number</Text>
-            <View
-              className="flex-row items-center"
-              style={{
-                borderBottomColor: submitted && errors.phone ? '#ef4444' : borderColor,
-                borderBottomWidth: 1,
-                minHeight: 44,
-              }}
-            >
-              {/* Country Code Prefix */}
-              <View className="flex-row items-center">
-                <Text
-                  className="text-base font-medium"
-                  style={{ color: textColor, fontSize: 16, lineHeight: 22 }}
-                >
-                  +237
-                </Text>
-                <View
-                  className="mx-3"
-                  style={{
-                    width: 1,
-                    height: 20,
-                    backgroundColor: borderColor
-                  }}
-                />
-              </View>
-
-              {/* Phone Input */}
-              <TextInput
-                style={{
-                  flex: 1,
-                  fontSize: 16,
-                  lineHeight: 22,
-                  paddingVertical: 10,
-                  color: textColor,
-                }}
-                value={form.phone}
-                onChangeText={handlePhoneChange}
-                keyboardType="phone-pad"
-                maxLength={9}
-                editable={!anyLoading}
-                placeholderTextColor={isDark ? '#71717a' : '#a1a1aa'}
-              />
-            </View>
+          <View className="mb-4">
+            <Input
+              placeholder="Phone number"
+              value={form.phone}
+              onChangeText={handlePhoneChange}
+              keyboardType="phone-pad"
+              maxLength={9}
+              editable={!anyLoading}
+              hasError={submitted && !!errors.phone}
+            />
             {submitted && errors.phone && (
               <Text className="text-xs text-red-500 mt-1">{errors.phone}</Text>
             )}
           </View>
 
           {/* Password */}
-          <View className="mb-6">
-            <Text className="text-sm text-muted-foreground mb-2">Password</Text>
+          <View className="mb-4">
             <View
               className="flex-row items-center"
               style={{ borderBottomColor: submitted && errors.password ? '#ef4444' : borderColor, borderBottomWidth: 1 }}
             >
               <Input
+                placeholder="Password"
                 style={{
                   flex: 1,
                   borderBottomWidth: 0,
@@ -351,18 +315,15 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
               />
               <Pressable onPress={() => setShowPassword(!showPassword)} className="p-2">
                 {showPassword ? (
-                  <Eye width={20} height={20} color={iconColor} />
+                  <EyeIcon size={20} color={iconColor} weight="regular" />
                 ) : (
-                  <EyeClosed width={20} height={20} color={iconColor} />
+                  <EyeSlashIcon size={20} color={iconColor} weight="regular" />
                 )}
               </Pressable>
             </View>
             {submitted && errors.password && (
               <Text className="text-xs text-red-500 mt-1">{errors.password}</Text>
             )}
-            <Text className="text-xs text-muted-foreground mt-2">
-              Must be at least 8 characters
-            </Text>
           </View>
 
           {/* Country Selector */}
@@ -385,7 +346,7 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
               }}
             >
               {acceptsPromos && (
-                <Check width={14} height={14} color={isDark ? '#18181b' : '#fafafa'} />
+                <CheckIcon size={14} color={isDark ? '#18181b' : '#fafafa'} weight="bold" />
               )}
             </View>
             <Text className="flex-1 text-sm text-muted-foreground leading-5">
@@ -393,30 +354,31 @@ export function SignupForm({ role, successRoute }: SignupFormProps) {
             </Text>
           </Pressable>
 
-          <OrDivider />
-
-          {/* Google Signup Button */}
-          <Pressable
-            onPress={handleGoogleSignup}
-            disabled={anyLoading}
-            className="h-14 flex-row items-center justify-center rounded-xl border-2 border-border bg-background mt-6 active:bg-secondary"
-          >
-            {isGoogleLoading ? (
-              <ActivityIndicator size="small" color={textColor} />
-            ) : (
-              <>
-                <Google width={20} height={20} color={textColor} />
-                <Text className="ml-3 text-base font-semibold text-foreground">
-                  Sign up with Google
-                </Text>
-              </>
-            )}
-          </Pressable>
         </View>
       </ScrollView>
 
       {/* Bottom Section */}
       <View className="px-6 pb-4 bg-background">
+        <OrDivider />
+
+        {/* Google Signup Button */}
+        <Pressable
+          onPress={handleGoogleSignup}
+          disabled={anyLoading}
+          className="h-14 flex-row items-center justify-center rounded-xl border-2 border-border bg-background mb-3 active:bg-secondary"
+        >
+          {isGoogleLoading ? (
+            <ActivityIndicator size="small" color={textColor} />
+          ) : (
+            <>
+              <GoogleLogoIcon size={20} color={textColor} weight="regular" />
+              <Text className="ml-3 text-base font-semibold text-foreground">
+                Sign up with Google
+              </Text>
+            </>
+          )}
+        </Pressable>
+
         <Pressable
           onPress={handleSignup}
           disabled={!hasInput || anyLoading}

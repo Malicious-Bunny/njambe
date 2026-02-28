@@ -1,5 +1,5 @@
 import { Text } from '@/components/ui/text';
-import { MapPin } from 'iconoir-react-native';
+import { MapPinIcon } from 'phosphor-react-native';
 import * as React from 'react';
 import { Pressable, View } from 'react-native';
 import { useColorScheme } from 'nativewind';
@@ -18,7 +18,7 @@ export function LocationSelector({
 
   return (
     <View className="flex-row items-center gap-2 px-5 pb-4">
-      <MapPin width={18} height={18} color={iconColor} />
+      <MapPinIcon size={18} color={iconColor} weight="regular" />
       <Text className="text-sm text-muted-foreground dark:text-muted-foreground">{location}</Text>
       <Pressable onPress={onChangePress}>
         <Text className="text-sm text-primary dark:text-primary">Change</Text>

@@ -1,6 +1,6 @@
 import { NjambeLogo } from '@/components/custom/start/NjambeLogo';
 import { router } from 'expo-router';
-import { NavArrowLeft, Bell } from 'iconoir-react-native';
+import { ArrowLeftIcon, BellIcon } from 'phosphor-react-native';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import { Pressable, View } from 'react-native';
@@ -33,7 +33,7 @@ export function Header({
     <View className="flex-row items-center justify-between px-5 pt-2 pb-4">
       {showBackButton ? (
         <Pressable onPress={handleBack} className="p-2">
-          <NavArrowLeft width={24} height={24} color={iconColor} />
+          <ArrowLeftIcon size={24} color={iconColor} weight="regular" />
         </Pressable>
       ) : (
         <View className="w-10" />
@@ -41,7 +41,7 @@ export function Header({
       <NjambeLogo size="md" />
       {showNotification ? (
         <Pressable onPress={onNotificationPress} className="p-2">
-          <Bell width={24} height={24} color={iconColor} />
+          <BellIcon size={24} color={iconColor} weight="regular" />
         </Pressable>
       ) : (
         <View className="w-10" />

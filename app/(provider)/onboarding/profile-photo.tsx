@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { useProviderOnboardingStore } from '@/lib/stores';
-import { NavArrowLeft, Camera, Check, Xmark } from 'iconoir-react-native';
+import { ArrowLeftIcon, CameraIcon, CheckIcon, XIcon } from 'phosphor-react-native';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
@@ -86,7 +86,7 @@ export default function ProfilePhotoScreen() {
           className="p-3 active:opacity-70"
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
-          <NavArrowLeft width={24} height={24} color={iconColor} strokeWidth={2} />
+          <ArrowLeftIcon size={24} color={iconColor} weight="regular" />
         </Pressable>
       </View>
 
@@ -118,7 +118,7 @@ export default function ProfilePhotoScreen() {
                   resizeMode="cover"
                 />
               ) : (
-                <Camera width={48} height={48} color={mutedColor} strokeWidth={1} />
+                <CameraIcon size={48} color={mutedColor} weight="regular" />
               )}
             </View>
           </Pressable>
@@ -142,9 +142,9 @@ export default function ProfilePhotoScreen() {
                     }`}
                   >
                     {photo.isGood ? (
-                      <Check width={14} height={14} color="#ffffff" strokeWidth={3} />
+                      <CheckIcon size={14} color="#ffffff" weight="bold" />
                     ) : (
-                      <Xmark width={14} height={14} color="#ffffff" strokeWidth={3} />
+                      <XIcon size={14} color="#ffffff" weight="bold" />
                     )}
                   </View>
                 </View>

@@ -3,8 +3,8 @@ import * as React from 'react';
 import { Pressable, View } from 'react-native';
 import { useColorScheme } from 'nativewind';
 
-// Generic icon component type compatible with iconoir icons
-type IconComponent = React.ComponentType<{ width?: number; height?: number; color?: string }>;
+// Generic icon component type compatible with phosphor icons
+type IconComponent = React.ComponentType<{ size?: number; color?: string; weight?: string }>;
 
 interface EmptyStateProps {
   icon?: IconComponent;
@@ -26,7 +26,7 @@ export function EmptyState({
 
   return (
     <View className="items-center justify-center rounded-2xl bg-card py-12 shadow-sm dark:bg-card">
-      {Icon && <Icon width={48} height={48} color={iconColor} />}
+      {Icon && <Icon size={48} color={iconColor} weight="regular" />}
       <Text className={`${Icon ? 'mt-3' : ''} text-muted-foreground dark:text-muted-foreground`}>{title}</Text>
       {subtitle && <Text className="mt-1 text-sm text-muted-foreground dark:text-muted-foreground">{subtitle}</Text>}
       {actionLabel && onActionPress && (

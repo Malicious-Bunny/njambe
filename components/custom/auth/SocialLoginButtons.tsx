@@ -1,7 +1,7 @@
 import { Text } from '@/components/ui/text';
 import { getUserRole, signInWithGoogle, type UserRole } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
-import { Google, Linkedin, AppleMac } from 'iconoir-react-native';
+import { GoogleLogoIcon, LinkedinLogoIcon, AppleLogoIcon } from 'phosphor-react-native';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import { ActivityIndicator, Alert, Pressable, View } from 'react-native';
@@ -77,7 +77,7 @@ export function SocialLoginButtons({ onSuccess, disabled = false }: SocialLoginB
           {isGoogleLoading ? (
             <ActivityIndicator size="small" color={textColor} />
           ) : (
-            <Google width={22} height={22} color={textColor} />
+            <GoogleLogoIcon size={22} color={textColor} weight="regular" />
           )}
         </Pressable>
         <Pressable
@@ -85,14 +85,14 @@ export function SocialLoginButtons({ onSuccess, disabled = false }: SocialLoginB
           disabled={isDisabled}
           className="h-12 w-12 items-center justify-center rounded-xl bg-secondary active:bg-accent"
         >
-          <Linkedin width={22} height={22} color={textColor} />
+          <LinkedinLogoIcon size={22} color={textColor} weight="regular" />
         </Pressable>
         <Pressable
           onPress={() => handleSocialLogin('apple')}
           disabled={isDisabled}
           className="h-12 w-12 items-center justify-center rounded-xl bg-secondary active:bg-accent"
         >
-          <AppleMac width={22} height={22} color={textColor} />
+          <AppleLogoIcon size={22} color={textColor} weight="regular" />
         </Pressable>
       </View>
     </View>

@@ -2,7 +2,7 @@ import { Input } from '@/components/ui/input';
 import { Text } from '@/components/ui/text';
 import { getUserRole, type UserRole } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
-import { Eye, EyeClosed } from 'iconoir-react-native';
+import { EyeIcon, EyeSlashIcon } from 'phosphor-react-native';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import { ActivityIndicator, Pressable, View } from 'react-native';
@@ -116,9 +116,9 @@ export function LoginForm({ onSuccess, onForgotPassword }: LoginFormProps) {
           />
           <Pressable onPress={() => setShowPassword(!showPassword)} className="p-2">
             {showPassword ? (
-              <Eye width={20} height={20} color={iconColor} />
+              <EyeIcon size={20} color={iconColor} weight="regular" />
             ) : (
-              <EyeClosed width={20} height={20} color={iconColor} />
+              <EyeSlashIcon size={20} color={iconColor} weight="regular" />
             )}
           </Pressable>
         </View>

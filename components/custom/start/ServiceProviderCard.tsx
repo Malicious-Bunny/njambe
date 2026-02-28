@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Text } from '@/components/ui/text';
 import type { ServiceProvider } from '@/lib/start/service-providers';
-import { StarSolid } from 'iconoir-react-native';
+import { StarIcon } from 'phosphor-react-native';
 import * as React from 'react';
 import { Image, View, type ViewStyle } from 'react-native';
 import { useColorScheme } from 'nativewind';
@@ -36,7 +36,7 @@ export function ServiceProviderCard({ provider, style }: ServiceProviderCardProp
             )}
           </View>
           <View className="mt-1 flex-row items-center gap-1">
-            <StarSolid width={14} height={14} color={starColor} />
+            <StarIcon size={14} color={starColor} weight="fill" />
             <Text className="text-sm text-muted-foreground">{provider.rating}/5</Text>
           </View>
           <View className="mt-2">

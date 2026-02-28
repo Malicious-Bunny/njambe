@@ -1,12 +1,13 @@
 import { Text } from '@/components/ui/text';
 import { EmailSuccessIllustration } from '@/components/custom/provider/onboarding';
 import { useProviderOnboardingStore } from '@/lib/stores';
+import { RESEND_COOLDOWN_SECONDS } from '@/lib/auth/constants';
 import { supabase } from '@/lib/supabase';
-import { ArrowLeft } from 'phosphor-react-native';
+import { ArrowLeftIcon } from 'phosphor-react-native';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
-import { Pressable, View } from 'react-native';
+import { ActivityIndicator, Pressable, View } from 'react-native';
 
 // Zinc theme colors matching the app's design system
 const THEME_COLORS = {
@@ -30,27 +31,78 @@ export default function CheckEmailScreen() {
   const { colorScheme } = useColorScheme();
   const router = useRouter();
   const { resetOnboarding } = useProviderOnboardingStore();
-  const [userEmail, setUserEmail] = React.useState<string>('');
 
+  const [userEmail, setUserEmail] = React.useState<string>('');
+  const [isSendingEmail, setIsSendingEmail] = React.useState(false);
+  const [emailSent, setEmailSent] = React.useState(false);
+  const [sendError, setSendError] = React.useState<string | null>(null);
+  const [resendCooldown, setResendCooldown] = React.useState(0);
+
+  const cooldownRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
   const colors = THEME_COLORS[colorScheme ?? 'light'];
 
-  // Get current user's email
+  const sendVerificationEmail = React.useCallback(async (email: string) => {
+    setIsSendingEmail(true);
+    setSendError(null);
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email,
+      });
+      if (error) {
+        setSendError(error.message);
+      } else {
+        setEmailSent(true);
+        setResendCooldown(RESEND_COOLDOWN_SECONDS);
+      }
+    } catch {
+      setSendError('Failed to send email');
+    } finally {
+      setIsSendingEmail(false);
+    }
+  }, []);
+
+  // Fetch user email then auto-send verification email on mount
   React.useEffect(() => {
-    const fetchUserEmail = async () => {
+    const init = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (user?.email) {
         setUserEmail(user.email);
+        await sendVerificationEmail(user.email);
       }
     };
-    fetchUserEmail();
-  }, []);
+    init();
+  }, [sendVerificationEmail]);
+
+  // Cooldown countdown
+  React.useEffect(() => {
+    if (resendCooldown > 0) {
+      cooldownRef.current = setInterval(() => {
+        setResendCooldown((prev) => {
+          if (prev <= 1) {
+            clearInterval(cooldownRef.current!);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => {
+      if (cooldownRef.current) clearInterval(cooldownRef.current);
+    };
+  }, [resendCooldown]);
+
+  const handleResend = () => {
+    if (userEmail && resendCooldown === 0 && !isSendingEmail) {
+      sendVerificationEmail(userEmail);
+    }
+  };
 
   const handleBack = () => {
     router.back();
   };
 
   const handleLater = () => {
-    // Reset onboarding store and navigate to tabs
     resetOnboarding();
     router.replace('/(provider)/(tabs)');
   };
@@ -64,7 +116,7 @@ export default function CheckEmailScreen() {
           className="p-3 active:opacity-70"
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
-          <ArrowLeft size={24} color={colors.foreground} weight="regular" />
+          <ArrowLeftIcon size={24} color={colors.foreground} weight="regular" />
         </Pressable>
       </View>
 
@@ -114,6 +166,41 @@ export default function CheckEmailScreen() {
         >
           Pas reçu ? Attendez quelques minutes et vérifiez vos spams.
         </Text>
+
+        {/* Error note */}
+        {sendError && (
+          <Text
+            className="mt-3 text-center text-sm"
+            style={{ color: '#ef4444' }}
+          >
+            {sendError}
+          </Text>
+        )}
+
+        {/* Resend button */}
+        <Pressable
+          onPress={handleResend}
+          disabled={resendCooldown > 0 || isSendingEmail}
+          className="mt-6 px-8 py-3 active:opacity-70"
+          hitSlop={{ top: 10, bottom: 10, left: 20, right: 20 }}
+        >
+          {isSendingEmail ? (
+            <ActivityIndicator size="small" color={colors.mutedForeground} />
+          ) : (
+            <Text
+              className="text-sm font-medium"
+              style={{
+                color: resendCooldown > 0 ? colors.mutedForeground : colors.accent,
+              }}
+            >
+              {resendCooldown > 0
+                ? `Renvoyer dans ${resendCooldown}s`
+                : emailSent
+                ? 'Renvoyer l\'email'
+                : 'Envoyer l\'email'}
+            </Text>
+          )}
+        </Pressable>
       </View>
 
       {/* Bottom "Plus tard" button */}

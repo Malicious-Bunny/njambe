@@ -1,6 +1,6 @@
 import { EmptyState, Header } from '@/components/custom/shared';
 import { Text } from '@/components/ui/text';
-import { User } from 'iconoir-react-native';
+import { UserIcon } from 'phosphor-react-native';
 import * as React from 'react';
 import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -23,7 +23,7 @@ export default function AccountScreen() {
         {/* Empty State */}
         <View className="px-5">
           <EmptyState
-            icon={User}
+            icon={UserIcon}
             title="Account settings"
             subtitle="Profile settings will appear here"
           />

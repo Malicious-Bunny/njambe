@@ -3,7 +3,7 @@ import { Text } from '@/components/ui/text';
 import { ServicesCategorySection } from '@/components/custom/provider/onboarding';
 import { useProviderOnboardingStore, type CategoryExperience } from '@/lib/stores';
 import { fetchServiceCategories, type ServiceCategory } from '@/lib/provider/service-categories';
-import { ArrowLeft } from 'phosphor-react-native';
+import { ArrowLeftIcon } from 'phosphor-react-native';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
@@ -125,7 +125,7 @@ export default function ServicesSelectionScreen() {
           className="p-3 active:opacity-70"
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
-          <ArrowLeft size={24} color={iconColor} weight="regular" />
+          <ArrowLeftIcon size={24} color={iconColor} weight="regular" />
         </Pressable>
       </View>
 

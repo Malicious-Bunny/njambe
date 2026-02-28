@@ -1,7 +1,7 @@
 import { Text } from '@/components/ui/text';
 import { getPasswordStrength, validatePassword } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
-import { Eye, EyeClosed, Lock, CheckCircle } from 'iconoir-react-native';
+import { EyeIcon, EyeSlashIcon, LockIcon, CheckCircleIcon } from 'phosphor-react-native';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import {
@@ -77,7 +77,7 @@ export function ResetPasswordForm({ onBackToLogin, onContinue }: ResetPasswordFo
       <View className="flex-1">
         <View className="flex-1 px-6 pt-24 items-center">
           <View className="w-20 h-20 rounded-full bg-green-100 dark:bg-green-900/30 items-center justify-center mb-6">
-            <CheckCircle width={48} height={48} color={successColor} />
+            <CheckCircleIcon size={48} color={successColor} weight="regular" />
           </View>
 
           <Text className="text-2xl font-bold text-foreground text-center mb-4">
@@ -113,7 +113,7 @@ export function ResetPasswordForm({ onBackToLogin, onContinue }: ResetPasswordFo
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} className="flex-1">
       <View className="flex-1 px-6 pt-8">
         <View className="w-16 h-16 rounded-full bg-primary/10 items-center justify-center mb-6 self-center">
-          <Lock width={32} height={32} color={textColor} />
+          <LockIcon size={32} color={textColor} weight="regular" />
         </View>
 
         <Text className="text-2xl font-bold text-foreground text-center mb-3">
@@ -152,9 +152,9 @@ export function ResetPasswordForm({ onBackToLogin, onContinue }: ResetPasswordFo
             />
             <Pressable onPress={() => setShowPassword(!showPassword)} className="pb-3">
               {showPassword ? (
-                <Eye width={20} height={20} color={iconColor} />
+                <EyeIcon size={20} color={iconColor} weight="regular" />
               ) : (
-                <EyeClosed width={20} height={20} color={iconColor} />
+                <EyeSlashIcon size={20} color={iconColor} weight="regular" />
               )}
             </Pressable>
           </View>
@@ -207,9 +207,9 @@ export function ResetPasswordForm({ onBackToLogin, onContinue }: ResetPasswordFo
             />
             <Pressable onPress={() => setShowConfirmPassword(!showConfirmPassword)} className="pb-3">
               {showConfirmPassword ? (
-                <Eye width={20} height={20} color={iconColor} />
+                <EyeIcon size={20} color={iconColor} weight="regular" />
               ) : (
-                <EyeClosed width={20} height={20} color={iconColor} />
+                <EyeSlashIcon size={20} color={iconColor} weight="regular" />
               )}
             </Pressable>
           </View>

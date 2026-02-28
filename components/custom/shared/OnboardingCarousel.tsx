@@ -1,6 +1,6 @@
 import { Text } from '@/components/ui/text';
 import { THEME } from '@/lib/theme';
-import { NavArrowRight } from 'iconoir-react-native';
+import { ArrowRightIcon } from 'phosphor-react-native';
 import * as React from 'react';
 import {
   Dimensions,
@@ -196,7 +196,7 @@ function NavigationButtons({ onSkip, onNext, arrowColor }: NavigationButtonsProp
           Next
         </Text>
         <View className="flex-row">
-          <NavArrowRight width={18} height={18} color={arrowColor} strokeWidth={2} />
+          <ArrowRightIcon size={18} color={arrowColor} weight="regular" />
         </View>
       </Pressable>
     </View>

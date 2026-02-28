@@ -1,5 +1,5 @@
 import { Text } from '@/components/ui/text';
-import { Briefcase, Plus } from 'iconoir-react-native';
+import { BriefcaseIcon, PlusIcon } from 'phosphor-react-native';
 import * as React from 'react';
 import { Pressable, View } from 'react-native';
 import { useColorScheme } from 'nativewind';
@@ -21,13 +21,13 @@ export function QuickActions({ onAddService, onBrowseJobs }: QuickActionsProps) 
         <Pressable
           onPress={onAddService}
           className="flex-1 flex-row items-center justify-center gap-2 rounded-2xl bg-primary py-4 shadow-lg active:bg-primary/90 dark:bg-primary dark:active:bg-primary/90">
-          <Plus width={20} height={20} color={primaryForeground} />
+          <PlusIcon size={20} color={primaryForeground} weight="regular" />
           <Text className="font-semibold text-primary-foreground dark:text-primary-foreground">Add Service</Text>
         </Pressable>
         <Pressable
           onPress={onBrowseJobs}
           className="flex-1 flex-row items-center justify-center gap-2 rounded-2xl border-2 border-primary bg-card py-4 active:bg-accent dark:border-primary dark:bg-card dark:active:bg-accent">
-          <Briefcase width={20} height={20} color={primary} />
+          <BriefcaseIcon size={20} color={primary} weight="regular" />
           <Text className="font-semibold text-primary dark:text-primary">Browse Jobs</Text>
         </Pressable>
       </View>

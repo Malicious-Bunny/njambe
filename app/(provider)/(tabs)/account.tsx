@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { supabase } from '@/lib/supabase';
 import { router } from 'expo-router';
-import { LogOut, Settings, User } from 'iconoir-react-native';
+import { SignOutIcon, GearSixIcon, UserIcon } from 'phosphor-react-native';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import { Alert, Pressable, View } from 'react-native';
@@ -37,7 +37,7 @@ export default function ProviderAccountScreen() {
         <View className="rounded-xl border border-border bg-card p-4">
           <View className="flex-row items-center gap-4">
             <View className="h-16 w-16 items-center justify-center rounded-full bg-secondary">
-              <User width={32} height={32} color={iconColor} />
+              <UserIcon size={32} color={iconColor} weight="regular" />
             </View>
             <View className="flex-1">
               <Text className="text-lg font-semibold text-foreground">Provider Account</Text>
@@ -48,7 +48,7 @@ export default function ProviderAccountScreen() {
 
         {/* Settings */}
         <Pressable className="flex-row items-center gap-4 rounded-xl border border-border bg-card p-4 active:bg-accent">
-          <Settings width={24} height={24} color={iconColor} />
+          <GearSixIcon size={24} color={iconColor} weight="regular" />
           <Text className="flex-1 text-base text-foreground">Settings</Text>
         </Pressable>
 
@@ -57,7 +57,7 @@ export default function ProviderAccountScreen() {
           onPress={handleLogout}
           className="flex-row items-center gap-4 rounded-xl border border-destructive bg-card p-4 active:bg-destructive/10"
         >
-          <LogOut width={24} height={24} color="#ef4444" />
+          <SignOutIcon size={24} color="#ef4444" weight="regular" />
           <Text className="flex-1 text-base text-destructive">Sign Out</Text>
         </Pressable>
       </View>

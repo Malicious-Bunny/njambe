@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import { EnvelopeSimple, CheckCircle, CursorClick } from 'phosphor-react-native';
+import { EnvelopeSimpleIcon, CheckCircleIcon, CursorClickIcon } from 'phosphor-react-native';
 
 interface EmailSuccessIllustrationProps {
   size?: number;
@@ -57,7 +57,7 @@ export function EmailSuccessIllustration({
         }}
       >
         {/* Envelope icon */}
-        <EnvelopeSimple
+        <EnvelopeSimpleIcon
           size={iconSize}
           color={colors.foreground}
           weight="duotone"
@@ -74,7 +74,7 @@ export function EmailSuccessIllustration({
             padding: 2,
           }}
         >
-          <CheckCircle
+          <CheckCircleIcon
             size={checkSize}
             color="#ffffff"
             weight="fill"
@@ -89,7 +89,7 @@ export function EmailSuccessIllustration({
             right: size * 0.08,
           }}
         >
-          <CursorClick
+          <CursorClickIcon
             size={cursorSize}
             color={colors.mutedForeground}
             weight="duotone"

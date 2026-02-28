@@ -1,6 +1,7 @@
 import { Text } from '@/components/ui/text';
 import { useProviderOnboardingStore, WorkType } from '@/lib/stores';
-import { ArrowRight } from 'lucide-react-native';
+import { ArrowRightIcon } from 'phosphor-react-native';
+import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import { Image, Pressable, View } from 'react-native';
 
@@ -27,9 +28,10 @@ interface WorkTypeOptionProps {
   title: string;
   description: string;
   onPress: () => void;
+  iconColor: string;
 }
 
-function WorkTypeOption({ title, description, onPress }: WorkTypeOptionProps) {
+function WorkTypeOption({ title, description, onPress, iconColor }: WorkTypeOptionProps) {
   return (
     <Pressable
       onPress={onPress}
@@ -40,7 +42,7 @@ function WorkTypeOption({ title, description, onPress }: WorkTypeOptionProps) {
         <Text className="mt-1 text-base text-muted-foreground">{description}</Text>
       </View>
       <View className="h-12 w-12 items-center justify-center rounded-full bg-primary">
-        <ArrowRight size={24} className="text-primary-foreground" />
+        <ArrowRightIcon size={24} color={iconColor} weight="regular" />
       </View>
     </Pressable>
   );
@@ -48,6 +50,8 @@ function WorkTypeOption({ title, description, onPress }: WorkTypeOptionProps) {
 
 export function WorkTypeStep() {
   const { setWorkType, nextStep } = useProviderOnboardingStore();
+  const { colorScheme } = useColorScheme();
+  const primaryForeground = colorScheme === 'dark' ? '#18181b' : '#fafafa';
 
   const handleSelectWorkType = (type: WorkType) => {
     setWorkType(type);
@@ -94,12 +98,14 @@ export function WorkTypeStep() {
           title="Particulier"
           description="Travailler légalement comme particulier"
           onPress={() => handleSelectWorkType('individual')}
+          iconColor={primaryForeground}
         />
 
         <WorkTypeOption
           title="Indépendant"
           description="Travailler avec mon numéro d'entreprise"
           onPress={() => handleSelectWorkType('independent')}
+          iconColor={primaryForeground}
         />
       </View>
     </View>
