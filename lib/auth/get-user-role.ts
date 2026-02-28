@@ -41,5 +41,5 @@ export async function getUserRole(userId: string, userMetadata?: Record<string, 
  * Get the route path for a given user role
  */
 export function getRouteForRole(role: UserRole): string {
-  return role === 'provider' ? '/(provider)/(tabs)/' : '/(customer)/(tabs)/';
+  return role === 'provider' ? '/(provider)/(tabs)/' : '/(customer)/(tabs)/services';
 }

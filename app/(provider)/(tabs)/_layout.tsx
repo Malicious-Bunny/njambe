@@ -1,30 +1,27 @@
-import { Text } from '@/components/ui/text';
 import { Tabs } from 'expo-router';
-import {
-  Bell,
-  Briefcase,
-  ChatBubble,
-  HomeSimple,
-  User,
-} from 'iconoir-react-native';
+import { BellSimpleIcon, BriefcaseIcon, ChatCenteredIcon, HouseSimpleIcon, UserCircleIcon } from 'phosphor-react-native';
+import { useColorScheme } from 'nativewind';
 import * as React from 'react';
-import { Platform, View } from 'react-native';
+import { Platform } from 'react-native';
 
 export default function ProviderTabsLayout() {
+  const { colorScheme } = useColorScheme();
+  const isDark = colorScheme === 'dark';
+
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: '#FAFAFA',
+          backgroundColor: isDark ? '#09090b' : '#fafafa',
           borderTopWidth: 1,
-          borderTopColor: '#E4E4E7',
+          borderTopColor: isDark ? '#27272a' : '#e4e4e7',
           height: Platform.OS === 'ios' ? 85 : 65,
           paddingBottom: Platform.OS === 'ios' ? 25 : 10,
           paddingTop: 10,
         },
-        tabBarActiveTintColor: '#18181B',
-        tabBarInactiveTintColor: '#A1A1AA',
+        tabBarActiveTintColor: isDark ? '#fafafa' : '#18181b',
+        tabBarInactiveTintColor: '#a1a1aa',
         tabBarLabelStyle: {
           fontSize: 11,
           fontWeight: '500',
@@ -32,44 +29,20 @@ export default function ProviderTabsLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Dashboard',
-          tabBarIcon: ({ focused }) => (
-            <View
-              className={`-mt-4 h-14 w-14 items-center justify-center rounded-full ${
-                focused ? 'bg-primary' : 'bg-border'
-              }`}
-            >
-              <HomeSimple width={28} height={28} color={focused ? '#FAFAFA' : '#71717A'} />
-            </View>
-          ),
-          tabBarLabel: ({ focused }) => (
-            <Text
-              className={`mt-1 text-[11px] font-medium ${
-                focused ? 'text-primary' : 'text-muted-foreground'
-              }`}
-            >
-              Dashboard
-            </Text>
-          ),
-        }}
-      />
-      <Tabs.Screen
         name="jobs"
         options={{
           title: 'Jobs',
           tabBarIcon: ({ color, size }) => (
-            <Briefcase width={size} height={size} color={color} />
+            <BriefcaseIcon size={size} color={color} weight="regular" />
           ),
         }}
       />
       <Tabs.Screen
-        name="messages"
+        name="index"
         options={{
-          title: 'Messages',
+          title: 'Dashboard',
           tabBarIcon: ({ color, size }) => (
-            <ChatBubble width={size} height={size} color={color} />
+            <HouseSimpleIcon size={size} color={color} weight="regular" />
           ),
         }}
       />
@@ -78,7 +51,16 @@ export default function ProviderTabsLayout() {
         options={{
           title: 'Notifications',
           tabBarIcon: ({ color, size }) => (
-            <Bell width={size} height={size} color={color} />
+            <BellSimpleIcon size={size} color={color} weight="regular" />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="messages"
+        options={{
+          title: 'Messages',
+          tabBarIcon: ({ color, size }) => (
+            <ChatCenteredIcon size={size} color={color} weight="regular" />
           ),
         }}
       />
@@ -87,7 +69,7 @@ export default function ProviderTabsLayout() {
         options={{
           title: 'Account',
           tabBarIcon: ({ color, size }) => (
-            <User width={size} height={size} color={color} />
+            <UserCircleIcon size={size} color={color} weight="regular" />
           ),
         }}
       />

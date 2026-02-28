@@ -1,30 +1,27 @@
-import { Text } from '@/components/ui/text';
 import { Tabs } from 'expo-router';
-import {
-  Bell,
-  Heart,
-  ChatBubble,
-  Plus,
-  User,
-} from 'iconoir-react-native';
+import { BabyCarriageIcon, BellSimpleIcon, ChatCenteredIcon, HandshakeIcon, UserCircleIcon } from 'phosphor-react-native';
+import { useColorScheme } from 'nativewind';
 import * as React from 'react';
-import { Platform, View } from 'react-native';
+import { Platform } from 'react-native';
 
 export default function CustomerTabsLayout() {
+  const { colorScheme } = useColorScheme();
+  const isDark = colorScheme === 'dark';
+
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: '#FAFAFA',
+          backgroundColor: isDark ? '#09090b' : '#fafafa',
           borderTopWidth: 1,
-          borderTopColor: '#E4E4E7',
+          borderTopColor: isDark ? '#27272a' : '#e4e4e7',
           height: Platform.OS === 'ios' ? 85 : 65,
           paddingBottom: Platform.OS === 'ios' ? 25 : 10,
           paddingTop: 10,
         },
-        tabBarActiveTintColor: '#18181B',
-        tabBarInactiveTintColor: '#A1A1AA',
+        tabBarActiveTintColor: isDark ? '#fafafa' : '#18181b',
+        tabBarInactiveTintColor: '#a1a1aa',
         tabBarLabelStyle: {
           fontSize: 11,
           fontWeight: '500',
@@ -35,32 +32,17 @@ export default function CustomerTabsLayout() {
         name="requests"
         options={{
           title: 'Requests',
-          tabBarIcon: ({ color, size }) => (
-            <Heart width={size} height={size} color={color} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <HandshakeIcon size={size} color={color} weight={focused ? 'fill' : 'regular'} />
           ),
         }}
       />
       <Tabs.Screen
-        name="index"
+        name="services"
         options={{
-          title: 'Service',
-          tabBarIcon: ({ focused }) => (
-            <View
-              className={`-mt-4 h-14 w-14 items-center justify-center rounded-full ${
-                focused ? 'bg-primary' : 'bg-border'
-              }`}
-            >
-              <Plus width={28} height={28} color={focused ? '#FAFAFA' : '#71717A'} />
-            </View>
-          ),
-          tabBarLabel: ({ focused }) => (
-            <Text
-              className={`mt-1 text-[11px] font-medium ${
-                focused ? 'text-primary' : 'text-muted-foreground'
-              }`}
-            >
-              Service
-            </Text>
+          title: 'Services',
+          tabBarIcon: ({ color, size, focused }) => (
+            <BabyCarriageIcon size={size} color={color} weight={focused ? 'fill' : 'regular'} />
           ),
         }}
       />
@@ -68,8 +50,8 @@ export default function CustomerTabsLayout() {
         name="notifications"
         options={{
           title: 'Notifications',
-          tabBarIcon: ({ color, size }) => (
-            <Bell width={size} height={size} color={color} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <BellSimpleIcon size={size} color={color} weight={focused ? 'fill' : 'regular'} />
           ),
         }}
       />
@@ -77,8 +59,8 @@ export default function CustomerTabsLayout() {
         name="messages"
         options={{
           title: 'Messages',
-          tabBarIcon: ({ color, size }) => (
-            <ChatBubble width={size} height={size} color={color} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <ChatCenteredIcon size={size} color={color} weight={focused ? 'fill' : 'regular'} />
           ),
         }}
       />
@@ -86,8 +68,8 @@ export default function CustomerTabsLayout() {
         name="account"
         options={{
           title: 'Account',
-          tabBarIcon: ({ color, size }) => (
-            <User width={size} height={size} color={color} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <UserCircleIcon size={size} color={color} weight={focused ? 'fill' : 'regular'} />
           ),
         }}
       />

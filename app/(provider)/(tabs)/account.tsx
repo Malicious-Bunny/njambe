@@ -1,66 +1,11 @@
-import { TabPageLayout } from '@/components/custom/shared';
-import { Button } from '@/components/ui/button';
-import { Text } from '@/components/ui/text';
-import { supabase } from '@/lib/supabase';
-import { router } from 'expo-router';
-import { SignOutIcon, GearSixIcon, UserIcon } from 'phosphor-react-native';
-import { useColorScheme } from 'nativewind';
 import * as React from 'react';
-import { Alert, Pressable, View } from 'react-native';
+import { View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ProviderAccountScreen() {
-  const { colorScheme } = useColorScheme();
-  const iconColor = colorScheme === 'dark' ? '#fafafa' : '#18181b';
-
-  const handleLogout = async () => {
-    Alert.alert(
-      'Sign Out',
-      'Are you sure you want to sign out?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Sign Out',
-          style: 'destructive',
-          onPress: async () => {
-            await supabase.auth.signOut();
-            router.replace('/');
-          },
-        },
-      ]
-    );
-  };
-
   return (
-    <TabPageLayout title="Account" subtitle="Manage your provider profile">
-      <View className="mt-4 gap-4">
-        {/* Profile Section */}
-        <View className="rounded-xl border border-border bg-card p-4">
-          <View className="flex-row items-center gap-4">
-            <View className="h-16 w-16 items-center justify-center rounded-full bg-secondary">
-              <UserIcon size={32} color={iconColor} weight="regular" />
-            </View>
-            <View className="flex-1">
-              <Text className="text-lg font-semibold text-foreground">Provider Account</Text>
-              <Text className="text-sm text-muted-foreground">Manage your profile and services</Text>
-            </View>
-          </View>
-        </View>
-
-        {/* Settings */}
-        <Pressable className="flex-row items-center gap-4 rounded-xl border border-border bg-card p-4 active:bg-accent">
-          <GearSixIcon size={24} color={iconColor} weight="regular" />
-          <Text className="flex-1 text-base text-foreground">Settings</Text>
-        </Pressable>
-
-        {/* Sign Out */}
-        <Pressable
-          onPress={handleLogout}
-          className="flex-row items-center gap-4 rounded-xl border border-destructive bg-card p-4 active:bg-destructive/10"
-        >
-          <SignOutIcon size={24} color="#ef4444" weight="regular" />
-          <Text className="flex-1 text-base text-destructive">Sign Out</Text>
-        </Pressable>
-      </View>
-    </TabPageLayout>
+    <SafeAreaView className="flex-1 bg-background" edges={['top']}>
+      <View className="flex-1" />
+    </SafeAreaView>
   );
 }

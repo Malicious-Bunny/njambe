@@ -1,13 +1,11 @@
-import { EmptyState, TabPageLayout } from '@/components/custom/shared';
 import * as React from 'react';
+import { View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ProviderNotificationsScreen() {
   return (
-    <TabPageLayout title="Notifications" subtitle="Stay updated on your services">
-      <EmptyState
-        title="No notifications"
-        subtitle="You'll receive updates about job requests and messages here"
-      />
-    </TabPageLayout>
+    <SafeAreaView className="flex-1 bg-background" edges={['top']}>
+      <View className="flex-1" />
+    </SafeAreaView>
   );
 }
