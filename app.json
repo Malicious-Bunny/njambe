@@ -18,6 +18,7 @@
     ],
     "ios": {
       "supportsTablet": true,
+      "bundleIdentifier": "com.njambe.app",
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "Njambe uses your location to set the service address and find providers near you.",
         "NSPhotoLibraryUsageDescription": "Njambe needs access to your photo library to attach photos to your service request."

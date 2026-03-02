@@ -1,3 +1,4 @@
+export { AnimatedTabIcon } from './AnimatedTabIcon';
 export { EmptyState } from './EmptyState';
 export { Header } from './Header';
 export { LocationSelector } from './LocationSelector';

@@ -1,3 +1,4 @@
+import { AnimatedTabIcon } from '@/components/custom/shared';
 import { Tabs } from 'expo-router';
 import { BellSimpleIcon, BriefcaseIcon, ChatCenteredIcon, HouseSimpleIcon, UserCircleIcon } from 'phosphor-react-native';
 import { useColorScheme } from 'nativewind';
@@ -32,8 +33,8 @@ export default function ProviderTabsLayout() {
         name="jobs"
         options={{
           title: 'Jobs',
-          tabBarIcon: ({ color, size }) => (
-            <BriefcaseIcon size={size} color={color} weight="regular" />
+          tabBarIcon: ({ color, size, focused }) => (
+            <AnimatedTabIcon icon={BriefcaseIcon} color={color} size={size} focused={focused} />
           ),
         }}
       />
@@ -41,8 +42,8 @@ export default function ProviderTabsLayout() {
         name="index"
         options={{
           title: 'Dashboard',
-          tabBarIcon: ({ color, size }) => (
-            <HouseSimpleIcon size={size} color={color} weight="regular" />
+          tabBarIcon: ({ color, size, focused }) => (
+            <AnimatedTabIcon icon={HouseSimpleIcon} color={color} size={size} focused={focused} />
           ),
         }}
       />
@@ -50,8 +51,8 @@ export default function ProviderTabsLayout() {
         name="notifications"
         options={{
           title: 'Notifications',
-          tabBarIcon: ({ color, size }) => (
-            <BellSimpleIcon size={size} color={color} weight="regular" />
+          tabBarIcon: ({ color, size, focused }) => (
+            <AnimatedTabIcon icon={BellSimpleIcon} color={color} size={size} focused={focused} />
           ),
         }}
       />
@@ -59,8 +60,8 @@ export default function ProviderTabsLayout() {
         name="messages"
         options={{
           title: 'Messages',
-          tabBarIcon: ({ color, size }) => (
-            <ChatCenteredIcon size={size} color={color} weight="regular" />
+          tabBarIcon: ({ color, size, focused }) => (
+            <AnimatedTabIcon icon={ChatCenteredIcon} color={color} size={size} focused={focused} />
           ),
         }}
       />
@@ -68,8 +69,8 @@ export default function ProviderTabsLayout() {
         name="account"
         options={{
           title: 'Account',
-          tabBarIcon: ({ color, size }) => (
-            <UserCircleIcon size={size} color={color} weight="regular" />
+          tabBarIcon: ({ color, size, focused }) => (
+            <AnimatedTabIcon icon={UserCircleIcon} color={color} size={size} focused={focused} />
           ),
         }}
       />

@@ -10,7 +10,7 @@ import * as React from 'react';
 import { BackHandler, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function SuccessScreen() {
+export default function RequestSuccessScreen() {
   const { colorScheme } = useColorScheme();
   const router = useRouter();
   const setCategory = useServiceRequestStore((s) => s.setCategory);
@@ -34,18 +34,18 @@ export default function SuccessScreen() {
 
   const handleCategoryPress = (category: ServiceCategory) => {
     setCategory(category.id, category.name);
-    router.push({
+    router.replace({
       pathname: '/(customer)/(tabs)/services/subcategories',
       params: { categoryId: category.id },
     });
   };
 
   const handleViewRequests = () => {
-    router.navigate('/(customer)/(tabs)/requests');
+    router.replace('/(customer)/(tabs)/requests');
   };
 
   const handleNewRequest = () => {
-    router.navigate('/(customer)/(tabs)/services');
+    router.replace('/(customer)/(tabs)/services');
   };
 
   return (
@@ -68,7 +68,7 @@ export default function SuccessScreen() {
         </View>
 
         {/* Divider */}
-        <View className="h-px mx-4 bg-border" />
+        <View className="mx-4 h-px bg-border" />
 
         {/* Suggested categories */}
         <View className="pt-6">
