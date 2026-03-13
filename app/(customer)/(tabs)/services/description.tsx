@@ -4,7 +4,7 @@ import { Text } from '@/components/ui/text';
 import { useServiceRequestStore, type ProviderType } from '@/lib/stores';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
-import { PencilSimpleIcon, XIcon } from 'phosphor-react-native';
+import { MarkerCircleIcon, XIcon } from 'phosphor-react-native';
 import * as React from 'react';
 import {
   KeyboardAvoidingView,
@@ -141,7 +141,7 @@ export default function DescriptionScreen() {
               <Text className="flex-1 pr-3 text-base font-medium text-foreground">
                 {selectedOption.label}
               </Text>
-              <PencilSimpleIcon size={18} color={placeholderColor} weight="regular" />
+              <MarkerCircleIcon size={18} color={placeholderColor} weight="regular" />
             </View>
           </Pressable>
         </ScrollView>

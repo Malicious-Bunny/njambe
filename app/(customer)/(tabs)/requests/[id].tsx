@@ -17,7 +17,7 @@ import {
   HeartIcon,
   LeafIcon,
   PawPrintIcon,
-  PencilSimpleIcon,
+  MarkerCircleIcon,
   TruckIcon,
   WrenchIcon,
 } from 'phosphor-react-native';
@@ -91,7 +91,7 @@ export default function RequestDetailScreen() {
           }
           className="h-10 w-10 items-center justify-center rounded-xl active:bg-secondary"
         >
-          <PencilSimpleIcon size={20} color={iconColor} weight="regular" />
+          <MarkerCircleIcon size={20} color={iconColor} weight="regular" />
         </Pressable>
       </View>
 
@@ -177,7 +177,15 @@ export default function RequestDetailScreen() {
               ) : (
                 <View className="gap-3">
                   {offers.map((offer) => (
-                    <OfferCard key={offer.id} offer={offer} />
+                    <OfferCard
+                      key={offer.id}
+                      offer={offer}
+                      onPress={() =>
+                        router.push(
+                          `/(customer)/(tabs)/requests/offer/${offer.id}` as any
+                        )
+                      }
+                    />
                   ))}
                 </View>
               )}

@@ -15,11 +15,12 @@ function relativeTime(isoDate: string): string {
 
 export interface OfferCardProps {
   offer: CustomerOffer;
+  onPress?: () => void;
   onChoose?: (offer: CustomerOffer) => void;
   onDecline?: (offer: CustomerOffer) => void;
 }
 
-export function OfferCard({ offer, onChoose, onDecline }: OfferCardProps) {
+export function OfferCard({ offer, onPress, onChoose, onDecline }: OfferCardProps) {
   const { colorScheme } = useColorScheme();
   const iconColor = colorScheme === 'dark' ? '#a1a1aa' : '#71717a';
   const xColor = colorScheme === 'dark' ? '#a1a1aa' : '#52525b';
@@ -27,7 +28,7 @@ export function OfferCard({ offer, onChoose, onDecline }: OfferCardProps) {
   const firstName = offer.providerName.split(' ')[0];
 
   return (
-    <View className="overflow-hidden rounded-2xl border border-border bg-card">
+    <Pressable onPress={onPress} className="overflow-hidden rounded-2xl border border-border bg-card active:opacity-80">
       {/* Avatar + name + rate */}
       <View className="flex-row items-center px-4 pb-3 pt-4">
         <View
@@ -89,6 +90,6 @@ export function OfferCard({ offer, onChoose, onDecline }: OfferCardProps) {
           <Text className="font-semibold text-primary-foreground">Choose {firstName}</Text>
         </Pressable>
       </View>
-    </View>
+    </Pressable>
   );
 }

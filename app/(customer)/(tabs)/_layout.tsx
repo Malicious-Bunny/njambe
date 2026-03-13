@@ -1,4 +1,4 @@
-import { Tabs } from 'expo-router';
+import { Tabs, usePathname } from 'expo-router';
 import { BabyCarriageIcon, BellSimpleIcon, ChatCenteredIcon, HandshakeIcon, UserCircleIcon } from 'phosphor-react-native';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
@@ -7,19 +7,25 @@ import { Platform } from 'react-native';
 export default function CustomerTabsLayout() {
   const { colorScheme } = useColorScheme();
   const isDark = colorScheme === 'dark';
+  const pathname = usePathname();
+
+  // Hide tab bar when inside a nested requests screen (detail, edit, etc.)
+  const hideTabBar = pathname.includes('/requests/') || pathname.includes('/account/');
 
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarStyle: {
-          backgroundColor: isDark ? '#09090b' : '#fafafa',
-          borderTopWidth: 1,
-          borderTopColor: isDark ? '#27272a' : '#e4e4e7',
-          height: Platform.OS === 'ios' ? 85 : 65,
-          paddingBottom: Platform.OS === 'ios' ? 25 : 10,
-          paddingTop: 10,
-        },
+        tabBarStyle: hideTabBar
+          ? { display: 'none' }
+          : {
+              backgroundColor: isDark ? '#09090b' : '#fafafa',
+              borderTopWidth: 1,
+              borderTopColor: isDark ? '#27272a' : '#e4e4e7',
+              height: Platform.OS === 'ios' ? 85 : 65,
+              paddingBottom: Platform.OS === 'ios' ? 25 : 10,
+              paddingTop: 10,
+            },
         tabBarActiveTintColor: isDark ? '#fafafa' : '#18181b',
         tabBarInactiveTintColor: '#a1a1aa',
         tabBarLabelStyle: {

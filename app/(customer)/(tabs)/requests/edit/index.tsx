@@ -1,6 +1,7 @@
+import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { fetchRequestById } from '@/lib/customer/requests';
-import { useEditRequestStore } from '@/lib/stores';
+import { useEditRequestStore, type ProviderTypeEdit } from '@/lib/stores';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import {
@@ -8,18 +9,28 @@ import {
   BabyCarriageIcon,
   BookOpenIcon,
   BroomIcon,
-  CameraIcon,
-  CaretRightIcon,
   HeartIcon,
   LeafIcon,
-  MapPinIcon,
   PawPrintIcon,
+  MarkerCircleIcon,
   TruckIcon,
   WrenchIcon,
+  XIcon,
 } from 'phosphor-react-native';
 import * as React from 'react';
-import { Pressable, ScrollView, TextInput, View } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  Pressable,
+  ScrollView,
+  TextInput,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+const TITLE_MAX = 50;
+const DESC_MAX = 750;
 
 const ICON_MAP = {
   WrenchIcon,
@@ -32,10 +43,20 @@ const ICON_MAP = {
   HeartIcon,
 } as const;
 
-const PROVIDER_LABELS: Record<string, string> = {
-  all: 'Individuals & professionals',
-  professionals_only: 'Professionals only',
-};
+const PROVIDER_OPTIONS: { id: ProviderTypeEdit; label: string; description: string }[] = [
+  {
+    id: 'all',
+    label: 'Individuals & professionals',
+    description:
+      'Access to our wide selection of qualified providers. Receipt available in your account.',
+  },
+  {
+    id: 'professionals_only',
+    label: 'Professionals only',
+    description:
+      'For requests requiring a VAT invoice. (e.g. business, insurance claim, subsidized work...)',
+  },
+];
 
 export default function EditRequestIndexScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -43,9 +64,13 @@ export default function EditRequestIndexScreen() {
   const { colorScheme } = useColorScheme();
   const isDark = colorScheme === 'dark';
   const iconColor = isDark ? '#a1a1aa' : '#71717a';
+  const inputColor = isDark ? '#fafafa' : '#18181b';
+  const placeholderColor = isDark ? '#71717a' : '#a1a1aa';
 
   const store = useEditRequestStore();
   const [loading, setLoading] = React.useState(true);
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const [tempProviderType, setTempProviderType] = React.useState<ProviderTypeEdit>('all');
 
   React.useEffect(() => {
     if (!id) return;
@@ -57,6 +82,17 @@ export default function EditRequestIndexScreen() {
   }, [id]);
 
   const IconComponent = store.categoryIcon ? ICON_MAP[store.categoryIcon] : null;
+  const selectedOption = PROVIDER_OPTIONS.find((o) => o.id === store.providerType)!;
+
+  const handleOpenProviderModal = () => {
+    setTempProviderType(store.providerType);
+    setModalVisible(true);
+  };
+
+  const handleConfirmProviderModal = () => {
+    store.setProviderType(tempProviderType);
+    setModalVisible(false);
+  };
 
   if (loading) {
     return (
@@ -86,164 +122,229 @@ export default function EditRequestIndexScreen() {
         <View className="h-10 w-10" />
       </View>
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-        contentContainerStyle={{ padding: 16, gap: 16, paddingBottom: 16 }}
+      <KeyboardAvoidingView
+        className="flex-1"
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        {/* Title */}
-        <View>
-          <Text className="mb-2 text-sm text-muted-foreground">Title</Text>
-          <View className="rounded-2xl border border-border bg-card px-4 py-3">
-            <TextInput
-              value={store.title}
-              onChangeText={store.setTitle}
-              multiline
-              placeholder="Request title..."
-              placeholderTextColor={isDark ? '#71717a' : '#a1a1aa'}
-              style={{
-                color: isDark ? '#fafafa' : '#18181b',
-                fontSize: 15,
-                lineHeight: 22,
-              }}
-            />
-          </View>
-        </View>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{ padding: 16, gap: 12, paddingBottom: 16 }}
+        >
 
-        {/* Category */}
-        <View>
-          <Text className="mb-2 text-sm text-muted-foreground">Category</Text>
-          <Pressable
-            onPress={() =>
-              router.push({
-                pathname: '/(customer)/(tabs)/requests/edit/category' as any,
-                params: { id },
-              })
-            }
-            className="flex-row items-center rounded-2xl border border-border bg-card px-4 py-3 active:bg-secondary"
-          >
-            <View
-              className="mr-3 h-10 w-10 items-center justify-center rounded-xl"
-              style={{ backgroundColor: store.categoryColor ?? '#18181b' }}
-            >
-              {IconComponent && <IconComponent size={20} color="#ffffff" weight="regular" />}
-            </View>
-            <View className="flex-1">
-              <Text className="text-base font-semibold text-foreground">
-                {store.categoryName ?? '—'}
+          {/* Title + Description card */}
+          <View className="overflow-hidden rounded-2xl border border-border bg-card">
+            {/* Title */}
+            <View className="border-b border-border px-4 pb-3 pt-4">
+              <Text className="mb-1.5 text-xs text-muted-foreground">Title</Text>
+              <TextInput
+                value={store.title}
+                onChangeText={(t) => store.setTitle(t.slice(0, TITLE_MAX))}
+                placeholder="Request title..."
+                placeholderTextColor={placeholderColor}
+                style={{ color: inputColor, fontSize: 15, paddingVertical: 0 }}
+                maxLength={TITLE_MAX}
+                returnKeyType="next"
+              />
+              <Text className="mt-2 text-right text-xs text-muted-foreground">
+                {store.title.length} / {TITLE_MAX}
               </Text>
-              <Text className="mt-0.5 text-xs text-muted-foreground">
+            </View>
+
+            {/* Description */}
+            <View className="px-4 pb-3 pt-4">
+              <Text className="mb-1.5 text-xs text-muted-foreground">Additional information</Text>
+              <TextInput
+                value={store.description}
+                onChangeText={(t) => store.setDescription(t.slice(0, DESC_MAX))}
+                placeholder="Describe what you need..."
+                placeholderTextColor={placeholderColor}
+                style={{
+                  color: inputColor,
+                  fontSize: 15,
+                  minHeight: 100,
+                  textAlignVertical: 'top',
+                  paddingVertical: 0,
+                }}
+                multiline
+                maxLength={DESC_MAX}
+              />
+              <Text className="mt-2 text-right text-xs text-muted-foreground">
+                {store.description.length} / {DESC_MAX}
+              </Text>
+            </View>
+          </View>
+
+          {/* Category card */}
+          <View className="overflow-hidden rounded-2xl border border-border bg-card">
+            {/* Edit icon */}
+            <Pressable
+              onPress={() =>
+                router.push({
+                  pathname: '/(customer)/(tabs)/requests/edit/category' as any,
+                  params: { id },
+                })
+              }
+              className="absolute right-4 top-4 z-10 h-8 w-8 items-center justify-center rounded-lg active:bg-secondary"
+            >
+              <MarkerCircleIcon size={18} color={iconColor} weight="regular" />
+            </Pressable>
+
+            {/* Category row */}
+            <View className="border-b border-border px-4 pb-3 pt-4">
+              <Text className="mb-1 text-xs text-muted-foreground">Category</Text>
+              <View className="flex-row items-center gap-2.5">
+                {IconComponent && store.categoryColor && (
+                  <View
+                    className="h-7 w-7 items-center justify-center rounded-lg"
+                    style={{ backgroundColor: store.categoryColor }}
+                  >
+                    <IconComponent size={15} color="#ffffff" weight="regular" />
+                  </View>
+                )}
+                <Text className="text-base font-medium text-foreground">
+                  {store.categoryName ?? '—'}
+                </Text>
+              </View>
+            </View>
+
+            {/* Subcategory row */}
+            <View className="px-4 pb-3 pt-3">
+              <Text className="mb-1 text-xs text-muted-foreground">Sub-category</Text>
+              <Text className="text-base font-medium text-foreground">
                 {store.subcategoryName || '—'}
               </Text>
             </View>
-            <CaretRightIcon size={16} color={iconColor} weight="regular" />
-          </Pressable>
-        </View>
-
-        {/* Provider type */}
-        <View>
-          <Text className="mb-2 text-sm text-muted-foreground">Provider type</Text>
-          <View className="flex-row gap-2">
-            {(['all', 'professionals_only'] as const).map((type) => {
-              const active = store.providerType === type;
-              return (
-                <Pressable
-                  key={type}
-                  onPress={() => store.setProviderType(type)}
-                  className={`flex-1 items-center rounded-xl border px-3 py-3 ${
-                    active
-                      ? 'border-foreground bg-foreground'
-                      : 'border-border bg-card active:bg-secondary'
-                  }`}
-                >
-                  <Text
-                    className={`text-center text-xs font-semibold ${
-                      active ? 'text-background' : 'text-foreground'
-                    }`}
-                    numberOfLines={2}
-                  >
-                    {PROVIDER_LABELS[type]}
-                  </Text>
-                </Pressable>
-              );
-            })}
           </View>
-        </View>
 
-        {/* Address */}
-        <View>
-          <Text className="mb-2 text-sm text-muted-foreground">Service address</Text>
+          {/* Provider type */}
           <Pressable
-            onPress={() =>
-              router.push({
-                pathname: '/(customer)/(tabs)/requests/edit/address' as any,
-                params: { id },
-              })
-            }
-            className="flex-row items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3 active:bg-secondary"
+            onPress={handleOpenProviderModal}
+            className="overflow-hidden rounded-2xl border border-border bg-card px-4 py-4 active:bg-secondary"
           >
-            <MapPinIcon size={18} color={iconColor} weight="regular" />
-            <Text className="flex-1 text-base text-foreground" numberOfLines={2}>
-              {store.address || 'No address set'}
-            </Text>
-            <CaretRightIcon size={16} color={iconColor} weight="regular" />
+            <Text className="mb-1 text-xs text-muted-foreground">Provider type</Text>
+            <View className="flex-row items-center justify-between">
+              <Text className="flex-1 pr-3 text-base font-medium text-foreground">
+                {selectedOption?.label ?? '—'}
+              </Text>
+              <MarkerCircleIcon size={17} color={iconColor} weight="regular" />
+            </View>
           </Pressable>
-        </View>
 
-        {/* Photos */}
-        <View>
-          <Text className="mb-2 text-sm text-muted-foreground">Photos</Text>
-          <Pressable
-            onPress={() =>
-              router.push({
-                pathname: '/(customer)/(tabs)/requests/edit/photos' as any,
-                params: { id },
-              })
-            }
-            className="flex-row items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3 active:bg-secondary"
-          >
-            <CameraIcon size={18} color={iconColor} weight="regular" />
-            <Text className="flex-1 text-base text-foreground">
-              {store.photos.length > 0
-                ? `${store.photos.length} photo${store.photos.length > 1 ? 's' : ''}`
-                : 'No photos added'}
-            </Text>
-            <CaretRightIcon size={16} color={iconColor} weight="regular" />
-          </Pressable>
-        </View>
+          {/* Address card */}
+          <View className="overflow-hidden rounded-2xl border border-border bg-card">
+            <Pressable
+              onPress={() =>
+                router.push({
+                  pathname: '/(customer)/(tabs)/requests/edit/address' as any,
+                  params: { id },
+                })
+              }
+              className="absolute right-4 top-4 z-10 h-8 w-8 items-center justify-center rounded-lg active:bg-secondary"
+            >
+              <MarkerCircleIcon size={18} color={iconColor} weight="regular" />
+            </Pressable>
 
-        {/* Description */}
-        <View>
-          <Text className="mb-2 text-sm text-muted-foreground">Description</Text>
-          <View className="rounded-2xl border border-border bg-card px-4 py-3">
-            <TextInput
-              value={store.description}
-              onChangeText={store.setDescription}
-              multiline
-              placeholder="Describe what you need..."
-              placeholderTextColor={isDark ? '#71717a' : '#a1a1aa'}
-              style={{
-                color: isDark ? '#fafafa' : '#18181b',
-                fontSize: 14,
-                lineHeight: 21,
-                minHeight: 100,
-                textAlignVertical: 'top',
-              }}
-            />
+            <View className="px-4 pb-3 pt-4">
+              <Text className="mb-1 text-xs text-muted-foreground">Service address</Text>
+              <Text className="pr-10 text-base font-medium text-foreground" numberOfLines={2}>
+                {store.address || 'No address set'}
+              </Text>
+            </View>
           </View>
-        </View>
 
-      </ScrollView>
+          {/* Photos card */}
+          <View className="overflow-hidden rounded-2xl border border-border bg-card">
+            <Pressable
+              onPress={() =>
+                router.push({
+                  pathname: '/(customer)/(tabs)/requests/edit/photos' as any,
+                  params: { id },
+                })
+              }
+              className="absolute right-4 top-4 z-10 h-8 w-8 items-center justify-center rounded-lg active:bg-secondary"
+            >
+              <MarkerCircleIcon size={18} color={iconColor} weight="regular" />
+            </Pressable>
+
+            <View className="px-4 pb-3 pt-4">
+              <Text className="mb-1 text-xs text-muted-foreground">Photos</Text>
+              <Text className="text-base font-medium text-foreground">
+                {store.photos.length > 0
+                  ? `${store.photos.length} photo${store.photos.length > 1 ? 's' : ''}`
+                  : '—'}
+              </Text>
+            </View>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
 
       {/* Fixed bottom action bar */}
       <View className="gap-3 border-t border-border px-4 pb-6 pt-3">
         <Pressable className="items-center rounded-2xl bg-primary py-3.5 active:opacity-90">
           <Text className="font-semibold text-primary-foreground">Save changes</Text>
         </Pressable>
-        <Pressable className="items-center rounded-2xl border border-border py-3.5 active:bg-secondary">
-          <Text className="font-semibold text-red-500">Delete request</Text>
+        <Pressable className="items-center rounded-2xl bg-red-500 py-3.5 active:opacity-80">
+          <Text className="font-semibold text-white">Delete request</Text>
         </Pressable>
       </View>
+
+      {/* Provider type bottom sheet */}
+      <Modal
+        visible={modalVisible}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setModalVisible(false)}
+        statusBarTranslucent
+      >
+        <View className="flex-1 justify-end">
+          <Pressable
+            className="absolute inset-0 bg-black/50"
+            onPress={() => setModalVisible(false)}
+          />
+          <View className="rounded-t-3xl bg-card px-6 pb-10 pt-6">
+            <View className="mb-6 flex-row items-start justify-between">
+              <Text className="flex-1 pr-4 text-xl font-bold text-foreground">
+                Your request will be sent to:
+              </Text>
+              <Pressable onPress={() => setModalVisible(false)} hitSlop={8}>
+                <XIcon size={22} color={isDark ? '#fafafa' : '#18181b'} weight="regular" />
+              </Pressable>
+            </View>
+
+            <View className="mb-6 gap-5">
+              {PROVIDER_OPTIONS.map((option) => {
+                const selected = tempProviderType === option.id;
+                return (
+                  <Pressable
+                    key={option.id}
+                    onPress={() => setTempProviderType(option.id)}
+                    className="flex-row items-start gap-3"
+                  >
+                    <View
+                      className={`mt-0.5 h-5 w-5 items-center justify-center rounded-full border-2 ${
+                        selected ? 'border-primary bg-primary' : 'border-muted-foreground'
+                      }`}
+                    >
+                      {selected && <View className="h-2 w-2 rounded-full bg-primary-foreground" />}
+                    </View>
+                    <View className="flex-1">
+                      <Text className="mb-0.5 font-medium text-foreground">{option.label}</Text>
+                      <Text className="text-sm leading-relaxed text-muted-foreground">
+                        {option.description}
+                      </Text>
+                    </View>
+                  </Pressable>
+                );
+              })}
+            </View>
+
+            <Button onPress={handleConfirmProviderModal}>
+              <Text className="font-semibold text-primary-foreground">Confirm</Text>
+            </Button>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
